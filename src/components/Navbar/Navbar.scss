@@ -1,0 +1,206 @@
+.navbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 5%;
+    z-index: 100;
+    color: #ffffff;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    &__logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+
+        &-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+        }
+
+        &-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            letter-spacing: -0.5px;
+        }
+    }
+
+    &__links {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    &__nav-items {
+        display: flex;
+        gap: 2.5rem;
+    }
+
+    &__nav-item {
+        a {
+            font-size: 15px;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            font-family: "General Sans";
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+            line-height: 130%;
+            letter-spacing: -2%;
+            color: #fff;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    &__action-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+
+        span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        svg {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+        }
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &__contact-btn {
+        background: #1F61E1;
+        color: white;
+        border: none;
+        padding: 0.6rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+        margin-left: 1rem;
+
+        &:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+    }
+
+    &__mobile-toggle {
+        cursor: pointer;
+        z-index: 101;
+
+        svg {
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+        }
+    }
+
+    &__mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 300px;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        padding: 6rem 2rem 2rem;
+        transition: right 0.4s ease;
+        z-index: 100;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+
+        &.open {
+            right: 0;
+        }
+    }
+
+    &__mobile-nav-items {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+    }
+
+    &__mobile-nav-item {
+        a {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    }
+
+    &__mobile-actions {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 3rem;
+    }
+
+    &__mobile-action-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+
+        span {
+            font-size: 0.8rem;
+        }
+    }
+
+    &__mobile-contact-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+}
+
+/* Responsive Utilities */
+.desktop-only {
+    display: flex !important;
+}
+
+.mobile-only {
+    display: none !important;
+}
+
+@media (max-width: 1024px) {
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only {
+        display: block !important;
+    }
+}
