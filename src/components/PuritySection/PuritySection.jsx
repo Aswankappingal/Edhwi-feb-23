@@ -1,59 +1,81 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './PuritySection.scss';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { BiLeaf } from "react-icons/bi";
+import { TbBowl, TbDroplet } from "react-icons/tb";
+
+const products = [
+    { id: 1, src: "/Bottle-blue.svg", alt: "Edhwi Blue Bottle" },
+    { id: 2, src: "/Edhwi-bottle.svg", alt: "Edhwi Bottle" },
+    { id: 3, src: "/Edhwi-packet.svg", alt: "Edhwi Packet" }
+];
 
 const PuritySection = () => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % products.length);
+        }, 3000); // Change image every 3 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <section className="purity-section">
-            <div className="purity-section__container">
+        <section className="hero">
+            {/* Background elements */}
+            <img src="/img_greenleafe (1).svg" alt="" className="hero__leaf hero__leaf--1" />
+            <img src="/Flowers.svg" alt="" className="hero__leaf hero__leaf--2" />
 
-                {/* Left Content */}
-                <div className="purity-section__content">
-                    <h2 className="purity-section__title">
-                        <span className="highlight">Rooted</span> in Purity. Inspired by <br className="desktop-br" />
-                        <span className="highlight">Tradition.</span>
-                    </h2>
+            <div className="hero__container hero__container--vertical">
+                {/* <!-- TOP CONTENT --> */}
+                <div className="hero__content hero__content--centered">
+                    <h1 className="hero__title">
+                        <span>Rooted in Purity.</span> <br />
+                        Inspired by Tradition.
+                    </h1>
 
-                    <p className="purity-section__description">
-                        Edhwi brings the purity of Kerala to your table with products inspired by timeless traditions. From premium unrefined coconut oil to traditional pickles, spices, nuts, and vermicelli, every pack delivers authentic taste, dependable quality, and thoughtful care for your family.
+                    <p className="hero__description">
+                        Edhwi brings the purity of Kerala to your table with products inspired
+                        by timeless traditions. From premium unrefined coconut oil to traditional
+                        pickles, spices, nuts, and vermicelli, every pack delivers authentic taste,
+                        dependable quality, and thoughtful care for your family.
                     </p>
 
-                    <div className="purity-section__features">
-                        <div className="feature-card">
-                            <img src="/Cup.svg" alt="Pure" className="feature-icon" />
-                            <span className="feature-text">Pure</span>
+                    <div className="hero__features-box">
+                        <div className="feature">
+                            <TbDroplet className="feature-icon" />
+                            <span>Pure</span>
                         </div>
-                        <div className="feature-card">
-                            <img src="/Flowers.svg" alt="Traditional" className="feature-icon" />
-                            <span className="feature-text">Traditional</span>
+                        <div className="feature">
+                            <TbBowl className="feature-icon" />
+                            <span>Traditional</span>
                         </div>
-                        <div className="feature-card">
-                            <img src="/Flowerrs.svg" alt="Fresh" className="feature-icon" />
-                            <span className="feature-text">Fresh</span>
+                        <div className="feature">
+                            <BiLeaf className="feature-icon" />
+                            <span>Fresh</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Visuals */}
-                <div className="purity-section__visuals">
-                    {/* Background decorations - we might adjust positioning once we see them */}
-                    <div className="purity-section__visuals-wrapper">
-                        <img src="/Rounded part.svg" alt="Podium" className="podium-img" />
-                        <img src="/Bottle-Coconut.svg" alt="Edhwi Coconut Oil" className="bottle-img" />
+                {/* <!-- BOTTOM CAROUSEL --> */}
+                <div className="hero__image-slider">
+                    <div className="hero__carousel">
+                        {products.map((product, index) => (
+                            <img
+                                key={product.id}
+                                src={product.src}
+                                alt={product.alt}
+                                className={`carousel-image ${index === currentIndex ? 'active' : ''} ${index < currentIndex ? 'prev' : ''} ${index > currentIndex ? 'next' : ''}`}
+                            />
+                        ))}
                     </div>
 
-                    <div className="purity-section__nav">
-                        <button className="nav-btn" aria-label="Previous">
-                            <FiChevronLeft size={20} />
-                        </button>
-                        <button className="nav-btn" aria-label="Next">
-                            <FiChevronRight size={20} />
-                        </button>
-                    </div>
+                    <div className="platform platform--animated"></div>
                 </div>
 
-                <img src="/img_greenleafe (1).svg" alt="Leaf Decoration" className="purity-section__leaf-decoration" />
             </div>
+
+            <div className="hero__bottom"></div>
         </section>
     );
 };
