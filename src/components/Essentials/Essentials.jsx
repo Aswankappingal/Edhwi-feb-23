@@ -42,6 +42,7 @@ const Essentials = () => {
                 <div className="essentials__footer">
                     <div className="essentials__footer-col">
                         <h2 className="essentials__title">
+
                             Pure. Authentic.<br />
                             Everyday Essentials.
                         </h2>

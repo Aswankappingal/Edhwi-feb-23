@@ -14,11 +14,9 @@ const Navbar = () => {
             <div className="navbar__container">
                 {/* Logo Section */}
                 <div className="navbar__logo">
-                    {/* Placeholder for Logo Image, user will provide */}
                     <div className="navbar__logo-icon">
-                        <img src="../../../public/Edhwi-logo.svg" alt="no-image" />
+                        <img src="../../../public/Edhwi-logo.svg" alt="edhwi" />
                     </div>
-                    {/* <span className="navbar__logo-text">edhwi</span> */}
                 </div>
 
                 {/* Desktop Menu */}
@@ -33,16 +31,20 @@ const Navbar = () => {
 
                 {/* Right Actions */}
                 <div className="navbar__actions desktop-only">
+                    <div className="navbar__divider"></div>
                     <div className="navbar__action-icon">
-                        <FiHeart size={20} />
+                        <FiHeart size={22} color="#fff" strokeWidth={1.5} />
                         <span>Wishlist</span>
                     </div>
                     <div className="navbar__action-icon">
-                        <FiShoppingBag size={20} />
+                        <div className="navbar__cart-wrapper">
+                            <FiShoppingBag size={22} color="#fff" strokeWidth={1.5} />
+                            <span className="navbar__cart-badge"></span>
+                        </div>
                         <span>Cart</span>
                     </div>
                     <div className="navbar__action-icon">
-                        <FiUser size={20} />
+                        <FiUser size={22} color="#fff" strokeWidth={1.5} />
                         <span>Account</span>
                     </div>
                     <button className="navbar__contact-btn">Contact Us</button>
@@ -56,27 +58,35 @@ const Navbar = () => {
 
             {/* Mobile Sidebar */}
             <div className={`navbar__mobile-menu ${isMenuOpen ? 'open' : ''}`}>
-                <ul className="navbar__mobile-nav-items">
-                    <li className="navbar__mobile-nav-item"><a href="#home">Home</a></li>
-                    <li className="navbar__mobile-nav-item"><a href="#about">About Us</a></li>
-                    <li className="navbar__mobile-nav-item"><a href="#products">Our Products</a></li>
-                    <li className="navbar__mobile-nav-item"><a href="#gallery">Gallery</a></li>
-                </ul>
-                <div className="navbar__mobile-actions">
-                    <div className="navbar__mobile-action-icon">
-                        <FiHeart size={20} />
-                        <span>Wishlist</span>
-                    </div>
-                    <div className="navbar__mobile-action-icon">
-                        <FiShoppingBag size={20} />
-                        <span>Cart</span>
-                    </div>
-                    <div className="navbar__mobile-action-icon">
-                        <FiUser size={20} />
-                        <span>Account</span>
+                <div className="navbar__mobile-menu-header">
+                    <svg className="navbar__mobile-wave" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                        <path d="M0,0 L1440,0 L1440,60 C1200,100 960,20 720,60 C480,100 240,20 0,60 Z" fill="#172554" opacity="0.8" />
+                        <path d="M0,0 L1440,0 L1440,40 C1200,80 960,0 720,40 C480,80 240,0 0,40 Z" fill="#1e3a8a" opacity="0.9" />
+                    </svg>
+                    <div className="navbar__mobile-close" onClick={toggleMenu}>
+                        <FiX size={24} color="#fff" strokeWidth={1} />
                     </div>
                 </div>
-                <button className="navbar__mobile-contact-btn">Contact Us</button>
+
+                <div className="navbar__mobile-content">
+                    <div className="navbar__mobile-logo">
+                        <div className="navbar__mobile-logo-icon">
+                            <img src="../../../public/Edhwi-logo.svg" alt="edhwi" />
+                        </div>
+                    </div>
+
+                    <ul className="navbar__mobile-nav-items">
+                        <li className="navbar__mobile-nav-item"><a href="#home" onClick={toggleMenu}>Home</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#about" onClick={toggleMenu}>About Us</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#products" onClick={toggleMenu}>Our Products</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#gallery" onClick={toggleMenu}>Gallery</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#wishlist" onClick={toggleMenu}>Whishlist</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#cart" onClick={toggleMenu}>Cart</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#account" onClick={toggleMenu}>Account</a></li>
+                    </ul>
+
+                    <button className="navbar__mobile-login-btn">Login/ Register</button>
+                </div>
             </div>
         </nav>
     );
