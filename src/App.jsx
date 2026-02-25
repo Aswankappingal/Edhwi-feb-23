@@ -3,6 +3,7 @@ import './App.css'; // Or keep it if there's anything useful, otherwise might be
 import HomeBanner from './components/HomeBanner/HomeBanner';
 import PuritySection from './components/PuritySection/PuritySection';
 import Essentials from './components/Essentials/Essentials';
+import SecretsOfQuality from './components/SecretsOfQuality/SecretsOfQuality';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
 
       <Essentials />
       <PuritySection />
+      <SecretsOfQuality />
     </div>
   );
 }
