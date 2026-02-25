@@ -2,14 +2,14 @@ import React from 'react';
 import './HomeBanner.scss';
 import Navbar from '../Navbar/Navbar';
 
-const HomeBanner = () => {
+const HomeBanner = ({ setCurrentPage }) => {
     return (
         <div className="home-banner">
             {/* Background Image Overlay */}
             <div className="home-banner__overlay"></div>
 
             {/* The Navbar sits on top of the banner */}
-            <Navbar />
+            <Navbar setCurrentPage={setCurrentPage} />
 
             {/* Main Content Area */}
             <div className="home-banner__content">

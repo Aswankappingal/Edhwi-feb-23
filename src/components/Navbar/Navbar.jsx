@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Navbar.scss';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu, FiX } from 'react-icons/fi';
 
-const Navbar = () => {
+const Navbar = ({ setCurrentPage }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
@@ -14,7 +14,7 @@ const Navbar = () => {
             <div className="navbar__container">
                 {/* Logo Section */}
                 <div className="navbar__logo">
-                    <div className="navbar__logo-icon">
+                    <div className="navbar__logo-icon" onClick={() => { if (setCurrentPage) setCurrentPage('home'); }} style={{ cursor: 'pointer' }}>
                         <img src="../../../public/Edhwi-logo.svg" alt="edhwi" />
                     </div>
                 </div>
@@ -22,7 +22,7 @@ const Navbar = () => {
                 {/* Desktop Menu */}
                 <div className="navbar__links desktop-only">
                     <ul className="navbar__nav-items">
-                        <li className="navbar__nav-item"><a href="#home">Home</a></li>
+                        <li className="navbar__nav-item"><a href="#home" onClick={(e) => { e.preventDefault(); if (setCurrentPage) setCurrentPage('home'); }}>Home</a></li>
                         <li className="navbar__nav-item"><a href="#about">About Us</a></li>
                         <li className="navbar__nav-item"><a href="#products">Our Products</a></li>
                         <li className="navbar__nav-item"><a href="#gallery">Gallery</a></li>
@@ -43,7 +43,7 @@ const Navbar = () => {
                         </div>
                         <span>Cart</span>
                     </div>
-                    <div className="navbar__action-icon">
+                    <div className="navbar__action-icon" onClick={() => { if (setCurrentPage) setCurrentPage('my-account'); }} style={{ cursor: 'pointer' }}>
                         <FiUser size={22} color="#fff" strokeWidth={1.5} />
                         <span>Account</span>
                     </div>
@@ -70,19 +70,19 @@ const Navbar = () => {
 
                 <div className="navbar__mobile-content">
                     <div className="navbar__mobile-logo">
-                        <div className="navbar__mobile-logo-icon">
+                        <div className="navbar__mobile-logo-icon" onClick={() => { toggleMenu(); if (setCurrentPage) setCurrentPage('home'); }} style={{ cursor: 'pointer' }}>
                             <img src="../../../public/Edhwi-logo.svg" alt="edhwi" />
                         </div>
                     </div>
 
                     <ul className="navbar__mobile-nav-items">
-                        <li className="navbar__mobile-nav-item"><a href="#home" onClick={toggleMenu}>Home</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#home" onClick={(e) => { e.preventDefault(); toggleMenu(); if (setCurrentPage) setCurrentPage('home'); }}>Home</a></li>
                         <li className="navbar__mobile-nav-item"><a href="#about" onClick={toggleMenu}>About Us</a></li>
                         <li className="navbar__mobile-nav-item"><a href="#products" onClick={toggleMenu}>Our Products</a></li>
                         <li className="navbar__mobile-nav-item"><a href="#gallery" onClick={toggleMenu}>Gallery</a></li>
                         <li className="navbar__mobile-nav-item"><a href="#wishlist" onClick={toggleMenu}>Whishlist</a></li>
                         <li className="navbar__mobile-nav-item"><a href="#cart" onClick={toggleMenu}>Cart</a></li>
-                        <li className="navbar__mobile-nav-item"><a href="#account" onClick={toggleMenu}>Account</a></li>
+                        <li className="navbar__mobile-nav-item"><a href="#account" onClick={(e) => { e.preventDefault(); toggleMenu(); if (setCurrentPage) setCurrentPage('my-account'); }}>Account</a></li>
                     </ul>
 
                     <button className="navbar__mobile-login-btn">Login/ Register</button>
