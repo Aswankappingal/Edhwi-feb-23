@@ -4,6 +4,7 @@ import HomeBanner from './components/HomeBanner/HomeBanner';
 import PuritySection from './components/PuritySection/PuritySection';
 import Essentials from './components/Essentials/Essentials';
 import SecretsOfQuality from './components/SecretsOfQuality/SecretsOfQuality';
+import OurProducts from './components/OurProducts/OurProducts';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Essentials />
       <PuritySection />
       <SecretsOfQuality />
+      <OurProducts />
     </div>
   );
 }
