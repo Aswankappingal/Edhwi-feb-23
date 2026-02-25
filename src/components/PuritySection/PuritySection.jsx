@@ -24,14 +24,15 @@ const PuritySection = () => {
         <section className="hero">
             {/* Background elements */}
             <img src="/img_greenleafe (1).svg" alt="" className="hero__leaf hero__leaf--1" />
-            <img src="/Flowers.svg" alt="" className="hero__leaf hero__leaf--2" />
+            {/* <img src="/Flowers.svg" alt="" className="hero__leaf hero__leaf--2" /> */}
 
             <div className="hero__container hero__container--vertical">
                 {/* <!-- TOP CONTENT --> */}
                 <div className="hero__content hero__content--centered">
                     <h1 className="hero__title">
-                        <span>Rooted in Purity.</span> <br />
-                        Inspired by Tradition.
+                        <span>Rooted in Purity.  Inspired by <br />
+                            Tradition.</span>
+
                     </h1>
 
                     <p className="hero__description">
@@ -43,15 +44,15 @@ const PuritySection = () => {
 
                     <div className="hero__features-box">
                         <div className="feature">
-                            <TbDroplet className="feature-icon" />
+                            <img src="/Cup.svg" alt="" />
                             <span>Pure</span>
                         </div>
                         <div className="feature">
-                            <TbBowl className="feature-icon" />
+                            <img src="/Flowers.svg" alt="no-flowers" />
                             <span>Traditional</span>
                         </div>
                         <div className="feature">
-                            <BiLeaf className="feature-icon" />
+                            <img src="/Flowerrs.svg" alt="no-flowers" />
                             <span>Fresh</span>
                         </div>
                     </div>
