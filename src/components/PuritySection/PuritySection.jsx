@@ -4,8 +4,8 @@ import { BiLeaf } from "react-icons/bi";
 import { TbBowl, TbDroplet } from "react-icons/tb";
 
 const products = [
-    { id: 1, src: "/Bottle-blue.svg", alt: "Edhwi Blue Bottle" },
-    { id: 2, src: "/Edhwi-bottle.svg", alt: "Edhwi Bottle" },
+    { id: 1, src: "/Bottle-with-coconut.svg", alt: "Edhwi Blue Bottle" },
+    { id: 2, src: "/Bottle-blue.svg", alt: "Edhwi Bottle" },
     { id: 3, src: "/Edhwi-packet.svg", alt: "Edhwi Packet" }
 ];
 
@@ -15,7 +15,7 @@ const PuritySection = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev + 1) % products.length);
-        }, 3000); // Change image every 3 seconds
+        }, 4500); // Change image every 4.5 seconds
 
         return () => clearInterval(interval);
     }, []);
