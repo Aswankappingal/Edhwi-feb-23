@@ -28,8 +28,10 @@ function App() {
           <Essentials />
           <PuritySection />
           <SecretsOfQuality />
-          <OurProcess />
+
           <OurProducts />
+
+          <OurProcess />
         </>
       )}
     </div>
