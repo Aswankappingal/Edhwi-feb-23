@@ -1,20 +1,26 @@
 import React from 'react';
-import './App.css'; // Or keep it if there's anything useful, otherwise might be empty
-import HomeBanner from './components/HomeBanner/HomeBanner';
-import PuritySection from './components/PuritySection/PuritySection';
-import Essentials from './components/Essentials/Essentials';
-import SecretsOfQuality from './components/SecretsOfQuality/SecretsOfQuality';
-import OurProducts from './components/OurProducts/OurProducts';
+import './App.css';
+import Navbar from './components/Navbar/Navbar';
+import MyAccount from './components/MyAccount/MyAccount';
 
 function App() {
   return (
     <div className="app">
-      <HomeBanner />
+      {/* Wrapper to give Navbar a background since it defaults to white text */}
+      <div style={{ backgroundColor: '#1e3a8a' }}>
+        <Navbar />
+      </div>
 
+      <MyAccount />
+
+      {/* 
+      // Temporarily hiding the home page components to work on My Account
+      <HomeBanner />
       <Essentials />
       <PuritySection />
       <SecretsOfQuality />
-      <OurProducts />
+      <OurProducts /> 
+      */}
     </div>
   );
 }
