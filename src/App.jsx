@@ -8,6 +8,7 @@ import PuritySection from './components/PuritySection/PuritySection';
 import SecretsOfQuality from './components/SecretsOfQuality/SecretsOfQuality';
 import OurProducts from './components/OurProducts/OurProducts';
 import OurProcess from './components/OurProcess/OurProcess';
+import EdhwiMoments from './components/EdhwiMoments/EdhwiMoments';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -32,6 +33,8 @@ function App() {
           <OurProducts />
 
           <OurProcess />
+
+          <EdhwiMoments />
         </>
       )}
     </div>

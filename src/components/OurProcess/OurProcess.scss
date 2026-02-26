@@ -70,28 +70,35 @@
             flex-direction: column;
             align-items: flex-start;
 
+            span {
+                font-family: 'General Sans', sans-serif;
+                font-weight: 800 !important;
+                font-size: 15px;
+
+            }
+
             .step-number {
                 font-family: 'General Sans', sans-serif;
                 font-weight: 800;
                 font-size: 15px;
-                color: #1753DD; // Bright blue matching "Our"
+                color: #1F61E1; // Bright blue matching "Our"
                 margin-bottom: 12px;
             }
 
             .step-title {
                 font-family: 'General Sans', sans-serif;
-                font-weight: 800;
+                font-weight: 700;
                 font-size: 22px;
                 color: #1B1919;
                 margin-bottom: 16px;
-                line-height: 1.2;
+                line-height: 130%;
             }
 
             .step-description {
                 font-family: 'General Sans', sans-serif;
-                font-weight: 500;
-                font-size: 15px;
-                color: #555555;
+                font-weight: 800;
+                font-size: 16px;
+                color: #0a0a0a;
                 line-height: 1.6;
                 margin: 0;
             }
