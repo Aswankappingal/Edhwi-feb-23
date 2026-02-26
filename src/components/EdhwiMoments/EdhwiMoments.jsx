@@ -41,8 +41,8 @@ const EdhwiMoments = () => {
                         richness of Kerala's coconuts.
                     </p>
                     <a href="https://instagram.com/Edhwiindia" target="_blank" rel="noopener noreferrer" className="instagram-link">
-                        <img src="/instagram-icon.svg" alt="Instagram" className="insta-icon" />
-                        <span>Edhwiindia</span>
+                        <img src="/Instagram.svg" alt="Instagram" className="insta-icon" />
+                        <span className="insta-text">Edhwiindia</span>
                     </a>
                 </div>
             </div>

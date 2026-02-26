@@ -17,14 +17,11 @@
         letter-spacing: -2px;
         margin-bottom: 60px;
         text-align: left;
+        background: linear-gradient(to left, #246dff, #1c1c1ce1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
 
-        .blue-text {
-            color: #1753DD; // Blue matching the design
-        }
 
-        .dark-text {
-            color: #1B1919;
-        }
     }
 
     /* Auto-scrolling Carousel Styles */
@@ -119,18 +116,29 @@
 
         .family-title {
             font-family: 'Inter Tight', sans-serif;
-            font-weight: 700;
-            font-size: 24px;
-            color: #1B1919;
+            font-family: General Sans;
+            font-weight: 800;
+            font-style: Semibold;
+            font-size: 32px;
+            leading-trim: NONE;
+            line-height: 100%;
+            letter-spacing: -2%;
+            text-align: center;
+            color: #000000;
             margin-bottom: 12px;
         }
 
         .family-description {
             font-family: 'General Sans', sans-serif;
-            font-weight: 500;
-            font-size: 16px;
-            color: #555555;
-            line-height: 1.5;
+            font-family: General Sans;
+            font-weight: 400;
+            font-style: Regular;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 130%;
+            letter-spacing: -2%;
+            text-align: center;
+            color: #1B1919;
             margin-bottom: 24px;
         }
 
@@ -154,6 +162,23 @@
                 height: 24px;
                 // If there's no instagram svg yet, create a fallback style using a background or border
                 background-color: transparent;
+            }
+
+            .insta-text {
+                font-family: 'General Sans', sans-serif;
+                font-weight: 1200;
+                font-style: Medium;
+                font-size: 26.67px;
+                leading-trim: NONE;
+                line-height: 100%;
+                letter-spacing: -2%;
+                text-decoration: underline;
+                text-decoration-style: solid;
+                text-decoration-offset: 0%;
+                text-decoration-thickness: 0%;
+                text-decoration-skip-ink: auto;
+                color: #1B1919;
+
             }
         }
     }
