@@ -11,6 +11,7 @@ import OurProcess from './components/OurProcess/OurProcess';
 import EdhwiMoments from './components/EdhwiMoments/EdhwiMoments';
 import OurPromise from './components/OurPromise/OurPromise';
 import VideoBanner from './components/VideoBanner/VideoBanner';
+import Blogs from './components/Blogs/Blogs';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -43,6 +44,8 @@ function App() {
           <OurPromise />
 
           <VideoBanner />
+
+          <Blogs />
         </>
       )}
     </div>
