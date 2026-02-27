@@ -9,6 +9,8 @@ import SecretsOfQuality from './components/SecretsOfQuality/SecretsOfQuality';
 import OurProducts from './components/OurProducts/OurProducts';
 import OurProcess from './components/OurProcess/OurProcess';
 import EdhwiMoments from './components/EdhwiMoments/EdhwiMoments';
+import OurPromise from './components/OurPromise/OurPromise';
+import VideoBanner from './components/VideoBanner/VideoBanner';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -34,7 +36,13 @@ function App() {
 
           <OurProcess />
 
+
+
           <EdhwiMoments />
+
+          <OurPromise />
+
+          <VideoBanner />
         </>
       )}
     </div>
