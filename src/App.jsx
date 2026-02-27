@@ -1,6 +1,5 @@
-// 🔹 NEW: import Routes, Route
-import { Routes, Route } from "react-router-dom";
 
+import { Routes, Route } from "react-router-dom";
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import MyAccount from './components/MyAccount/MyAccount';
@@ -14,7 +13,7 @@ import EdhwiMoments from './components/EdhwiMoments/EdhwiMoments';
 import OurPromise from './components/OurPromise/OurPromise';
 import VideoBanner from './components/VideoBanner/VideoBanner';
 import Blogs from './components/Blogs/Blogs';
-import AllProducts from './components/Pages/Ourproducts/AllProducts';
+import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts";
 
 function App() {
   return (
@@ -47,7 +46,10 @@ function App() {
           <Route path="/my-account" element={<MyAccount />} />
 
           {/* 🔹 Our Products Page */}
-          <Route path="/our-products" element={<AllProducts />} />
+          <Route path="/our-products" element={<ExploreProducts />} />
+
+
+
 
         </Routes>
       </div>

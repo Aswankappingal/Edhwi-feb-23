@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Navbar.scss';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu, FiX } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 const Navbar = ({ setCurrentPage }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,9 +15,14 @@ const Navbar = ({ setCurrentPage }) => {
             <div className="navbar__container">
                 {/* Logo Section */}
                 <div className="navbar__logo">
-                    <div className="navbar__logo-icon" onClick={() => { if (setCurrentPage) setCurrentPage('home'); }} style={{ cursor: 'pointer' }}>
-                        <img src="../../../public/Edhwi-logo.svg" alt="edhwi" />
-                    </div>
+                    {/* // 🔹 CHANGED: div → Link */}
+                    <Link
+                        to="/"
+                        className="navbar__logo-icon"
+                        style={{ cursor: "pointer" }}
+                    >
+                        <img src="/Edhwi-logo.svg" alt="edhwi" />
+                    </Link>
                 </div>
 
                 {/* Desktop Menu */}
@@ -45,10 +51,18 @@ const Navbar = ({ setCurrentPage }) => {
                         </div>
                         <span>Cart</span>
                     </div>
-                    <div className="navbar__action-icon" onClick={() => { if (setCurrentPage) setCurrentPage('my-account'); }} style={{ cursor: 'pointer' }}>
+
+
+                    <Link
+                        to="/my-account"
+                        className="navbar__action-icon"
+                        style={{ textDecoration: "none", cursor: "pointer" }}
+                    >
                         <FiUser size={22} color="#fff" strokeWidth={1.5} />
                         <span>Account</span>
-                    </div>
+                    </Link>
+
+
                     <button className="navbar__contact-btn">Contact Us</button>
                 </div>
 
