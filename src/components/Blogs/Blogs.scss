@@ -13,24 +13,36 @@
     }
 
     &__header {
-        margin-bottom: 40px;
+        margin-bottom: 60px;
         /* Matches the dotted blue box around the header in your screenshot */
         /* border: 1px dotted #1F61E1; */
         display: inline-block;
 
         h2 {
-
-            font-weight: 600;
-            font-style: Semibold;
+            font-weight: 900;
             font-family: 'General Sans', sans-serif;
             font-size: 60px;
             leading-trim: NONE;
-            line-height: 105%;
+            line-height: 125%;
             letter-spacing: -3%;
             background: linear-gradient(to left, #246dff, #1c1c1ce1);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 2rem;
             margin: 0;
+
+            span {
+                font-weight: 1200;
+                font-family: 'General Sans', sans-serif;
+                font-size: 40px;
+                leading-trim: NONE;
+                line-height: 125%;
+                letter-spacing: -3%;
+                background: linear-gradient(to left, #246dff, #1c1c1ce1);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+
+            }
 
             @media (min-width: 768px) {
                 font-size: 40px;
@@ -103,10 +115,16 @@
     &__meta {
         display: flex;
         align-items: center;
+        font-family: 'General Sans', sans-serif;
+        font-weight: 800;
+        font-style: Medium;
         font-size: 14px;
-        color: #6B7280;
+        leading-trim: NONE;
+        line-height: 110.00000000000001%;
+        letter-spacing: 0%;
+        color: #767676;
         margin-bottom: 12px;
-        font-weight: 500;
+
     }
 
     &__meta-dot {
@@ -125,9 +143,14 @@
     }
 
     &__title {
+        font-family: 'General Sans', sans-serif;
+        font-weight: 1200;
+        // font-style: Medium;
         font-size: 20px;
-        font-weight: 600;
-        color: #111827;
+        leading-trim: NONE;
+        line-height: 120%;
+        letter-spacing: 0%;
+        color: #000000;
         margin: 0;
         line-height: 1.4;
 
@@ -137,11 +160,18 @@
     }
 
     &__description {
+        font-family: General Sans;
+        font-weight: 900;
+        font-style: Regular;
         font-size: 16px;
-        color: #4B5563;
+        leading-trim: NONE;
+        line-height: 130%;
+        letter-spacing: 0%;
+        font-size: 16px;
+        color: #1B1919;
         line-height: 1.6;
         margin: 0;
-        max-width: 800px;
+        max-width: 600px;
     }
 
     &__arrow {

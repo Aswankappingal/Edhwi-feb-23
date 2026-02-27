@@ -37,7 +37,7 @@ const Blogs = () => {
         <section className="blogs">
             <div className="blogs__container">
                 <div className="blogs__header">
-                    <h2><span className="blogs__highlight">Blogs</span> and updates</h2>
+                    <h2><span className="blogs__highlight">Blogs and updates</span> </h2>
                 </div>
 
                 <div className="blogs__list">
