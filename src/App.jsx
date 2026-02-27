@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// 🔹 NEW: import Routes, Route
+import { Routes, Route } from "react-router-dom";
+
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import MyAccount from './components/MyAccount/MyAccount';
@@ -12,43 +14,44 @@ import EdhwiMoments from './components/EdhwiMoments/EdhwiMoments';
 import OurPromise from './components/OurPromise/OurPromise';
 import VideoBanner from './components/VideoBanner/VideoBanner';
 import Blogs from './components/Blogs/Blogs';
+import AllProducts from './components/Pages/Ourproducts/AllProducts';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
-
   return (
-    <div className="app">
-      {currentPage === 'my-account' ? (
-        <>
-          {/* Wrapper to give Navbar a background since it defaults to white text */}
-          <div style={{ backgroundColor: '#1e3a8a' }}>
-            <Navbar setCurrentPage={setCurrentPage} />
-          </div>
-          <MyAccount setCurrentPage={setCurrentPage} />
-        </>
-      ) : (
-        <>
-          <HomeBanner setCurrentPage={setCurrentPage} />
-          <Essentials />
-          <PuritySection />
-          <SecretsOfQuality />
+    <>
+      <div className="app">
+        <Navbar />
 
-          <OurProducts />
+        <Routes> {/* 🔹 NEW: Routes section */}
 
-          <OurProcess />
+          {/* 🔹 Home Page */}
+          <Route
+            path="/"
+            element={
+              <>
+                <HomeBanner />
+                <Essentials />
+                <PuritySection />
+                <SecretsOfQuality />
+                <OurProducts />
+                <OurProcess />
+                <EdhwiMoments />
+                <OurPromise />
+                <VideoBanner />
+                <Blogs />
+              </>
+            }
+          />
 
+          {/* 🔹 My Account Page */}
+          <Route path="/my-account" element={<MyAccount />} />
 
+          {/* 🔹 Our Products Page */}
+          <Route path="/our-products" element={<AllProducts />} />
 
-          <EdhwiMoments />
-
-          <OurPromise />
-
-          <VideoBanner />
-
-          <Blogs />
-        </>
-      )}
-    </div>
+        </Routes>
+      </div>
+    </>
   );
 }
 

@@ -24,7 +24,9 @@ const Navbar = ({ setCurrentPage }) => {
                     <ul className="navbar__nav-items">
                         <li className="navbar__nav-item"><a href="#home" onClick={(e) => { e.preventDefault(); if (setCurrentPage) setCurrentPage('home'); }}>Home</a></li>
                         <li className="navbar__nav-item"><a href="#about">About Us</a></li>
-                        <li className="navbar__nav-item"><a href="#products">Our Products</a></li>
+                        <li className="navbar__nav-item">
+                            <a href="/our-products">Our Products</a>
+                        </li>
                         <li className="navbar__nav-item"><a href="#gallery">Gallery</a></li>
                     </ul>
                 </div>
