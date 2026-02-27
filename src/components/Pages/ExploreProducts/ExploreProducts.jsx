@@ -315,7 +315,7 @@ const ExploreProducts = () => {
 
                 <div className="Head-and-filter-main-flex">
                     <div className="heading-section-explore">
-                        <h3>Explore our Merchandise Products</h3>
+                        <h3>Explore our Products</h3>
                         <div className="choose-section">
                             <p>Choose products {products.length > 0 && `(${products.length} items)`}</p>
                         </div>
