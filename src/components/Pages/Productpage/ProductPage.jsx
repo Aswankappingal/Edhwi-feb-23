@@ -147,6 +147,16 @@ const ProductPage = () => {
                     ))}
                 </div>
 
+                <div className="row image-whole-section">
+                    {productData.images.map((image, index) => (
+                        <div key={index} className="col-lg-6 col-md-6 col-sm-6 col-6">
+                            <div className='card-image-section'>
+                                <img src={image.url} alt={`Product ${index + 1}`} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Process Section */}
                 <div className="container">
                     <div className="our-process-main-section">
