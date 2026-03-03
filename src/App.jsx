@@ -14,6 +14,7 @@ import OurPromise from './components/OurPromise/OurPromise';
 import VideoBanner from './components/VideoBanner/VideoBanner';
 import Blogs from './components/Blogs/Blogs';
 import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts";
+import ProductPage from "./components/Pages/Productpage/ProductPage";
 
 function App() {
   return (
@@ -47,6 +48,8 @@ function App() {
 
           {/* 🔹 Our Products Page */}
           <Route path="/our-products" element={<ExploreProducts />} />
+
+          <Route path='/Product-page' element={<ProductPage />} />
 
 
 

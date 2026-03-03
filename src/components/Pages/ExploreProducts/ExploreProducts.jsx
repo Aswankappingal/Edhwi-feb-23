@@ -375,7 +375,7 @@ const ExploreProducts = () => {
                             <div key={rowIndex} className="row three-cards">
                                 {row?.map((product) => (
                                     <div key={product.id} className={columnClass}>
-                                        <Link to={`/Product-page/${product.id}`} className='Right-side-link'>
+                                        <Link to={`/Product-page`} className='Right-side-link'>
                                             <div className="product-card-main">
                                                 <div className="product-card">
                                                     <div className="prod-image-section">
