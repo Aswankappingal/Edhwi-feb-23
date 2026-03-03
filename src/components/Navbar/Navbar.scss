@@ -23,7 +23,8 @@
         .navbar__nav-item {
             a {
                 color: #000 !important;
-                text-shadow: none; // 🔥 remove white shadow
+                text-shadow: none;
+                font-weight: 700; // 🔥 remove white shadow
             }
         }
 
