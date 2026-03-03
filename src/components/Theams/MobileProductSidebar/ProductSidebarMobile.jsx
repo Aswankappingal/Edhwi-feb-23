@@ -21,7 +21,7 @@ const ProductSidebarMobile = ({ isOpen: externalIsOpen, onToggle, showTriggerBut
     const [selectedPriceRange, setSelectedPriceRange] = useState('');
     const [selectedColors, setSelectedColors] = useState([]);
 
-    const categories = [    
+    const categories = [
         'All',
         'T-shirts',
         'Notebooks',
@@ -145,7 +145,7 @@ const ProductSidebarMobile = ({ isOpen: externalIsOpen, onToggle, showTriggerBut
                             onClick={() => toggleSection('categories')}
                             className="section-header"
                         >
-                            <span className="section-title"> Categories   <CiSearch /> </span>
+                            <span className="section-title"> Categories <CiSearch /> </span>
                             <span className="chevron">
                                 {expandedSections.categories ? <RiArrowDropUpLine style={{ fontSize: "36px" }} /> : <IoIosArrowDown style={{ fontSize: "22px" }} />}
                             </span>

@@ -309,9 +309,11 @@ const ExploreProducts = () => {
             {/* <Navbar /> */}
 
             <div className="explore-contents">
-                {/* <div className="breadcrumb-section-Explore">
-                    <Breadcrumb items={breadcrumbItems} />
-                </div> */}
+                <div className="breadcrumb-section-Explore">
+                    <Link to="/" className="breadcrumb-link">Home</Link>
+                    <span className="breadcrumb-separator">›</span>
+                    <span className="breadcrumb-current">Products</span>
+                </div>
 
                 <div className="Head-and-filter-main-flex">
                     <div className="heading-section-explore">
