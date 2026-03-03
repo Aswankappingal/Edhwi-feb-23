@@ -20,7 +20,7 @@ const productData = {
     certification: "FSSAI Certified",
     images: [
         { url: "/Edhwi-Packetss.svg" },
-        { url: "/Edhwi-Packetss.svg" }
+        { url: "/Edhwi-bottle.svg" }
     ],
     sizes: ["12", "24", "48", "200 ml", "1 L"]
 }
@@ -33,19 +33,19 @@ const processData = {
     title: "100% Pure Coconut Oil",
     steps: [
         {
-            image: "/Images/Coconut oils demo.svg",
+            image: "Edhwi-bottle.svg",
             stepNumber: "01",
             title: "Fine & Matured Coconuts",
             description: "Harvested at the perfect age for best quality."
         },
         {
-            image: "/Images/Coconut-black.svg",
+            image: "Edhwi-bottle.svg",
             stepNumber: "02",
             title: "Premium Quality Copra",
             description: "Extracted gently preserving nutrients and aroma."
         },
         {
-            image: "/Images/Bottles-coconut.svg",
+            image: "Edhwi-bottle.svg",
             stepNumber: "03",
             title: "Hygienically Packed",
             description: "Packed without additives or preservatives."
@@ -153,7 +153,7 @@ const ProductPage = () => {
                         <h3 className='process'>Our process</h3>
                         <p className='Virgin'>{processData.title}</p>
 
-                        <div className="row">
+                        {/* <div className="row">
                             {processData.steps.map((step, index) => (
                                 <div key={index} className="col-lg-4 col-md-6 col-sm-12">
                                     <div className="cards-n-images-section">
@@ -164,7 +164,7 @@ const ProductPage = () => {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
 
                         <h3 className='Other-pro'>Other products</h3>
 
@@ -173,7 +173,7 @@ const ProductPage = () => {
                                 <div key={item} className="col-lg-4 col-md-6 col-sm-12">
                                     <div className="other-product-card">
                                         <div className="other-product-image">
-                                            <img src="/Images/Coconut-black.svg" alt="Other Product" />
+                                            <img src="Edhwi-bottle.svg" alt="Other Product" />
                                         </div>
                                         <div className="other-product-details">
                                             <h5>Sample Product</h5>
