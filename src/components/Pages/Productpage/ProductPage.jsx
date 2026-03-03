@@ -160,8 +160,8 @@ const ProductPage = () => {
                 {/* Process Section */}
                 <div className="container">
                     <div className="our-process-main-section">
-                        <h3 className='process'>Our process</h3>
-                        <p className='Virgin'>{processData.title}</p>
+                        {/* <h3 className='process'>Our process</h3> */}
+                        {/* <p className='Virgin'>{processData.title}</p> */}
 
                         {/* <div className="row">
                             {processData.steps.map((step, index) => (
