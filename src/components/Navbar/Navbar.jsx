@@ -72,7 +72,7 @@ const Navbar = ({ setCurrentPage }) => {
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <a className="nav-link" href="#gallery" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Gallery</a>
+                            <Link className="nav-link" to="/gallery" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Gallery</Link>
                         </li>
                     </ul>
 
