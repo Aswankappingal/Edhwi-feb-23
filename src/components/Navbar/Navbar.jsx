@@ -11,6 +11,17 @@ const Navbar = ({ setCurrentPage }) => {
     // 🔥 NEW: Check if current page is home
     const isHome = location.pathname === "/";
 
+    const handleNavClick = () => {
+        const collapseElement = document.getElementById('navbarSupportedContent');
+        if (collapseElement && window.bootstrap) {
+            const bsCollapse = window.bootstrap.Collapse.getInstance(collapseElement);
+            if (bsCollapse) {
+                bsCollapse.hide();
+            }
+        }
+        window.scrollTo(0, 0);
+    };
+
     return (
         <nav className={`navbar navbar-expand-lg ${isHome ? 'navbar-dark-mode' : 'navbar-light-mode'}`}>
             <div className="container-fluid px-0" style={{ maxWidth: '1440px', margin: '0 auto' }}>
@@ -60,19 +71,26 @@ const Navbar = ({ setCurrentPage }) => {
                     {/* Center Menu */}
                     <ul className="navbar-nav mx-auto mb-2 mb-lg-0 navbar__nav-items align-items-center align-items-lg-center" style={{ zIndex: 10 }}>
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Home</Link>
+                            <Link className="nav-link" to="/" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Home</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <a className="nav-link" href="#about" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">About Us</a>
+                            <Link className="nav-link" to="/blogs" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Blogs</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/our-products" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Our Products</Link>
+                            <Link className="nav-link" to="/our-products" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Our Products</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/gallery" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Gallery</Link>
+                            <Link
+                                className="nav-link"
+                                to="/gallery"
+                                style={{ color: isHome ? "#fff" : "#000" }}
+                                onClick={handleNavClick}
+                            >
+                                Gallery
+                            </Link>
                         </li>
                     </ul>
 
@@ -98,15 +116,7 @@ const Navbar = ({ setCurrentPage }) => {
                             to="/my-account"
                             className="navbar__action-icon"
                             style={{ textDecoration: "none", color: isHome ? "#fff" : "#000" }}
-                            onClick={() => {
-                                const collapseElement = document.getElementById('navbarSupportedContent');
-                                if (collapseElement && window.bootstrap) {
-                                    const bsCollapse = window.bootstrap.Collapse.getInstance(collapseElement);
-                                    if (bsCollapse) {
-                                        bsCollapse.hide();
-                                    }
-                                }
-                            }}
+                            onClick={handleNavClick}
                         >
                             <FiUser size={22} color={isHome ? "#fff" : "#000"} className="d-none d-lg-block" />
                             <span className="mobile-nav-text">Account</span>

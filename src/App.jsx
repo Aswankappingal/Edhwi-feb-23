@@ -39,10 +39,12 @@ function App() {
                 <EdhwiMoments />
                 <OurPromise />
                 <VideoBanner />
-                <Blogs />
               </>
             }
           />
+
+          {/* 🔹 Blogs Page */}
+          <Route path="/blogs" element={<Blogs />} />
 
           {/* 🔹 My Account Page */}
           <Route path="/my-account" element={<MyAccount />} />

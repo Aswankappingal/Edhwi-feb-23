@@ -1,33 +1,72 @@
 import React from 'react';
 import './Blogs.scss';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const blogsData = [
     {
         id: 1,
         image: '/First.svg',
-        category: 'Article',
-        date: 'March 4, 2024',
+        category: 'Health',
         title: 'Traditional Kerala Pickles: A Taste of Home',
-        description: 'Explore the flavors of Kerala through Edhwi\'s homemade pickles. We dive into traditional recipes, natural preservation techniques, and how these condiments bring back nostalgic memories.',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
         link: '#'
     },
     {
         id: 2,
         image: '/Second.svg',
-        category: 'Article',
-        date: 'March 4, 2024',
+        category: 'Health',
         title: 'Why Unrefined Coconut Oil is Better for Your Health',
-        description: 'Discover the benefits of using pure, unrefined coconut oil over processed alternatives. This blog covers the nutritional advantages, natural processing methods, and how it supports your immune system and digestion',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
         link: '#'
     },
     {
         id: 3,
         image: '/third.svg',
-        category: 'Article',
-        date: 'March 4, 2024',
+        category: 'Health',
         title: 'From Farm to Bottle: The Edhwi Journey',
-        description: 'Get a behind-the-scenes look at how Edhwi sources matured coconuts directly from coastal farmers and transforms them into high-quality products. Learn about our sun-drying process and commitment to purity.',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
+        link: '#'
+    },
+    {
+        id: 4,
+        image: '/First.svg',
+        category: 'Health',
+        title: 'Traditional Kerala Pickles: A Taste of Home',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
+        link: '#'
+    },
+    {
+        id: 5,
+        image: '/Second.svg',
+        category: 'Health',
+        title: 'Why Unrefined Coconut Oil is Better for Your Health',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
+        link: '#'
+    },
+    {
+        id: 6,
+        image: '/third.svg',
+        category: 'Health',
+        title: 'From Farm to Bottle: The Edhwi Journey',
+        description: 'In a world full of sugary drinks and synthetic flavors, going back to nature...',
+        author: 'Willard Harris',
+        date: '1 May 2024',
+        readTime: '15 Mins read',
         link: '#'
     }
 ];
@@ -37,21 +76,19 @@ const Blogs = () => {
         <section className="blogs">
             <div className="blogs__container">
                 <div className="blogs__header">
-                    <h2><span className="blogs__highlight">Blogs and updates</span> </h2>
+                    <h2><span className="blogs__highlight">Our</span> Blogs</h2>
                 </div>
 
-                <div className="blogs__list">
+                <div className="blogs__grid">
                     {blogsData.map((blog) => (
-                        <div className="blogs__item" key={blog.id}>
-                            <div className="blogs__image-wrapper">
+                        <div className="blogs__card" key={blog.id}>
+                            <div className="blogs__image-container">
                                 <img src={blog.image} alt={blog.title} className="blogs__image" />
                             </div>
 
                             <div className="blogs__content">
-                                <div className="blogs__meta">
-                                    <span>{blog.category}</span>
-                                    <span className="blogs__meta-dot">•</span>
-                                    <span>{blog.date}</span>
+                                <div className="blogs__category">
+                                    {blog.category}
                                 </div>
 
                                 <a href={blog.link} className="blogs__title-link">
@@ -59,13 +96,30 @@ const Blogs = () => {
                                 </a>
 
                                 <p className="blogs__description">{blog.description}</p>
-                            </div>
 
-                            <a href={blog.link} className="blogs__arrow" aria-label={`Read more about ${blog.title}`}>
-                                <FiArrowUpRight />
-                            </a>
+                                <div className="blogs__footer">
+                                    <span className="blogs__author">{blog.author}</span>
+                                    <div className="blogs__meta">
+                                        <span>{blog.date}</span>
+                                        <span className="blogs__dot">•</span>
+                                        <span>{blog.readTime}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     ))}
+                </div>
+
+                <div className="blogs__pagination">
+                    <button className="blogs__pagination-btn prev" aria-label="Previous page">
+                        <FiChevronLeft />
+                    </button>
+                    <button className="blogs__pagination-btn active" aria-label="Page 1">
+                        1
+                    </button>
+                    <button className="blogs__pagination-btn next" aria-label="Next page">
+                        <FiChevronRight />
+                    </button>
                 </div>
             </div>
         </section>
