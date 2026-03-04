@@ -15,6 +15,7 @@ import VideoBanner from './components/VideoBanner/VideoBanner';
 import Blogs from './components/Blogs/Blogs';
 import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts";
 import ProductPage from "./components/Pages/Productpage/ProductPage";
+import Gallery from "./components/Pages/Gallery/Gallery";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           <Route path="/our-products" element={<ExploreProducts />} />
 
           <Route path='/Product-page' element={<ProductPage />} />
+          <Route path='/gallery' element={<Gallery />} />
 
 
 
