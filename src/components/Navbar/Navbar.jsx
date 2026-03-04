@@ -2,8 +2,12 @@ import React from 'react';
 import './Navbar.scss';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
+import LoginModal from '../Theams/LoginModal/LoginModal';
 
 const Navbar = ({ setCurrentPage }) => {
+
+    // Login Modal State
+    const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
 
     // 🔥 NEW: Get current route
     const location = useLocation();
@@ -122,16 +126,31 @@ const Navbar = ({ setCurrentPage }) => {
                             <span className="mobile-nav-text">Account</span>
                         </Link>
 
-                        <button className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block">
-                            Contact Us
+                        <button
+                            className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
+                            onClick={() => setIsLoginModalOpen(true)}
+                        >
+                            Login/Register
                         </button>
 
-                        <button className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto" style={{ maxWidth: '250px' }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+                        <button
+                            className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto"
+                            style={{ maxWidth: '250px' }}
+                            data-bs-toggle="collapse"
+                            data-bs-target=".navbar-collapse.show"
+                            onClick={() => setIsLoginModalOpen(true)}
+                        >
                             Login/ Register
                         </button>
                     </div>
                 </div>
             </div>
+
+            {/* Login Modal */}
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setIsLoginModalOpen(false)}
+            />
         </nav>
     );
 };
