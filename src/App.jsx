@@ -16,6 +16,7 @@ import Blogs from './components/Blogs/Blogs';
 import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts";
 import ProductPage from "./components/Pages/Productpage/ProductPage";
 import Gallery from "./components/Pages/Gallery/Gallery";
+import Footer from "./components/common/Footer/Footer";
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
 
 
         </Routes>
+        <Footer />
       </div>
     </>
   );
