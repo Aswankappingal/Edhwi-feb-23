@@ -3,6 +3,7 @@ import React from 'react'
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
 import { BsBoxSeam, BsHeadset } from 'react-icons/bs'
+import OurPromise from '../../OurPromise/OurPromise'
 /* =====================================================
    🔥 STATIC PRODUCT DATA OBJECT
 ===================================================== */
@@ -155,6 +156,10 @@ const ProductPage = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div>
+                    <OurPromise />
                 </div>
 
 
