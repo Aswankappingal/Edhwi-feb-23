@@ -35,66 +35,89 @@ const Navbar = ({ setCurrentPage }) => {
                 </button>
 
                 {/* Collapsible Content */}
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
+                <div className="collapse navbar-collapse custom-mobile-menu" id="navbarSupportedContent">
+
+                    {/* Mobile Only Header with Wave & Close */}
+                    <div className="mobile-menu-header d-lg-none position-absolute top-0 start-0 w-100">
+                        <svg className="mobile-menu-wave" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: 'auto', display: 'block' }}>
+                            <path d="M0 0H1440V60C1440 60 1140 -20 720 30C300 80 0 60 0 60V0Z" fill="#13368E" />
+                            <path opacity="0.5" d="M0 20H1440V80C1440 80 1140 0 720 50C300 100 0 80 0 80V20Z" fill="#184BC6" />
+                        </svg>
+                        <button
+                            className="btn-close btn-close-white position-absolute"
+                            style={{ top: '20px', right: '20px', zIndex: 10, filter: 'invert(1) grayscale(100%) brightness(200%)' }}
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarSupportedContent"
+                        ></button>
+                    </div>
+
+                    {/* Mobile Only Logo */}
+                    <div className="mobile-menu-logo d-lg-none text-center position-relative mt-5 pt-4 mb-4" style={{ zIndex: 10 }}>
+                        <img src="/Edhwi-logo.svg" alt="edhwi" style={{ width: '90px', height: 'auto' }} />
+                    </div>
 
                     {/* Center Menu */}
-                    <ul className="navbar-nav mx-auto mb-2 mb-lg-0 navbar__nav-items align-items-lg-center">
+                    <ul className="navbar-nav mx-auto mb-2 mb-lg-0 navbar__nav-items align-items-center align-items-lg-center" style={{ zIndex: 10 }}>
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/" style={{ color: isHome ? "#fff" : "#000" }}>
-                                Home
-                            </Link>
+                            <Link className="nav-link" to="/" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Home</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <a className="nav-link" href="#about" style={{ color: isHome ? "#fff" : "#000" }}>
-                                About Us
-                            </a>
+                            <a className="nav-link" href="#about" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">About Us</a>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/our-products" style={{ color: isHome ? "#fff" : "#000" }}>
-                                Our Products
-                            </Link>
+                            <Link className="nav-link" to="/our-products" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Our Products</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <a className="nav-link" href="#gallery" style={{ color: isHome ? "#fff" : "#000" }}>
-                                Gallery
-                            </a>
+                            <a className="nav-link" href="#gallery" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Gallery</a>
                         </li>
                     </ul>
 
                     <div className="navbar__divider d-none d-lg-block"></div>
 
                     {/* Right Actions */}
-                    <div className="d-flex align-items-lg-center justify-content-center flex-column flex-lg-row gap-4 mt-4 mt-lg-0 navbar__actions">
+                    <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-4 mt-lg-0 navbar__actions" style={{ zIndex: 10 }}>
 
-                        <div className="navbar__action-icon" style={{ color: isHome ? "#fff" : "#000" }}>
-                            <FiHeart size={22} color={isHome ? "#fff" : "#000"} />
-                            <span>Wishlist</span>
+                        <div className="navbar__action-icon" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+                            <FiHeart size={22} color={isHome ? "#fff" : "#000"} className="d-none d-lg-block px-0" />
+                            <span className="mobile-nav-text">Wishlist</span>
                         </div>
 
-                        <div className="navbar__action-icon navbar__cart-wrapper" style={{ color: isHome ? "#fff" : "#000" }}>
-                            <div className="position-relative d-flex align-items-center justify-content-center">
+                        <div className="navbar__action-icon navbar__cart-wrapper" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+                            <div className="position-relative d-none d-lg-flex align-items-center justify-content-center">
                                 <FiShoppingBag size={22} color={isHome ? "#fff" : "#000"} />
                                 <span className="navbar__cart-badge">0</span>
                             </div>
-                            <span>Cart</span>
+                            <span className="mobile-nav-text">Cart</span>
                         </div>
 
                         <Link
                             to="/my-account"
                             className="navbar__action-icon"
                             style={{ textDecoration: "none", color: isHome ? "#fff" : "#000" }}
+                            onClick={() => {
+                                const collapseElement = document.getElementById('navbarSupportedContent');
+                                if (collapseElement && window.bootstrap) {
+                                    const bsCollapse = window.bootstrap.Collapse.getInstance(collapseElement);
+                                    if (bsCollapse) {
+                                        bsCollapse.hide();
+                                    }
+                                }
+                            }}
                         >
-                            <FiUser size={22} color={isHome ? "#fff" : "#000"} />
-                            <span>Account</span>
+                            <FiUser size={22} color={isHome ? "#fff" : "#000"} className="d-none d-lg-block" />
+                            <span className="mobile-nav-text">Account</span>
                         </Link>
 
-                        <button
-                            className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3"
-                        >
+                        <button className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block">
                             Contact Us
+                        </button>
+
+                        <button className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto" style={{ maxWidth: '250px' }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+                            Login/ Register
                         </button>
                     </div>
                 </div>

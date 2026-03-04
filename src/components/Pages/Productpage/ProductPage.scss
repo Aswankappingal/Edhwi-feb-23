@@ -411,8 +411,8 @@
         }
 
         .Other-pro {
-            font-family: Nohemi;
-            font-weight: 600;
+            font-family: General sans-serif;
+            font-weight: 700;
             font-size: 32px;
             line-height: 105%;
             letter-spacing: -2%;
@@ -576,8 +576,8 @@
 
                     // display: none;
                     button {
-                        padding: 16px 20px;
-                        background-color: #3DAE4A;
+                        // padding: 16px 20px;
+                        background-color: #1d31e9;
                         border: none;
                         border-radius: 78px;
                         color: #ffffff; // Changed to proper white color
@@ -591,8 +591,8 @@
                     }
 
                     .Link {
-                        padding: 16px 20px;
-                        background-color: #3DAE4A;
+                        // padding: 16px 30px;
+                        background-color: #0f39f3;
                         border: none;
                         border-radius: 78px;
                         color: #ffffff; // Changed to proper white color
@@ -601,9 +601,9 @@
                         transition: background-color 0.2s ease;
                         text-decoration: none;
 
-                        &:hover {
-                            background-color: #359a41;
-                        }
+                        // &:hover {
+                        //     background-color: #359a41;
+                        // }
                     }
 
                     // New out-of-stock styling
@@ -973,22 +973,23 @@
 
         .other-product-details {
             h5 {
-                font-family: General Sans;
-                font-weight: 600;
-                font-style: Semibold;
-                font-size: 16px;
+                font-family: General sans-serif;
+                font-weight: 550;
+                font-style: Medium;
+                font-size: 18px;
                 leading-trim: NONE;
                 line-height: 130%;
                 letter-spacing: 0%;
+                vertical-align: middle;
                 color: #1a1a1a;
                 margin-bottom: 8px;
             }
 
             .other-product-features {
-                font-family: General Sans;
+                font-family: General sans-serif;
                 font-weight: 400;
                 font-style: Regular;
-                font-size: 14px;
+                font-size: 16px;
                 leading-trim: NONE;
                 line-height: 130%;
                 letter-spacing: 0%;
@@ -998,16 +999,25 @@
                 span {
                     color: #1B1919;
                     font-weight: 600;
+                    font-family: General sans-serif;
+                    font-weight: 600;
+                    font-style: Semibold;
+                    font-size: 16px;
+                    leading-trim: NONE;
+                    line-height: 130%;
+                    letter-spacing: 0%;
+
                 }
             }
 
             .other-product-price {
-                font-family: General Sans;
+                font-family: General sans-serif;
                 font-weight: 600;
                 font-style: Semibold;
                 font-size: 20px;
                 leading-trim: NONE;
                 line-height: 130%;
+                letter-spacing: 0%;
                 letter-spacing: 0%;
 
             }
