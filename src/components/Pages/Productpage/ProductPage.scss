@@ -251,15 +251,21 @@
             }
 
             h6 {
-                font-family: General Sans;
+                font-family: General sans-serif;
                 font-weight: 800;
                 font-size: 20px;
                 line-height: 130%;
                 letter-spacing: -2%;
 
                 span {
-                    font-weight: 600;
-                    font-size: 14px;
+                    font-family: General sans-serif;
+                    font-weight: 400;
+                    font-style: Regular;
+                    font-size: 20px;
+                    leading-trim: NONE;
+                    line-height: 130%;
+                    letter-spacing: -2%;
+
 
                 }
 
@@ -280,9 +286,9 @@
 
     // ####3rd
     .image-whole-section {
-        margin-top: 2rem;
+        margin-top: 12px;
         width: 80%;
-        margin-bottom: 3rem;
+        // margin-bottom: 3rem;
         margin-left: 2rem;
 
 

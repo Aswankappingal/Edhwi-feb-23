@@ -15,9 +15,9 @@ const productData = {
     imageUrl: "/Edhwi-Packetss.svg",
     features: "Premium Quality | 100% Pure | Cold Pressed | Hygienically packed in tamper-proof bottle.",
     description: "Experience the natural freshness of Karikku Tender Coconut Water, tapped from handpicked young coconuts grown in Kerala. Packed in a hygienic, food-grade bottle, it’s the perfect way to hydrate — pure, refreshing, and just as nature intended..",
-    storageInstruction: "Store in a cool and dry place.",
-    shelfLife: "12 Months",
-    certification: "FSSAI Certified",
+    storageInstruction: "Store in a cool, dry place. Keep away from direct sunlight.",
+    shelfLife: "12 months from the date of packaging.",
+    certification: "FSSAI Approved | 100% Vegetarian | Lab-tested purity",
     images: [
         { url: "/Edhwi-Packetss.svg" },
         { url: "/Edhwi-bottle.svg" }
@@ -156,6 +156,8 @@ const ProductPage = () => {
                         </div>
                     ))}
                 </div>
+
+
 
                 {/* Process Section */}
                 <div className="container">
