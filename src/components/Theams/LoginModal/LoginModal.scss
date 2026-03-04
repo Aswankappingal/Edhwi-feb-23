@@ -126,9 +126,7 @@
     p {
         font-family: General, sans-serif;
         font-weight: 400;
-
         font-size: 16px;
-
         line-height: 130%;
         letter-spacing: -2%;
         color: #1B1919;
@@ -145,11 +143,19 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
+        font-family: General, sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 110.00000000000001%;
+        letter-spacing: 0%;
 
         label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #4B5563;
+            font-family: General, sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 110.00000000000001%;
+            letter-spacing: 0%;
+            color: #121213;
         }
 
         .form-control {
