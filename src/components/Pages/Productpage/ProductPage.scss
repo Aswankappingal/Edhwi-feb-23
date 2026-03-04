@@ -988,12 +988,17 @@
                 font-family: General Sans;
                 font-weight: 400;
                 font-style: Regular;
-                font-size: 16px;
+                font-size: 14px;
                 leading-trim: NONE;
                 line-height: 130%;
                 letter-spacing: 0%;
-                color: #666666;
+                color: #8c8c8c;
+                margin-bottom: 8px;
 
+                span {
+                    color: #1B1919;
+                    font-weight: 600;
+                }
             }
 
             .other-product-price {

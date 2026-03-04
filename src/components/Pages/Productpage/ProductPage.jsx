@@ -2,7 +2,7 @@
 import React from 'react'
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
-import { BsBoxSeam, BsHeadset } from 'react-icons/bs'
+import { BsBoxSeam, BsHeadset, BsPlus } from 'react-icons/bs'
 import OurPromise from '../../OurPromise/OurPromise'
 /* =====================================================
    🔥 STATIC PRODUCT DATA OBJECT
@@ -186,15 +186,22 @@ const ProductPage = () => {
                         <h3 className='Other-pro'>Other products</h3>
 
                         <div className="row">
-                            {[1, 2, 3].map((item) => (
-                                <div key={item} className="col-lg-4 col-md-6 col-sm-12">
+                            {[
+                                { id: 1, name: 'Whole Nutmeg', available: '40g', price: '125', img: 'Bottle-Coconut.svg' },
+                                { id: 2, name: 'Coconut Oil - pouch', available: '1L', price: '145', img: 'packet edhwi.svg' }
+                            ].map((item) => (
+                                <div key={item.id} className="col-lg-4 col-md-6 col-sm-12">
                                     <div className="other-product-card">
                                         <div className="other-product-image">
-                                            <img src="Edhwi-bottle.svg" alt="Other Product" />
+                                            <img src={item.img} alt={item.name} />
+                                            <div className="add-to-cart-btn">
+                                                <BsPlus />
+                                            </div>
                                         </div>
                                         <div className="other-product-details">
-                                            <h5>Sample Product</h5>
-                                            <p className="other-product-price">₹299</p>
+                                            <h5>{item.name}</h5>
+                                            <p className="other-product-features">Available in <span>{item.available}</span></p>
+                                            <p className="other-product-price">₹{item.price}</p>
                                         </div>
                                     </div>
                                 </div>
