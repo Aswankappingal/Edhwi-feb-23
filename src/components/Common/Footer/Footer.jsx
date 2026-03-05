@@ -10,12 +10,13 @@ const Footer = () => {
                 <div className="footer__top">
                     {/* Left Section: Logo */}
                     <div className="footer__logo-container">
-                        <img src="/Edhwi-logo.svg" alt="Edhwi Logo" className="footer__logo-img" />
+                        <img src="/Footer-logo.svg" alt="Edhwi Logo" className="footer__logo-img" />
                     </div>
 
                     {/* Right Section: Links Columns */}
                     <div className="footer__links-section">
                         {/* Office Column */}
+
                         <div className="footer__column">
                             <h3 className="footer__column-title">Office</h3>
                             <div className="footer__address">
@@ -60,7 +61,7 @@ const Footer = () => {
                 <div className="footer__bottom">
                     {/* Large Brand Text */}
                     <div className="footer__brand-text-wrapper">
-                        <h1 className="footer__brand-text">edhwi</h1>
+                        <img src="/footer-text.svg" alt="edhwi text logo" className="footer__brand-img" />
                     </div>
 
                     {/* Socials and Copyright */}
@@ -86,10 +87,14 @@ const Footer = () => {
 
             {/* Bottom Wave Graphics */}
             <div className="footer__waves">
-                <svg className="wave-svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
-                    <path d="M0,60 C320,120 420,-40 1440,60 L1440,120 L0,120 Z" fill="#184BC6" opacity="0.3"></path>
-                    <path d="M0,80 C280,140 500,-20 1440,80 L1440,120 L0,120 Z" fill="#0D2D8A" opacity="0.6"></path>
-                    <path d="M0,100 C350,160 550,0 1440,100 L1440,120 L0,120 Z" fill="#0B1C4A"></path>
+                <svg className="wave-svg wave-1" viewBox="0 0 2880 120" preserveAspectRatio="none">
+                    <path d="M 0 70 Q 360 10 720 70 T 1440 70 T 2160 70 T 2880 70 L 2880 120 L 0 120 Z" fill="#184BC6" opacity="0.3"></path>
+                </svg>
+                <svg className="wave-svg wave-2" viewBox="0 0 2880 120" preserveAspectRatio="none">
+                    <path d="M 0 80 Q 250 140 720 80 T 1440 80 T 2160 80 T 2880 80 L 2880 120 L 0 120 Z" fill="#0D2D8A" opacity="0.6"></path>
+                </svg>
+                <svg className="wave-svg wave-3" viewBox="0 0 2880 120" preserveAspectRatio="none">
+                    <path d="M 0 90 Q 450 30 720 90 T 1440 90 T 2160 90 T 2880 90 L 2880 120 L 0 120 Z" fill="#0B1C4A"></path>
                 </svg>
             </div>
         </footer>
