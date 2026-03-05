@@ -9,6 +9,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa6'
 import { FaCheck } from 'react-icons/fa'
 import { BsArrowUpRightCircleFill } from 'react-icons/bs'
 import Productsidebar from '../../Theams/ProductSidebar/Productsidebar'
+import Navbar from '../../Navbar/Navbar'
 
 const ExploreProducts = () => {
     const breadcrumbItems = [
@@ -306,7 +307,7 @@ const ExploreProducts = () => {
     return (
         <div className='Explore-Main-wrapper'>
             {/* <ScrollToTopOnMount /> */}
-            {/* <Navbar /> */}
+            <Navbar />
 
             <div className="explore-contents">
                 <div className="breadcrumb-section-Explore">

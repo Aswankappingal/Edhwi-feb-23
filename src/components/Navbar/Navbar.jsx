@@ -109,13 +109,18 @@ const Navbar = ({ setCurrentPage }) => {
                             <span className="mobile-nav-text">Wishlist</span>
                         </div>
 
-                        <div className="navbar__action-icon navbar__cart-wrapper" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
+                        <Link
+                            to="/cart"
+                            className="navbar__action-icon navbar__cart-wrapper"
+                            style={{ textDecoration: "none", color: isHome ? "#fff" : "#000" }}
+                            onClick={handleNavClick}
+                        >
                             <div className="position-relative d-none d-lg-flex align-items-center justify-content-center">
                                 <FiShoppingBag size={22} color={isHome ? "#fff" : "#000"} />
                                 <span className="navbar__cart-badge">0</span>
                             </div>
                             <span className="mobile-nav-text">Cart</span>
-                        </div>
+                        </Link>
 
                         <Link
                             to="/my-account"

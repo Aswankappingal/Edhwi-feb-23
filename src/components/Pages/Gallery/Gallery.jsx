@@ -1,6 +1,7 @@
 import React from 'react';
 import './Gallery.scss';
 import { FaPlay } from 'react-icons/fa';
+import Navbar from '../../Navbar/Navbar';
 
 const Gallery = () => {
     const images = [
@@ -16,26 +17,29 @@ const Gallery = () => {
     ];
 
     return (
-        <div className="gallery-section">
-            <div className="gallery-header">
-                <h3>Gallery</h3>
+        <>
+            <Navbar />
+            <div className="gallery-section">
+                <div className="gallery-header">
+                    <h3>Gallery</h3>
 
+                </div>
+                <div className="gallery-grid">
+                    {images.map((image) => (
+                        <div key={image.id} className={`gallery-item ${image.isVideo ? 'video-item' : 'image-item'}`}>
+                            <img src={image.src} alt={image.alt} />
+                            {image.isVideo && (
+                                <div className="play-button-overlay">
+                                    <button className="play-button" aria-label="Play video">
+                                        <FaPlay className="play-icon" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
-            <div className="gallery-grid">
-                {images.map((image) => (
-                    <div key={image.id} className={`gallery-item ${image.isVideo ? 'video-item' : 'image-item'}`}>
-                        <img src={image.src} alt={image.alt} />
-                        {image.isVideo && (
-                            <div className="play-button-overlay">
-                                <button className="play-button" aria-label="Play video">
-                                    <FaPlay className="play-icon" />
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                ))}
-            </div>
-        </div>
+        </>
     );
 };
 

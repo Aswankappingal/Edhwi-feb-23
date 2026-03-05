@@ -17,12 +17,14 @@ import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts"
 import ProductPage from "./components/Pages/Productpage/ProductPage";
 import Gallery from "./components/Pages/Gallery/Gallery";
 import Footer from "./components/common/Footer/Footer";
+import Cart from "./components/Pages/Cart/Cart";
+import BlogSub from './components/BlogSub/BlogSub';
 
 function App() {
   return (
     <>
       <div className="app">
-        <Navbar />
+        {/* Global Navbar removed: <Navbar /> */}
 
         <Routes> {/* 🔹 NEW: Routes section */}
 
@@ -31,6 +33,7 @@ function App() {
             path="/"
             element={
               <>
+                <Navbar />
                 <HomeBanner />
                 <Essentials />
                 <PuritySection />
@@ -39,6 +42,7 @@ function App() {
                 <OurProcess />
                 <EdhwiMoments />
                 <OurPromise />
+                <BlogSub />
                 <VideoBanner />
               </>
             }
@@ -55,6 +59,7 @@ function App() {
 
           <Route path='/Product-page' element={<ProductPage />} />
           <Route path='/gallery' element={<Gallery />} />
+          <Route path='/cart' element={<Cart />} />
 
 
 
