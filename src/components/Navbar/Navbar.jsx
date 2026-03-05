@@ -37,6 +37,7 @@ const Navbar = ({ setCurrentPage }) => {
                     style={{ cursor: "pointer", width: "55px", marginRight: '2rem' }}
                 >
                     <img src="/Edhwi-logo.svg" alt="edhwi" style={{ width: '100%', height: 'auto' }} />
+
                 </Link>
 
                 {/* Mobile Toggle */}

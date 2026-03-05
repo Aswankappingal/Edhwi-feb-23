@@ -75,9 +75,9 @@
 
         &-title {
             font-family: General sans-serif;
-            font-weight: 500;
+            font-weight: 400;
             font-style: Medium;
-            font-size: 20px;
+            font-size: 18px;
             leading-trim: NONE;
             line-height: 100%;
             letter-spacing: 0%;
@@ -93,15 +93,13 @@
     &__contact {
         p {
             font-family: General sans-serif;
-            font-weight: 500;
-            font-style: Medium;
-            font-size: 20px;
+            font-weight: 400;
+            font-style: Regular;
+            font-size: 18px;
             leading-trim: NONE;
             line-height: 100%;
             letter-spacing: 0%;
-            text-transform: lowercase;
             color: #ffffff;
-            /* Slightly dimmed white */
             margin: 0 0 6px 0;
             line-height: 1.6;
             font-weight: 400;
@@ -112,8 +110,13 @@
         margin-top: 24px;
 
         .footer__phone {
-            font-size: 18px;
-            font-weight: 700;
+            font-family: General sans-serif;
+            font-weight: 500;
+            font-style: Medium;
+            font-size: 24px;
+            leading-trim: NONE;
+            line-height: 130%;
+            letter-spacing: 0%;
             color: #FFFFFF;
             margin-bottom: 12px;
             letter-spacing: 0.02em;
@@ -121,11 +124,17 @@
 
         a {
             display: block;
-            color: #E2E8F0;
-            font-size: 13px;
-            text-decoration: none;
+            color: #eff2f5;
+            font-family: General sans-serif;
+            font-weight: 400;
+            font-style: Regular;
+            font-size: 16px;
+            leading-trim: NONE;
+            line-height: 130%;
+            letter-spacing: 0%;
             margin-bottom: 6px;
             transition: color 0.2s ease;
+            cursor: pointer;
 
             &:hover {
                 color: #FFFFFF;
@@ -143,9 +152,15 @@
 
         li {
             a {
-                color: #E2E8F0;
-                font-size: 13px;
-                text-decoration: none;
+                color: #ffff;
+                font-family: General sans-serif;
+                font-weight: 400;
+                // font-style: Regular;
+                font-size: 14px;
+                leading-trim: NONE;
+                line-height: 10%;
+                letter-spacing: 0%;
+
                 transition: color 0.2s ease;
 
                 &:hover {
@@ -223,7 +238,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #FFFFFF;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 16px;
             transition: all 0.2s ease;
 
             &:hover {
@@ -234,8 +249,14 @@
     }
 
     &__copyright {
-        font-size: 12px;
-        color: rgba(255, 255, 255, 0.6);
+        font-family: General Sans;
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 16px;
+        leading-trim: NONE;
+        line-height: 130%;
+        letter-spacing: -2%;
+        color: #BCC8FF;
         margin: 0;
         letter-spacing: 0.01em;
     }
