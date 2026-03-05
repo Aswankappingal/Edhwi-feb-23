@@ -184,6 +184,12 @@
 /* =====================================================
    🔥 MOBILE MENU (Custom Fullscreen Overlay)
    ===================================================== */
+
+body.menu-open {
+    overflow: hidden !important;
+    touch-action: none;
+}
+
 @media (max-width: 991px) {
     .navbar.navbar-light-mode .custom-mobile-menu {
         background: #155eef !important;
@@ -194,6 +200,7 @@
         top: 0;
         left: 0;
         width: 100vw;
+        height: 100vh !important;
         background: #155eef !important;
         z-index: 1050;
         padding-bottom: 3rem;

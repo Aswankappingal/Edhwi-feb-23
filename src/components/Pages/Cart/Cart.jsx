@@ -11,7 +11,7 @@ const Cart = () => {
     const [cartItems, setCartItems] = useState([
         {
             id: 1,
-            image: '/path/to/bottle1.png', // Replace with actual path in your project or generic placeholder
+            image: '/Kuppi.svg', // Replace with actual path in your project or generic placeholder
             title: 'Coconut oil pet bottle (Pet bottle)...',
             volume: '1 LTR',
             price: 1000,
@@ -21,7 +21,7 @@ const Cart = () => {
         },
         {
             id: 2,
-            image: '/path/to/pouch.png',
+            image: '/Edhwi-bottle.svg',
             title: 'Coconut Oil - pouch',
             volume: '1 LTR',
             price: 560,
@@ -31,7 +31,7 @@ const Cart = () => {
         },
         {
             id: 3,
-            image: '/path/to/bottle2.png',
+            image: '/Edhwi-packet.svg',
             title: 'Coconut oil pet bottle (Pet bottle)...',
             volume: '1 LTR',
             price: 1000,
@@ -77,7 +77,7 @@ const Cart = () => {
                                 <div className="item-image-container">
                                     {/* Using a placeholder div for the image to match structure */}
                                     <div className="image-placeholder">
-                                        {/* <img src={item.image} alt={item.title} /> */}
+                                        <img src={item.image} alt={item.title} />
                                     </div>
                                 </div>
 

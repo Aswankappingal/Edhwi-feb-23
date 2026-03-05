@@ -42,8 +42,9 @@ function App() {
                 <OurProcess />
                 <EdhwiMoments />
                 <OurPromise />
-                <BlogSub />
                 <VideoBanner />
+                <BlogSub />
+
               </>
             }
           />

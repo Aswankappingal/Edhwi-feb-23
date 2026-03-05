@@ -23,7 +23,16 @@ const Navbar = ({ setCurrentPage }) => {
                 bsCollapse.hide();
             }
         }
+        document.body.classList.remove('menu-open');
         window.scrollTo(0, 0);
+    };
+
+    const handleMenuOpen = () => {
+        document.body.classList.add('menu-open');
+    };
+
+    const handleMenuClose = () => {
+        document.body.classList.remove('menu-open');
     };
 
     return (
@@ -44,6 +53,7 @@ const Navbar = ({ setCurrentPage }) => {
                 <button
                     className="navbar-toggler border-0 shadow-none px-0"
                     type="button"
+                    onClick={handleMenuOpen}
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
                 >
@@ -63,6 +73,7 @@ const Navbar = ({ setCurrentPage }) => {
                             className="btn-close btn-close-white position-absolute"
                             style={{ top: '20px', right: '20px', zIndex: 10, filter: 'invert(1) grayscale(100%) brightness(200%)' }}
                             type="button"
+                            onClick={handleMenuClose}
                             data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent"
                         ></button>
@@ -144,7 +155,10 @@ const Navbar = ({ setCurrentPage }) => {
                             style={{ maxWidth: '250px' }}
                             data-bs-toggle="collapse"
                             data-bs-target=".navbar-collapse.show"
-                            onClick={() => setIsLoginModalOpen(true)}
+                            onClick={() => {
+                                setIsLoginModalOpen(true);
+                                handleMenuClose();
+                            }}
                         >
                             Login/ Register
                         </button>
