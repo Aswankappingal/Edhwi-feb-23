@@ -8,6 +8,7 @@ import MySettings from './MySettings';
 import SavedCards from './SavedCards';
 import Coupons from './Coupons';
 import Notifications from './Notifications';
+import Cancelorder from './Cancelorder';
 import Navbar from '../Navbar/Navbar';
 
 const MyAccount = ({ setCurrentPage }) => {
@@ -18,7 +19,7 @@ const MyAccount = ({ setCurrentPage }) => {
             case 'overview':
                 return <Overview />;
             case 'orders':
-                return <Orders />;
+                return <Orders setActiveTab={setActiveTab} />;
             case 'returns':
                 return <Returns />;
             case 'settings':
@@ -29,6 +30,9 @@ const MyAccount = ({ setCurrentPage }) => {
                 return <Coupons />;
             case 'notifications':
                 return <Notifications />;
+
+            case 'cancel-order':
+                return <Cancelorder setActiveTab={setActiveTab} />;
             default:
                 return <Overview />;
         }
@@ -39,16 +43,25 @@ const MyAccount = ({ setCurrentPage }) => {
             <Navbar />
             <div className="my-account-page">
                 <div className="my-account-container">
-                    <nav className="breadcrumbs">
-                        <span onClick={() => { if (setCurrentPage) setCurrentPage('home'); }} style={{ cursor: 'pointer' }}>Home</span>
-                        <FiChevronRight className="breadcrumb-icon" />
-                        <span className="current">My account</span>
-                    </nav>
+                    {activeTab === 'cancel-order' ? (
+                        <nav className="breadcrumbs">
+                            <span onClick={() => setActiveTab('overview')} style={{ cursor: 'pointer' }}>My account</span>
+                            <FiChevronRight className="breadcrumb-icon" />
+                            <span className="current">Cancel order</span>
+                        </nav>
+                    ) : (
+                        <nav className="breadcrumbs">
+                            <span onClick={() => { if (setCurrentPage) setCurrentPage('home'); }} style={{ cursor: 'pointer' }}>Home</span>
+                            <FiChevronRight className="breadcrumb-icon" />
+                            <span className="current">My account</span>
+                        </nav>
+                    )}
 
-                    <h1 className="page-title"><span>Manage</span> your account</h1>
+                    {activeTab !== 'cancel-order' && <h1 className="page-title"><span>Manage</span> your account</h1>}
 
                     <div className="account-layout">
                         {/* Sidebar */}
+                        {activeTab !== 'cancel-order' && (
                         <aside className="account-sidebar">
                             <div className="sidebar-section">
                                 <h3
@@ -125,9 +138,10 @@ const MyAccount = ({ setCurrentPage }) => {
                                 </ul>
                             </div>
                         </aside>
+                        )}
 
                         {/* Main Content */}
-                        <main className="account-content">
+                        <main className="account-content" style={activeTab === 'cancel-order' ? { margin: '0 auto', maxWidth: '800px' } : {}}>
                             {renderContent()}
                         </main>
                     </div>

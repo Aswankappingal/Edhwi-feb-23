@@ -6,21 +6,21 @@ const Notifications = () => {
         {
             id: 1,
             isNew: true,
-            imageUrl: '/assets/images/coconut-oil.png', // Placeholder, assuming an image or we can just use a div
+            imageUrl: '/Edhwi-Packetss.svg', // Placeholder, assuming an image or we can just use a div
             message: 'Your package containing Coconut oil pet bottle... has been delivered. Thanks for shopping!',
             date: '12/12/25'
         },
         {
             id: 2,
             isNew: true,
-            imageUrl: '/assets/images/coconut-oil.png',
+            imageUrl: '/Kuppi.svg',
             message: 'Your package containing Coconut oil pet bottle... has been delivered. Thanks for shopping!',
             date: '12/12/25'
         },
         {
             id: 3,
             isNew: false,
-            imageUrl: '/assets/images/coconut-oil.png',
+            imageUrl: '/Kuppi.svg',
             message: 'Your package containing Coconut oil pet bottle... has been delivered. Thanks for shopping!',
             date: '12/12/25'
         }

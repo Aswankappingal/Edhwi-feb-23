@@ -1,7 +1,11 @@
 import React from 'react';
 import './Orders.scss';
+import { useNavigate } from 'react-router-dom';
 
-const Orders = () => {
+const Orders = ({ setActiveTab }) => {
+
+    const navigate = useNavigate();
+
     return (
         <section className="dashboard-section figma-orders-section">
             <h2 className="section-heading figma-heading">ORDERS</h2>
@@ -50,7 +54,13 @@ const Orders = () => {
                             <div className="item-name">Coconut oil pet bottle</div>
                         </div>
                         <div className="item-actions-box">
-                            <button className="btn-outline">Cancel</button>
+                            <button onClick={() => {
+                                if (setActiveTab) {
+                                    setActiveTab('cancel-order');
+                                } else {
+                                    navigate('/cancel-order');
+                                }
+                            }} className="btn-outline">Cancel</button>
                             <button className="btn-primary">Track</button>
                         </div>
                     </div>
