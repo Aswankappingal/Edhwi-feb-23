@@ -1,59 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Cart.scss';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { FiTrash2 } from 'react-icons/fi';
 import { BiHeart } from 'react-icons/bi';
 import { MdOutlineLocalOffer } from "react-icons/md";
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeFromCart, updateQuantity } from '../../../redux/slices/cartSlice';
 
 const Cart = () => {
-    // Mock cart items data
-    const [cartItems, setCartItems] = useState([
-        {
-            id: 1,
-            image: '/Kuppi.svg', // Replace with actual path in your project or generic placeholder
-            title: 'Coconut oil pet bottle (Pet bottle)...',
-            volume: '1 LTR',
-            price: 1000,
-            originalPrice: 12000, // as screenshot has 12000
-            discountPercent: '10% OFF',
-            quantity: 2
-        },
-        {
-            id: 2,
-            image: '/Edhwi-bottle.svg',
-            title: 'Coconut Oil - pouch',
-            volume: '1 LTR',
-            price: 560,
-            originalPrice: 12000,
-            discountPercent: '10% OFF',
-            quantity: 2
-        },
-        {
-            id: 3,
-            image: '/Edhwi-packet.svg',
-            title: 'Coconut oil pet bottle (Pet bottle)...',
-            volume: '1 LTR',
-            price: 1000,
-            originalPrice: 12000,
-            discountPercent: '10% OFF',
-            quantity: 2
-        }
-    ]);
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.cartItems);
 
-    const updateQuantity = (id, change) => {
-        setCartItems(prev => prev.map(item => {
-            if (item.id === id) {
-                const newQuantity = item.quantity + change;
-                return { ...item, quantity: newQuantity > 0 ? newQuantity : 1 };
+    const handleUpdateQuantity = (id, change) => {
+        const item = cartItems.find(i => i.id === id);
+        if (item) {
+            const newQuantity = item.quantity + change;
+            if (newQuantity > 0) {
+                dispatch(updateQuantity({ id, quantity: newQuantity }));
             }
-            return item;
-        }));
+        }
     };
 
-    const removeItem = (id) => {
-        setCartItems(prev => prev.filter(item => item.id !== id));
+    const handleRemoveItem = (id) => {
+        dispatch(removeFromCart(id));
     };
+
+    // Calculate dynamic totals
+    const totalMrp = cartItems.reduce((acc, item) => acc + ((item.mrp || item.priceNumber || item.price || 0) * item.quantity), 0);
+    const sellingPrice = cartItems.reduce((acc, item) => acc + ((item.priceNumber || item.price || 0) * item.quantity), 0);
+    const discountOnMrp = totalMrp - sellingPrice;
+
+    // Using some hypothetical static values for taxes/delivery for now, as they weren't strictly provided by backend API context, 
+    // or they can be adjusted if payload provides them.
+    const couponSavings = 0;
+    const applicableGst = 0;
+    const delivery = 0;
+    const total = sellingPrice + applicableGst + delivery - couponSavings;
 
     return (
         <div className="cart-page-container">
@@ -75,21 +58,20 @@ const Cart = () => {
                         {cartItems.map((item) => (
                             <div key={item.id} className="cart-item-card">
                                 <div className="item-image-container">
-                                    {/* Using a placeholder div for the image to match structure */}
                                     <div className="image-placeholder">
-                                        <img src={item.image} alt={item.title} />
+                                        <img src={item.primaryImage || item.image || item.images?.[0]?.url || "/Kuppi.svg"} alt={item.name} />
                                     </div>
                                 </div>
 
                                 <div className="item-details-container">
                                     <div className="item-title-row">
-                                        <h3 className="item-title">{item.title}</h3>
-                                        <span className="item-volume-badge">{item.volume}</span>
+                                        <h3 className="item-title">{item.name}</h3>
+                                        <span className="item-volume-badge">{item.variants?.[0]?.size || "Standard"}</span>
                                     </div>
 
                                     <div className="item-actions-and-price">
                                         <div className="item-actions">
-                                            <button className="action-btn text-grey" onClick={() => removeItem(item.id)}>
+                                            <button className="action-btn text-grey" onClick={() => handleRemoveItem(item.id)}>
                                                 <FiTrash2 /> Remove
                                             </button>
                                             <span className="action-divider">|</span>
@@ -100,16 +82,20 @@ const Cart = () => {
 
                                         <div className="item-controls-price">
                                             <div className="quantity-selector">
-                                                <button onClick={() => updateQuantity(item.id, -1)}>−</button>
+                                                <button onClick={() => handleUpdateQuantity(item.id, -1)}>−</button>
                                                 <span>{item.quantity}</span>
-                                                <button onClick={() => updateQuantity(item.id, 1)}>+</button>
+                                                <button onClick={() => handleUpdateQuantity(item.id, 1)}>+</button>
                                             </div>
 
                                             <div className="price-details">
-                                                <div className="current-price">₹{item.price}</div>
+                                                <div className="current-price">₹{item.priceNumber || item.price || 0}</div>
                                                 <div className="original-price-row">
-                                                    <span className="strike-price">-₹{item.originalPrice}</span>
-                                                    <span className="discount-badge">{item.discountPercent}</span>
+                                                    {(item.mrp && item.mrp > (item.priceNumber || item.price)) && (
+                                                        <>
+                                                            <span className="strike-price">-₹{item.mrp}</span>
+                                                            <span className="discount-badge">{item.offerPercentage ? `${item.offerPercentage}% OFF` : ''}</span>
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -132,12 +118,12 @@ const Cart = () => {
 
                         {/* Payment Summary */}
                         <PaymentSummary
-                            totalMrp={223.00}
-                            discountOnMrp={120.00}
-                            couponSavings={310.00}
-                            applicableGst={8.00}
-                            delivery={0}
-                            total={1058.00}
+                            totalMrp={totalMrp}
+                            discountOnMrp={discountOnMrp}
+                            couponSavings={couponSavings}
+                            applicableGst={applicableGst}
+                            delivery={delivery}
+                            total={total}
                             buttonText="Continue"
                             onButtonClick={() => alert('Proceeding...')}
                             showButton={true} className="desktop-payment-summary"

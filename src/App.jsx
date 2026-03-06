@@ -20,7 +20,11 @@ import Footer from "./components/Common/Footer/Footer";
 import Cart from "./components/Pages/Cart/Cart";
 import BlogSub from './components/BlogSub/BlogSub';
 
+import useFetchData from './hooks/useFetchData';
+
 function App() {
+  useFetchData();
+
   return (
     <>
       <div className="app">
@@ -58,7 +62,7 @@ function App() {
           {/* 🔹 Our Products Page */}
           <Route path="/our-products" element={<ExploreProducts />} />
 
-          <Route path='/Product-page' element={<ProductPage />} />
+          <Route path='/Product-page/:id' element={<ProductPage />} />
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/cart' element={<Cart />} />
 

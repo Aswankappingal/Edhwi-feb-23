@@ -10,8 +10,11 @@ import { FaCheck } from 'react-icons/fa'
 import { BsArrowUpRightCircleFill } from 'react-icons/bs'
 import Productsidebar from '../../Theams/ProductSidebar/Productsidebar'
 import Navbar from '../../Navbar/Navbar'
+import { useSelector, useDispatch } from 'react-redux'
+import { addToCart } from '../../../redux/slices/cartSlice'
 
 const ExploreProducts = () => {
+    const dispatch = useDispatch();
     const breadcrumbItems = [
         { label: 'Homepage', path: '/' },
         { label: 'Products', path: '/ExploreProducts' }
@@ -35,98 +38,8 @@ const ExploreProducts = () => {
 
     const [sortBy, setSortBy] = useState('name');
 
-    // Static fallback products
-    const allProductsData = useMemo(() => [
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/vermicil.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Kuppi.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Coconut-Edhwi-bottle.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/vermicil.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Kuppi.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Bottle-Coconut.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-    ], []);
+    // Dynamic products from Redux
+    const allProductsData = useSelector((state) => state.data.products);
 
     // Wishlist toggle (local only)
     const handleWishlistToggle = useCallback((e, productId) => {
@@ -157,30 +70,27 @@ const ExploreProducts = () => {
         );
     }, [wishlistItems]);
 
-    // Cart toggle (local only)
-    const handleAddToCart = useCallback((e, productId) => {
+    // Get cart status from Redux
+    const cart = useSelector((state) => state.cart.cartItems);
+
+    // Cart toggle 
+    const handleAddToCart = useCallback((e, product) => {
         e.preventDefault();
         e.stopPropagation();
 
-        setCartItems(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
-    }, []);
+        dispatch(addToCart(product));
+
+        // Show a brief success animation/state here if desired.
+    }, [dispatch]);
 
     // Get cart button content
     const getAddButtonContent = useCallback((productId) => {
-        const isProductInCart = cartItems.has(productId);
+        const isProductInCart = cart.some(item => item.id === productId);
         if (isProductInCart) {
             return <FaCheck className='check-icon' style={{ color: '#4CAF50' }} />;
         }
         return <GoPlus className='add-icon' />;
-    }, [cartItems]);
+    }, [cart]);
 
     // Apply filters and sorting
     const products = useMemo(() => {
@@ -376,7 +286,7 @@ const ExploreProducts = () => {
                             <div key={rowIndex} className="row three-cards">
                                 {row?.map((product) => (
                                     <div key={product.id} className={columnClass}>
-                                        <Link to={`/Product-page`} className='Right-side-link'>
+                                        <Link to={`/Product-page/${product.id}`} className='Right-side-link'>
                                             <div className="product-card-main">
                                                 <div className="product-card">
                                                     <div className="prod-image-section">
@@ -386,11 +296,11 @@ const ExploreProducts = () => {
                                                         >
                                                             {getWishlistIcon(product.id)}
                                                         </div>
-                                                        <img src={product.image} alt={product.name} />
+                                                        <img src={product.primaryImage || product.image || product.images?.[0]?.url || "/vermicil.svg"} alt={product.name} />
                                                         <div
-                                                            className={`add-icon-wrapper ${cartItems.has(product.id) ? 'in-cart' : ''}`}
-                                                            onClick={(e) => handleAddToCart(e, product.id)}
-                                                            title={cartItems.has(product.id) ? 'Remove from cart' : 'Add to cart'}
+                                                            className={`add-icon-wrapper ${cart.some(item => item.id === product.id) ? 'in-cart' : ''}`}
+                                                            onClick={(e) => handleAddToCart(e, product)}
+                                                            title={cart.some(item => item.id === product.id) ? 'Added to cart' : 'Add to cart'}
                                                         >
                                                             {getAddButtonContent(product.id)}
                                                         </div>
