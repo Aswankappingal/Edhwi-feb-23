@@ -16,7 +16,7 @@ import Blogs from './components/Blogs/Blogs';
 import ExploreProducts from "./components/Pages/ExploreProducts/ExploreProducts";
 import ProductPage from "./components/Pages/Productpage/ProductPage";
 import Gallery from "./components/Pages/Gallery/Gallery";
-import Footer from "./components/common/Footer/Footer";
+import Footer from "./components/Common/Footer/Footer";
 import Cart from "./components/Pages/Cart/Cart";
 import BlogSub from './components/BlogSub/BlogSub';
 
