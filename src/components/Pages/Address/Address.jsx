@@ -7,6 +7,9 @@ import './Address.scss';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { MdOutlineLocalOffer } from "react-icons/md";
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
+import EditAddressModal from './EditAddressModal';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const Address = () => {
     const dispatch = useDispatch();
@@ -17,18 +20,11 @@ const Address = () => {
 
     const [isAddingNew, setIsAddingNew] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
-    const [editAddressId, setEditAddressId] = useState(null); // Track if editing an existing address
 
-    // Form state
-    const [formData, setFormData] = useState({
-        fullName: '',
-        phone: '',
-        addressLine1: '',
-        addressLine2: '',
-        state: '',
-        zipCode: '',
-        addressType: 'Home' // Default to Home
-    });
+    // Modal states
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingAddressData, setEditingAddressData] = useState(null);
+    const [modalMode, setModalMode] = useState('add'); // 'add' or 'edit'
 
     useEffect(() => {
         dispatch(fetchAddresses());
@@ -40,82 +36,28 @@ const Address = () => {
     }, [cartItems, dispatch]);
 
     useEffect(() => {
-        if (addresses.length > 0 && !selectedAddressId && !isAddingNew) {
-            setSelectedAddressId(addresses[0].id || addresses[0]._id); // fallback depending on backend ID key
-        } else if (addresses.length === 0) {
-            setIsAddingNew(true);
-        }
-    }, [addresses, selectedAddressId, isAddingNew]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSaveAddress = async () => {
-        // Basic validation
-        if (!formData.fullName || !formData.addressLine1 || !formData.phone || !formData.state || !formData.zipCode) {
-            alert('Please fill out all required fields.');
-            return;
-        }
-
-        // Map frontend fields to backend expected fields
-        const addressPayload = {
-            fullName: formData.fullName,
-            phone: formData.phone,
-            addressLine1: formData.addressLine1,
-            addressLine2: formData.addressLine2,
-            state: formData.state,
-            zipCode: formData.zipCode,
-            city: formData.state, // Map city to state for now if city is missing in design
-            country: 'India',
-            addressType: formData.addressType === 'Home' ? 'home' : 'work'
-        };
-
-        if (editAddressId) {
-            addressPayload.id = editAddressId;
-            const resultAction = await dispatch(updateAddress(addressPayload));
-            if (updateAddress.fulfilled.match(resultAction)) {
-                resetFormState();
-            } else {
-                alert(resultAction.payload || 'Failed to update address');
-            }
-        } else {
-            const resultAction = await dispatch(addAddress(addressPayload));
-            if (addAddress.fulfilled.match(resultAction)) {
-                resetFormState();
-            } else {
-                alert(resultAction.payload || 'Failed to add address');
+        if (!addressLoading) {
+            if (addresses.length > 0 && !selectedAddressId) {
+                setSelectedAddressId(addresses[0].id || addresses[0]._id); // fallback depending on backend ID key
+            } else if (addresses.length === 0) {
+                // Auto-open add address modal if no addresses
+                setModalMode('add');
+                setEditingAddressData(null);
+                setIsEditModalOpen(true);
             }
         }
-    };
+    }, [addresses, addressLoading, selectedAddressId]);
 
-    const resetFormState = () => {
-        setIsAddingNew(false);
-        setEditAddressId(null);
-        setFormData({
-            fullName: '',
-            phone: '',
-            addressLine1: '',
-            addressLine2: '',
-            state: '',
-            zipCode: '',
-            addressType: 'Home'
-        });
+    const handleAddNewClick = () => {
+        setModalMode('add');
+        setEditingAddressData(null);
+        setIsEditModalOpen(true);
     };
 
     const handleEditClick = (address) => {
-        setFormData({
-            fullName: address.fullName || '',
-            phone: address.phone || '',
-            addressLine1: address.addressLine1 || '',
-            addressLine2: address.addressLine2 || '',
-            state: address.state || address.city || '',
-            zipCode: address.zipCode || '',
-            addressType: address.addressType === 'work' ? 'Office' : 'Home'
-        });
-        setEditAddressId(address.id || address._id);
-        setIsAddingNew(true);
+        setModalMode('edit');
+        setEditingAddressData(address);
+        setIsEditModalOpen(true);
     };
 
     return (
@@ -128,7 +70,15 @@ const Address = () => {
                 <div className="address-main-grid">
                     {/* Left Column - Addresses */}
                     <div className="address-items-section">
-                        {!isAddingNew ? (
+                        {addresses.length === 0 ? (
+                            <div className="no-address-state" style={{ padding: '40px 20px', textAlign: 'center', background: '#fff', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
+                                <h3 style={{ fontSize: '18px', marginBottom: '15px', color: '#333' }}>No addresses found</h3>
+                                <p style={{ color: '#666', marginBottom: '20px' }}>Please add a delivery address to proceed.</p>
+                                <button className="add-new-btn" onClick={handleAddNewClick} style={{ margin: '0' }}>
+                                    Add new Address
+                                </button>
+                            </div>
+                        ) : (
                             <>
                                 <h3 style={{ fontSize: '16px', marginBottom: '15px', fontWeight: '500' }}>Please Select your address.</h3>
                                 {addresses.map((address, index) => {
@@ -165,122 +115,10 @@ const Address = () => {
                                         </div>
                                     )
                                 })}
-                                <button className="add-new-btn" onClick={() => setIsAddingNew(true)}>
+                                <button className="add-new-btn" onClick={handleAddNewClick}>
                                     Add new Address
                                 </button>
                             </>
-                        ) : (
-                            <div className="address-form-container">
-                                <div className="address-form-row">
-                                    <div className="address-form-group">
-                                        <label className="address-label">Email your full name*</label>
-                                        <input
-                                            type="text"
-                                            className="address-input"
-                                            name="fullName"
-                                            value={formData.fullName}
-                                            onChange={handleInputChange}
-                                            placeholder="James Jacobe |"
-                                        />
-                                    </div>
-                                    <div className="address-form-group">
-                                        <label className="address-label">Phone</label>
-                                        <div className="phone-input-group">
-                                            <div className="phone-prefix">
-                                                <img src="https://flagcdn.com/w20/in.png" alt="IN" style={{ width: '20px' }} />
-                                                <span>▼</span>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                className="address-input"
-                                                name="phone"
-                                                value={formData.phone}
-                                                onChange={handleInputChange}
-                                                placeholder="9234 567 567"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="address-form-row">
-                                    <div className="address-form-group">
-                                        <label className="address-label">Address line 1</label>
-                                        <input
-                                            type="text"
-                                            className="address-input"
-                                            name="addressLine1"
-                                            value={formData.addressLine1}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter address here"
-                                        />
-                                    </div>
-                                    <div className="address-form-group">
-                                        <label className="address-label">Address line 2</label>
-                                        <input
-                                            type="text"
-                                            className="address-input"
-                                            name="addressLine2"
-                                            value={formData.addressLine2}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter address here"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="address-form-row">
-                                    <div className="address-form-group">
-                                        <label className="address-label">State</label>
-                                        <input
-                                            type="text"
-                                            className="address-input"
-                                            name="state"
-                                            value={formData.state}
-                                            onChange={handleInputChange}
-                                            placeholder=""
-                                        />
-                                    </div>
-                                    <div className="address-form-group">
-                                        <label className="address-label">Pin code</label>
-                                        <input
-                                            type="text"
-                                            className="address-input"
-                                            name="zipCode"
-                                            value={formData.zipCode}
-                                            onChange={handleInputChange}
-                                            placeholder=""
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="address-form-group">
-                                    <label className="address-label">Save address as</label>
-                                    <div className="address-type-selector">
-                                        <button
-                                            className={`type-btn ${formData.addressType === 'Home' ? 'active' : ''}`}
-                                            onClick={() => setFormData({ ...formData, addressType: 'Home' })}
-                                        >
-                                            Home
-                                        </button>
-                                        <button
-                                            className={`type-btn ${formData.addressType === 'Office' ? 'active' : ''}`}
-                                            onClick={() => setFormData({ ...formData, addressType: 'Office' })}
-                                        >
-                                            Office
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="form-actions">
-                                    {(addresses.length > 0 || editAddressId) && (
-                                        <button className="cancel-btn" onClick={() => resetFormState()}>
-                                            Cancel
-                                        </button>
-                                    )}
-                                    <button className="save-address-btn" onClick={handleSaveAddress} disabled={addressLoading} style={{ width: (addresses.length === 0 && !editAddressId) ? '100%' : 'auto' }}>
-                                        {addressLoading ? 'Saving...' : (editAddressId ? 'Update address' : 'Save address')}
-                                    </button>
-                                </div>
-                            </div>
                         )}
                     </div>
 
@@ -303,19 +141,27 @@ const Address = () => {
                             applicableGst={summary.gst}
                             delivery={summary.delivery}
                             total={summary.total}
-                            buttonText={isAddingNew ? undefined : "Continue"}
+                            buttonText="Continue"
                             onButtonClick={() => {
                                 if (selectedAddressId) {
-                                    alert('Proceed to payment! Address Selected.');
+                                    navigate('/payment', { state: { addressId: selectedAddressId } });
                                 } else {
                                     alert('Please select an address.');
                                 }
                             }}
-                            showButton={!isAddingNew} className="desktop-payment-summary"
+                            showButton={true} className="desktop-payment-summary"
                         />
                     </div>
                 </div>
             </div>
+
+            {/* Mount Edit Address Modal */}
+            <EditAddressModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                addressData={editingAddressData}
+                mode={modalMode}
+            />
         </div>
     );
 };

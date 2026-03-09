@@ -19,6 +19,7 @@ import Gallery from "./components/Pages/Gallery/Gallery";
 import Footer from "./components/Common/Footer/Footer";
 import Cart from "./components/Pages/Cart/Cart";
 import Address from "./components/Pages/Address/Address";
+import Payment from "./components/Pages/Payment/Payment";
 import BlogSub from './components/BlogSub/BlogSub';
 
 import useFetchData from './hooks/useFetchData';
@@ -66,6 +67,7 @@ function App() {
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/address' element={<Address />} />
+          <Route path='/payment' element={<Payment />} />
 
 
 

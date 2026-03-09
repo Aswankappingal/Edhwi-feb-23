@@ -22,8 +22,8 @@ const CartNavbar = ({ currentStep = 'cart' }) => {
       <div className="cart-navbar-left">
         {/* You can add your actual logo image here */}
         <div className="logo-placeholder">
-          {/* Example: <img src="/Edhwi-logo.svg" alt="Edhwi Logo" /> */}
-          <span style={{ fontWeight: 'bold', fontSize: '1.75rem', color: '#135cdd' }}>edhwi</span>
+          <img src="/Edhwi-logo.svg" alt="Edhwi Logo" />
+          {/* <span style={{ fontWeight: 'bold', fontSize: '1.75rem', color: '#135cdd' }}>edhwi</span> */}
         </div>
       </div>
 
