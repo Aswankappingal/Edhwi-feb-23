@@ -223,9 +223,6 @@ const Navbar = ({ setCurrentPage }) => {
                 formData={otpSessionData}
                 onSuccess={(payload) => {
                     setIsOtpModalOpen(false);
-                    if (payload.isNewUser) {
-                        setIsSignupModalOpen(true);
-                    }
                 }}
             />
 
