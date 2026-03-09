@@ -62,7 +62,7 @@ function App() {
           {/* 🔹 Our Products Page */}
           <Route path="/our-products" element={<ExploreProducts />} />
 
-          <Route path='/Product-page/:id' element={<ProductPage />} />
+          <Route path='/Product-page' element={<ProductPage />} />
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/cart' element={<Cart />} />
 

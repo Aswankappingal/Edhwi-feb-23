@@ -3,54 +3,60 @@ import React from 'react'
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
 import { BsBoxSeam, BsHeadset, BsPlus } from 'react-icons/bs'
-import { useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { addToCart } from '../../../redux/slices/cartSlice'
 import OurPromise from '../../OurPromise/OurPromise'
+/* =====================================================
+   🔥 STATIC PRODUCT DATA OBJECT
+===================================================== */
+
+const productData = {
+    id: 1,
+    name: "Coconut Oil pet Bottle",
+    price: 145,
+    offers: "10% OFF",
+    imageUrl: "/Edhwi-Packetss.svg",
+    features: "Premium Quality | 100% Pure | Cold Pressed | Hygienically packed in tamper-proof bottle.",
+    description: "Experience the natural freshness of Karikku Tender Coconut Water, tapped from handpicked young coconuts grown in Kerala. Packed in a hygienic, food-grade bottle, it’s the perfect way to hydrate — pure, refreshing, and just as nature intended..",
+    storageInstruction: "Store in a cool, dry place. Keep away from direct sunlight.",
+    shelfLife: "12 months from the date of packaging.",
+    certification: "FSSAI Approved | 100% Vegetarian | Lab-tested purity",
+    images: [
+        { url: "/Edhwi-Packetss.svg" },
+        { url: "/Edhwi-bottle.svg" }
+    ],
+    sizes: ["12", "24", "48", "200 ml", "1 L"]
+}
+
+/* =====================================================
+   PROCESS DATA
+===================================================== */
+
+const processData = {
+    title: "100% Pure Coconut Oil",
+    steps: [
+        {
+            image: "Edhwi-bottle.svg",
+            stepNumber: "01",
+            title: "Fine & Matured Coconuts",
+            description: "Harvested at the perfect age for best quality."
+        },
+        {
+            image: "Edhwi-bottle.svg",
+            stepNumber: "02",
+            title: "Premium Quality Copra",
+            description: "Extracted gently preserving nutrients and aroma."
+        },
+        {
+            image: "Edhwi-bottle.svg",
+            stepNumber: "03",
+            title: "Hygienically Packed",
+            description: "Packed without additives or preservatives."
+        }
+    ]
+}
 
 const ProductPage = () => {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+
     const [selectedSize, setSelectedSize] = React.useState("12");
-
-    // Fetch product from redux store by ID
-    const products = useSelector((state) => state.data.products);
-
-    // Find matching product
-    const product = products.find(p => p.id === id);
-
-    // Provide a fallback if loading or not found
-    if (!product) {
-        return (
-            <div className="Product-page-wrapper">
-                <Navbar />
-                <div className="container-fluid" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <p>Loading product details... Or product not found.</p>
-                </div>
-                {/* <Footer /> */}
-            </div>
-        )
-    }
-
-    // Adapt backend data to the existing UI shape
-    const productData = {
-        id: product.id,
-        name: product.name || "Unknown Product",
-        price: product.priceNumber || product.price || 0,
-        offers: product.offerPercentage ? `${product.offerPercentage}% OFF` : "",
-        imageUrl: product.primaryImage || product.image || product.images?.[0]?.url || "/Edhwi-Packetss.svg",
-        features: product.features || "Premium Quality | 100% Pure | Cold Pressed",
-        description: product.description || "Experience the natural freshness...",
-        storageInstruction: product.storageInstruction || "Store in a cool, dry place.",
-        shelfLife: product.shelfLife || "12 months from the date of packaging.",
-        certification: product.certification || "FSSAI Approved",
-        images: product.images?.length > 0 ? product.images : [{ url: product.primaryImage || "/Edhwi-Packetss.svg" }],
-        sizes: product.variants?.map(v => v.size || v.color) || ["Standard"]
-    };
-
-    const handleAddToCartClick = () => {
-        dispatch(addToCart(product));
-    };
 
     return (
         <div className="Product-page-wrapper">
@@ -116,7 +122,7 @@ const ProductPage = () => {
 
                         {/* Buttons (UI Only) */}
                         <div className='buy-now'>
-                            <button className='Link w-100' onClick={handleAddToCartClick}>Add to cart</button>
+                            <button className='Link w-100'>Buy now</button>
                         </div>
                     </div>
                 </div>
@@ -162,28 +168,40 @@ const ProductPage = () => {
                 <div className="container">
                     <div className="our-process-main-section">
                         {/* <h3 className='process'>Our process</h3> */}
-                        {/* <p className='Virgin'>100% Pure Coconut Oil</p> */}
+                        {/* <p className='Virgin'>{processData.title}</p> */}
 
                         {/* <div className="row">
-                            ...
+                            {processData.steps.map((step, index) => (
+                                <div key={index} className="col-lg-4 col-md-6 col-sm-12">
+                                    <div className="cards-n-images-section">
+                                        <img src={step.image} alt={step.title} />
+                                        <p className='steps-only'>Step {step.stepNumber}</p>
+                                        <h6 className='Handpicked'>{step.title}</h6>
+                                        <p className='para-process'>{step.description}</p>
+                                    </div>
+                                </div>
+                            ))}
                         </div> */}
 
                         <h3 className='Other-pro'>Other products</h3>
 
                         <div className="row">
-                            {products.filter(p => p.id !== product.id).slice(0, 3).map((item) => (
+                            {[
+                                { id: 1, name: 'Whole Nutmeg', available: '40g', price: '125', img: 'Bottle-Coconut.svg' },
+                                { id: 2, name: 'Coconut Oil - pouch', available: '1L', price: '145', img: 'packet edhwi.svg' }
+                            ].map((item) => (
                                 <div key={item.id} className="col-lg-4 col-md-6 col-sm-12">
                                     <div className="other-product-card">
                                         <div className="other-product-image">
-                                            <img src={item.primaryImage || item.images?.[0]?.url || '/Bottle-Coconut.svg'} alt={item.name} />
-                                            <div className="add-to-cart-btn" onClick={() => dispatch(addToCart(item))}>
+                                            <img src={item.img} alt={item.name} />
+                                            <div className="add-to-cart-btn">
                                                 <BsPlus />
                                             </div>
                                         </div>
                                         <div className="other-product-details">
                                             <h5>{item.name}</h5>
-                                            <p className="other-product-features">Available in <span>{item.variants?.[0]?.size || "Standard"}</span></p>
-                                            <p className="other-product-price">₹{item.priceNumber || item.price || 0}</p>
+                                            <p className="other-product-features">Available in <span>{item.available}</span></p>
+                                            <p className="other-product-price">₹{item.price}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -2,12 +2,22 @@ import React from 'react';
 import './Navbar.scss';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../redux/slices/authSlice';
 import LoginModal from '../Theams/LoginModal/LoginModal';
+import OtpVerificationModal from '../Theams/LoginModal/OtpVerificationModal';
+import SignupModal from '../Theams/LoginModal/SignupModal';
 
 const Navbar = ({ setCurrentPage }) => {
 
     // Login Modal State
     const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+    const [isOtpModalOpen, setIsOtpModalOpen] = React.useState(false);
+    const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
+    const [otpSessionData, setOtpSessionData] = React.useState(null);
+
+    const dispatch = useDispatch();
+    const { user, token } = useSelector((state) => state.auth);
 
     // 🔥 NEW: Get current route
     const location = useLocation();
@@ -143,25 +153,50 @@ const Navbar = ({ setCurrentPage }) => {
                             <span className="mobile-nav-text">Account</span>
                         </Link>
 
-                        <button
-                            className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
-                            onClick={() => setIsLoginModalOpen(true)}
-                        >
-                            Login/Register
-                        </button>
+                        {token || user ? (
+                            <button
+                                className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
+                                onClick={() => dispatch(logout())}
+                                style={{ backgroundColor: "#dc3545", color: "white", borderColor: "#dc3545" }}
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <button
+                                className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
+                                onClick={() => setIsLoginModalOpen(true)}
+                            >
+                                Login/Register
+                            </button>
+                        )}
 
-                        <button
-                            className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto"
-                            style={{ maxWidth: '250px' }}
-                            data-bs-toggle="collapse"
-                            data-bs-target=".navbar-collapse.show"
-                            onClick={() => {
-                                setIsLoginModalOpen(true);
-                                handleMenuClose();
-                            }}
-                        >
-                            Login/ Register
-                        </button>
+                        {token || user ? (
+                            <button
+                                className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto"
+                                style={{ maxWidth: '250px', backgroundColor: "#dc3545", color: "white", borderColor: "#dc3545" }}
+                                data-bs-toggle="collapse"
+                                data-bs-target=".navbar-collapse.show"
+                                onClick={() => {
+                                    dispatch(logout());
+                                    handleMenuClose();
+                                }}
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <button
+                                className="navbar__login-btn w-100 d-lg-none mt-4 mx-auto"
+                                style={{ maxWidth: '250px' }}
+                                data-bs-toggle="collapse"
+                                data-bs-target=".navbar-collapse.show"
+                                onClick={() => {
+                                    setIsLoginModalOpen(true);
+                                    handleMenuClose();
+                                }}
+                            >
+                                Login/ Register
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -170,6 +205,35 @@ const Navbar = ({ setCurrentPage }) => {
             <LoginModal
                 isOpen={isLoginModalOpen}
                 onClose={() => setIsLoginModalOpen(false)}
+                onOtpRequest={(data) => {
+                    setOtpSessionData(data);
+                    setIsLoginModalOpen(false);
+                    setIsOtpModalOpen(true);
+                }}
+                onSignupRequest={(email) => {
+                    setOtpSessionData({ value: email });
+                    setIsLoginModalOpen(false);
+                    setIsSignupModalOpen(true);
+                }}
+            />
+
+            <OtpVerificationModal
+                isOpen={isOtpModalOpen}
+                onClose={() => setIsOtpModalOpen(false)}
+                formData={otpSessionData}
+                onSuccess={(payload) => {
+                    setIsOtpModalOpen(false);
+                    if (payload.isNewUser) {
+                        setIsSignupModalOpen(true);
+                    }
+                }}
+            />
+
+            <SignupModal
+                isOpen={isSignupModalOpen}
+                onClose={() => setIsSignupModalOpen(false)}
+                initialEmail={otpSessionData?.value || ''}
+                onSuccess={() => setIsSignupModalOpen(false)}
             />
         </nav>
     );

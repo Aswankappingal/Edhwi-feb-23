@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { sendMobileOtp, sendEmailOtp } from '../../../redux/slices/authSlice';
 import './LoginModal.scss';
 import { FiX } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
-import { FaFacebook } from 'react-icons/fa';
 
-const LoginModal = ({ isOpen, onClose }) => {
+const LoginModal = ({ isOpen, onClose, onOtpRequest, onSignupRequest }) => {
+    const [loginId, setLoginId] = useState('');
+    const [localError, setLocalError] = useState('');
+
+    const dispatch = useDispatch();
+    const { loading, error } = useSelector((state) => state.auth);
+
     if (!isOpen) return null;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLocalError('');
+
+        if (!loginId.trim()) {
+            setLocalError('Please enter a valid email or mobile number.');
+            return;
+        }
+
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginId);
+        const isMobile = /^\d{10}$/.test(loginId);
+
+        if (!isEmail && !isMobile) {
+            setLocalError('Please enter a valid 10-digit mobile number or email address.');
+            return;
+        }
+
+        const action = isEmail ? sendEmailOtp(loginId) : sendMobileOtp(loginId);
+        const resultAction = await dispatch(action);
+
+        if (resultAction.payload?.success) {
+            onOtpRequest({ type: isEmail ? 'email' : 'mobile', value: loginId });
+        }
+    };
 
     return (
         <div className="login-modal-overlay" onClick={onClose}>
@@ -31,19 +63,28 @@ const LoginModal = ({ isOpen, onClose }) => {
                         <p>Your account for everything Edhwi</p>
                     </div>
 
-                    <form className="login-modal__form">
+                    <form className="login-modal__form" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="loginId">Enter Mobile Number / Email*</label>
                             <input
                                 type="text"
                                 id="loginId"
+                                value={loginId}
+                                onChange={(e) => { setLoginId(e.target.value); setLocalError(''); }}
                                 placeholder="Email or Mobile"
                                 className="form-control"
+                                required
                             />
                         </div>
 
-                        <button type="submit" className="login-modal__submit-btn">
-                            Continue
+                        {(error || localError) && (
+                            <div style={{ color: "red", fontSize: "12px", marginBottom: "15px" }}>
+                                {error || localError}
+                            </div>
+                        )}
+
+                        <button type="submit" className="login-modal__submit-btn" disabled={loading}>
+                            {loading ? 'Sending OTP...' : 'Continue'}
                         </button>
                     </form>
 
@@ -56,9 +97,8 @@ const LoginModal = ({ isOpen, onClose }) => {
                             <FcGoogle size={20} className="social-icon" />
                             Continue with Google
                         </button>
-                        <button className="social-btn facebook-btn">
-                            <FaFacebook size={20} color="#1877F2" className="social-icon" />
-                            Continue with Facebook
+                        <button className="social-btn facebook-btn" onClick={() => onSignupRequest(loginId)} style={{ backgroundColor: "#333", color: "white", borderColor: "#333" }}>
+                            Sign up manually
                         </button>
                     </div>
                 </div>
