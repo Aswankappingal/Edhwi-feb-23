@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
 import { fetchCart } from '../../redux/slices/cartSlice';
+import { fetchWishlist } from '../../redux/slices/wishlistSlice';
 import LoginModal from '../Theams/LoginModal/LoginModal';
 import OtpVerificationModal from '../Theams/LoginModal/OtpVerificationModal';
 import SignupModal from '../Theams/LoginModal/SignupModal';
@@ -20,10 +21,12 @@ const Navbar = ({ setCurrentPage }) => {
     const dispatch = useDispatch();
     const { user, token } = useSelector((state) => state.auth);
     const { items: cartItems } = useSelector((state) => state.cart);
+    const { items: wishlistItems } = useSelector((state) => state.wishlist);
 
     React.useEffect(() => {
         if (token) {
             dispatch(fetchCart());
+            dispatch(fetchWishlist());
         }
     }, [dispatch, token]);
 

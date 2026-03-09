@@ -1,68 +1,106 @@
-import React, { useState } from 'react';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaHeart } from 'react-icons/fa6';
 import { GoPlus } from "react-icons/go";
+import { FaCheck } from 'react-icons/fa';
+import { removeFromWishlist } from '../../redux/slices/wishlistSlice';
+import { addToCart } from '../../redux/slices/cartSlice';
+import ToastModal from '../common/ToastModal/ToastModal';
 import './Wishlist.scss';
 
 const Wishlist = () => {
-    // Mock wishlist items based on design
-    const [wishlistItems, setWishlistItems] = useState([
-        {
-            id: 1,
-            name: 'Coconut oil pet bottle',
-            availability: 'Available in 1L',
-            price: 159,
-            image: '/Bottle-Coconut.svg'
-        },
-        {
-            id: 2,
-            name: 'Coconut Oil - pouch',
-            availability: 'Available in 1L',
-            price: 159,
-            image: '/Kuppi.svg' // Mocking pouch image based on design
-        },
-        {
-            id: 3,
-            name: 'Vermicelli',
-            availability: 'Available in 1L',
-            price: 159,
-            image: '/vermicil.svg'
-        }
-    ]);
+    const dispatch = useDispatch();
+    const { items: wishlistItems, loading } = useSelector((state) => state.wishlist);
+    const { items: cartItems } = useSelector((state) => state.cart);
+    const { products: allProducts } = useSelector((state) => state.data);
 
-    const handleRemoveFromWishlist = (id) => {
-        setWishlistItems(wishlistItems.filter(item => item.id !== id));
-    };
+    // Toast state
+    const [toastConfig, setToastConfig] = React.useState({
+        isOpen: false,
+        message: '',
+        type: 'success'
+    });
+
+    const handleRemoveFromWishlist = useCallback((productId) => {
+        dispatch(removeFromWishlist({ productId })).then(() => {
+            setToastConfig({
+                isOpen: true,
+                message: 'Product removed from wishlist!',
+                type: 'error'
+            });
+        });
+    }, [dispatch]);
+
+    const handleAddToCart = useCallback((e, productId) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // Default quantity 1, if there are specific variants they could be passed here.
+        dispatch(addToCart({ productId, quantity: 1 }));
+    }, [dispatch]);
+
+    const getAddButtonContent = useCallback((productId) => {
+        const isProductInCart = cartItems.some(item => item.productId === productId);
+        if (isProductInCart) {
+            return <FaCheck className='check-icon' style={{ color: '#4CAF50' }} />;
+        }
+        return <GoPlus className='add-icon' />;
+    }, [cartItems]);
 
     return (
         <div className="wishlist-container">
             <h2 className="wishlist-heading">Whishlist</h2>
             <div className="wishlist-grid">
-                {wishlistItems.map((product) => (
-                    <div className="wishlist-card" key={product.id}>
-                        <div className="card-image-wrapper">
-                            <button 
-                                className="remove-btn" 
-                                onClick={() => handleRemoveFromWishlist(product.id)}
-                                title="Remove from wishlist"
-                            >
-                                <FaHeart className="heart-icon filled" />
-                            </button>
-                            <img src={product.image} alt={product.name} />
-                            <button className="add-to-cart-btn" title="Add to cart">
-                                <GoPlus className="add-icon" />
-                            </button>
-                        </div>
-                        <div className="card-details">
-                            <h3>{product.name}</h3>
-                            <p>{product.availability}</p>
-                            <div className="price">₹{product.price}</div>
-                        </div>
-                    </div>
-                ))}
-                {wishlistItems.length === 0 && (
+                {loading && wishlistItems.length === 0 ? (
+                    <div className="empty-wishlist">Loading your wishlist...</div>
+                ) : (
+                    wishlistItems.map((wishlistItem) => {
+                        // Cross-reference with allProducts to get missing details if API only returns productId
+                        const productRef = allProducts?.find(p => p.id.toString() === wishlistItem.productId?.toString() || p.id == wishlistItem.productId) || {};
+                        
+                        const displayImage = wishlistItem.productImage || productRef.imageUrl || (productRef.images && productRef.images[0]?.url) || '/Kuppi.svg';
+                        const displayName = wishlistItem.productName || wishlistItem.name || productRef.name || 'Product';
+                        const displayPrice = wishlistItem.price || wishlistItem.sellingPrice || productRef.price || productRef.sellingPrice || 0;
+                        const displayVolume = (wishlistItem.volumes && wishlistItem.volumes[0]) || (productRef.variantCombinations && productRef.variantCombinations[0]?.amount) || '1L';
+
+                        return (
+                            <div className="wishlist-card" key={wishlistItem.productId}>
+                                <div className="card-image-wrapper">
+                                    <button 
+                                        className="remove-btn" 
+                                        onClick={() => handleRemoveFromWishlist(wishlistItem.productId)}
+                                        title="Remove from wishlist"
+                                    >
+                                        <FaHeart className="heart-icon filled" />
+                                    </button>
+                                    <img src={displayImage} alt={displayName} />
+                                    <button 
+                                        className="add-to-cart-btn" 
+                                        title={cartItems.some(item => item.productId === wishlistItem.productId) ? "Added to cart" : "Add to cart"}
+                                        onClick={(e) => handleAddToCart(e, wishlistItem.productId)}
+                                    >
+                                        {getAddButtonContent(wishlistItem.productId)}
+                                    </button>
+                                </div>
+                                <div className="card-details">
+                                    <h3>{displayName}</h3>
+                                    <p>Available in {displayVolume}</p>
+                                    <div className="price">₹{displayPrice}</div>
+                                </div>
+                            </div>
+                        )
+                    })
+                )}
+                {!loading && wishlistItems.length === 0 && (
                     <div className="empty-wishlist">Your wishlist is empty.</div>
                 )}
             </div>
+
+            <ToastModal 
+                isOpen={toastConfig.isOpen} 
+                message={toastConfig.message} 
+                type={toastConfig.type} 
+                onClose={() => setToastConfig(prev => ({ ...prev, isOpen: false }))} 
+            />
         </div>
     );
 };

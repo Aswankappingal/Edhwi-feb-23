@@ -12,6 +12,8 @@ import Productsidebar from '../../Theams/ProductSidebar/Productsidebar'
 import Navbar from '../../Navbar/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
+import { addToWishlist, removeFromWishlist } from '../../../redux/slices/wishlistSlice'
+import ToastModal from '../../common/ToastModal/ToastModal'
 
 const ExploreProducts = () => {
     const breadcrumbItems = [
@@ -26,8 +28,14 @@ const ExploreProducts = () => {
     // Cart state
     const [cartItems, setCartItems] = useState(new Set());
 
-    // Wishlist state
-    const [wishlistItems, setWishlistItems] = useState(new Set());
+    // Toast state
+    const [toastConfig, setToastConfig] = useState({
+        isOpen: false,
+        message: '',
+        type: 'success'
+    });
+
+    // Wishlist state is now handled globally via Redux
 
     const [currentFilters, setCurrentFilters] = useState({
         categories: [],
@@ -40,6 +48,7 @@ const ExploreProducts = () => {
     // Redux state
     const dispatch = useDispatch();
     const { products: reduxProducts, status } = useSelector((state) => state.data);
+    const { items: wishlistItems } = useSelector((state) => state.wishlist);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -50,25 +59,35 @@ const ExploreProducts = () => {
     // Use Redux products, fallback to empty array
     const allProductsData = reduxProducts || [];
 
-    // Wishlist toggle (local only)
+    // Wishlist toggle directly interacting with backend
     const handleWishlistToggle = useCallback((e, productId) => {
         e.preventDefault();
         e.stopPropagation();
 
-        setWishlistItems(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
-    }, []);
+        const isInWishlist = wishlistItems.some(item => item.productId?.toString() === productId?.toString() || item.productId == productId);
+        
+        if (isInWishlist) {
+            dispatch(removeFromWishlist({ productId })).then(() => {
+                setToastConfig({
+                    isOpen: true,
+                    message: 'Product removed from wishlist!',
+                    type: 'error'
+                });
+            });
+        } else {
+            dispatch(addToWishlist({ productId })).then(() => {
+                setToastConfig({
+                    isOpen: true,
+                    message: 'Product added to wishlist!',
+                    type: 'success'
+                });
+            });
+        }
+    }, [wishlistItems, dispatch]);
 
-    // Get wishlist icon based on state
+    // Get wishlist icon based on Redux state
     const getWishlistIcon = useCallback((productId) => {
-        const isInWishlist = wishlistItems.has(productId);
+        const isInWishlist = wishlistItems.some(item => item.productId?.toString() === productId?.toString() || item.productId == productId);
         return (
             <div className="wishlist-icon-container">
                 {isInWishlist ?
@@ -344,6 +363,13 @@ const ExploreProducts = () => {
                     </div>
                 </div>
             </div>
+
+            <ToastModal 
+                isOpen={toastConfig.isOpen} 
+                message={toastConfig.message} 
+                type={toastConfig.type} 
+                onClose={() => setToastConfig(prev => ({ ...prev, isOpen: false }))} 
+            />
 
             {/* <Footer /> */}
         </div>
