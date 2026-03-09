@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import './MyAccount.scss';
 import { FiChevronRight } from 'react-icons/fi';
 import Overview from './Overview';
@@ -9,10 +10,18 @@ import SavedCards from './SavedCards';
 import Coupons from './Coupons';
 import Notifications from './Notifications';
 import Cancelorder from './Cancelorder';
+import Wishlist from './Wishlist';
 import Navbar from '../Navbar/Navbar';
 
 const MyAccount = ({ setCurrentPage }) => {
-    const [activeTab, setActiveTab] = useState('overview');
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'overview');
+
+    useEffect(() => {
+        if (location.state?.activeTab) {
+            setActiveTab(location.state.activeTab);
+        }
+    }, [location.state]);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -30,9 +39,10 @@ const MyAccount = ({ setCurrentPage }) => {
                 return <Coupons />;
             case 'notifications':
                 return <Notifications />;
-
             case 'cancel-order':
                 return <Cancelorder setActiveTab={setActiveTab} />;
+            case 'wishlist':
+                return <Wishlist />;
             default:
                 return <Overview />;
         }
@@ -91,6 +101,15 @@ const MyAccount = ({ setCurrentPage }) => {
                                             onClick={(e) => { e.preventDefault(); setActiveTab('returns'); }}
                                         >
                                             Returns
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="#wishlist"
+                                            className={activeTab === 'wishlist' ? 'active-link' : ''}
+                                            onClick={(e) => { e.preventDefault(); setActiveTab('wishlist'); }}
+                                        >
+                                            Wishlist
                                         </a>
                                     </li>
                                 </ul>
