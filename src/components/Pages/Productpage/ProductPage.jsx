@@ -1,5 +1,8 @@
-// src/pages/ProductPage/ProductPage.js
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
+import { addToCart } from '../../../redux/slices/cartSlice'
+import { fetchProducts } from '../../../redux/slices/dataSlice'
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
 import { BsBoxSeam, BsHeadset, BsPlus } from 'react-icons/bs'
@@ -8,23 +11,16 @@ import OurPromise from '../../OurPromise/OurPromise'
    🔥 STATIC PRODUCT DATA OBJECT
 ===================================================== */
 
-const productData = {
-    id: 1,
-    name: "Coconut Oil pet Bottle",
-    price: 145,
-    offers: "10% OFF",
-    imageUrl: "/Edhwi-Packetss.svg",
-    features: "Premium Quality | 100% Pure | Cold Pressed | Hygienically packed in tamper-proof bottle.",
-    description: "Experience the natural freshness of Karikku Tender Coconut Water, tapped from handpicked young coconuts grown in Kerala. Packed in a hygienic, food-grade bottle, it’s the perfect way to hydrate — pure, refreshing, and just as nature intended..",
+// Default fallback properties for missing DB data
+const defaultProductProps = {
+    offers: "",
+    features: "Premium Quality | 100% Pure | Cold Pressed | Hygienically packed.",
+    description: "Experience the natural freshness of our products, sourced and packed with utmost care.",
     storageInstruction: "Store in a cool, dry place. Keep away from direct sunlight.",
     shelfLife: "12 months from the date of packaging.",
-    certification: "FSSAI Approved | 100% Vegetarian | Lab-tested purity",
-    images: [
-        { url: "/Edhwi-Packetss.svg" },
-        { url: "/Edhwi-bottle.svg" }
-    ],
+    certification: "FSSAI Approved",
     sizes: ["12", "24", "48", "200 ml", "1 L"]
-}
+};
 
 /* =====================================================
    PROCESS DATA
@@ -55,8 +51,61 @@ const processData = {
 }
 
 const ProductPage = () => {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { items: cartItems, loading } = useSelector((state) => state.cart);
+    const { products, status: productStatus } = useSelector((state) => state.data);
+
+    useEffect(() => {
+        if (productStatus === 'idle') {
+            dispatch(fetchProducts());
+        }
+    }, [productStatus, dispatch]);
+
+    const product = products?.find(p => p.id === id || p.id === parseInt(id));
+
+    // Combine DB data with UI defaults
+    const productData = product ? {
+        id: product.id,
+        name: product.name,
+        price: product.price || product.sellingPrice || product.priceNumber || 0,
+        imageUrl: product.imageUrl || (product.images && product.images[0]?.url) || '/Kuppi.svg',
+        images: product.images || [],
+        offers: product.offers || defaultProductProps.offers,
+        features: product.features || defaultProductProps.features,
+        description: product.description || defaultProductProps.description,
+        storageInstruction: product.storageInstruction || defaultProductProps.storageInstruction,
+        shelfLife: product.shelfLife || defaultProductProps.shelfLife,
+        certification: product.certification || defaultProductProps.certification,
+        sizes: product.variantCombinations?.map(v => v.amount || v.weight || v.volume) || defaultProductProps.sizes
+    } : null;
 
     const [selectedSize, setSelectedSize] = React.useState("12");
+
+    if (productStatus === 'loading') {
+        return <div style={{ padding: '100px', textAlign: 'center' }}>Loading product details...</div>;
+    }
+
+    if (!productData) {
+        return <div style={{ padding: '100px', textAlign: 'center' }}>Product not found.</div>;
+    }
+
+    // Check if the current product is already in the cart
+    const isProductInCart = cartItems.some(item => item.productId === productData.id.toString() || item.productId === productData.id);
+
+    const handleCartAction = () => {
+        if (isProductInCart) {
+            navigate('/cart');
+        } else {
+            // For now, we assume a static product ID and a quantity of 1 for the 'Buy now' action wrapper.
+            // If the backend requires a string, converting it.
+            dispatch(addToCart({
+                productId: productData.id.toString(),
+                quantity: 1
+            }));
+        }
+    };
 
     return (
         <div className="Product-page-wrapper">
@@ -120,9 +169,11 @@ const ProductPage = () => {
                             </div>
                         </div>
 
-                        {/* Buttons (UI Only) */}
+                        {/* Buttons (UI) */}
                         <div className='buy-now'>
-                            <button className='Link w-100'>Buy now</button>
+                            <button className='Link w-100' onClick={handleCartAction} disabled={loading && !isProductInCart}>
+                                {isProductInCart ? 'Go to Cart' : (loading ? 'Adding...' : 'Add to cart')}
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -18,6 +18,7 @@ import ProductPage from "./components/Pages/Productpage/ProductPage";
 import Gallery from "./components/Pages/Gallery/Gallery";
 import Footer from "./components/Common/Footer/Footer";
 import Cart from "./components/Pages/Cart/Cart";
+import Address from "./components/Pages/Address/Address";
 import BlogSub from './components/BlogSub/BlogSub';
 
 import useFetchData from './hooks/useFetchData';
@@ -59,12 +60,12 @@ function App() {
           {/* 🔹 My Account Page */}
           <Route path="/my-account" element={<MyAccount />} />
 
-          {/* 🔹 Our Products Page */}
           <Route path="/our-products" element={<ExploreProducts />} />
 
-          <Route path='/Product-page' element={<ProductPage />} />
+          <Route path='/Product-page/:id' element={<ProductPage />} />
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/cart' element={<Cart />} />
+          <Route path='/address' element={<Address />} />
 
 
 

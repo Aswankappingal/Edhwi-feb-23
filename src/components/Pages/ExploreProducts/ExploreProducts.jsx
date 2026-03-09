@@ -10,6 +10,8 @@ import { FaCheck } from 'react-icons/fa'
 import { BsArrowUpRightCircleFill } from 'react-icons/bs'
 import Productsidebar from '../../Theams/ProductSidebar/Productsidebar'
 import Navbar from '../../Navbar/Navbar'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProducts } from '../../../redux/slices/dataSlice'
 
 const ExploreProducts = () => {
     const breadcrumbItems = [
@@ -35,98 +37,18 @@ const ExploreProducts = () => {
 
     const [sortBy, setSortBy] = useState('name');
 
-    // Static fallback products
-    const allProductsData = useMemo(() => [
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/vermicil.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
+    // Redux state
+    const dispatch = useDispatch();
+    const { products: reduxProducts, status } = useSelector((state) => state.data);
 
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Kuppi.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
+    useEffect(() => {
+        if (status === 'idle') {
+            dispatch(fetchProducts());
+        }
+    }, [status, dispatch]);
 
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Coconut-Edhwi-bottle.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/vermicil.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Kuppi.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-
-        {
-            id: 1,
-            name: "Karikku Pure Coconut Oil - Pet Bottle",
-            image: "/Bottle-Coconut.svg",
-            availability: "Available in 1L",
-            volumes: ["1L"],
-            price: "₹89",
-            categoryName: "Food",
-            categoryId: "food",
-            variantCombinations: [{ color: "Clear" }],
-            sellingPrice: 89,
-            priceNumber: 89,
-            variants: [{ color: "Clear" }]
-        },
-    ], []);
+    // Use Redux products, fallback to empty array
+    const allProductsData = reduxProducts || [];
 
     // Wishlist toggle (local only)
     const handleWishlistToggle = useCallback((e, productId) => {
@@ -197,7 +119,7 @@ const ExploreProducts = () => {
         // Filter by price ranges
         if (currentFilters.price.length > 0) {
             filtered = filtered.filter(product => {
-                const productPrice = product.priceNumber || 0;
+                const productPrice = product.price || product.sellingPrice || 0;
                 return currentFilters.price.some(priceRange => {
                     switch (priceRange) {
                         case '₹0 - ₹100': return productPrice >= 0 && productPrice <= 100;
@@ -226,14 +148,18 @@ const ExploreProducts = () => {
         // Sort
         switch (sortBy) {
             case 'price-low-to-high':
-                filtered.sort((a, b) => a.priceNumber - b.priceNumber);
+                filtered.sort((a, b) => (a.price || a.sellingPrice || 0) - (b.price || b.sellingPrice || 0));
                 break;
             case 'price-high-to-low':
-                filtered.sort((a, b) => b.priceNumber - a.priceNumber);
+                filtered.sort((a, b) => (b.price || b.sellingPrice || 0) - (a.price || a.sellingPrice || 0));
                 break;
             case 'name':
             default:
-                filtered.sort((a, b) => a.name.localeCompare(b.name));
+                filtered.sort((a, b) => {
+                    const nameA = a.name || '';
+                    const nameB = b.name || '';
+                    return nameA.localeCompare(nameB);
+                });
                 break;
         }
 
@@ -376,7 +302,7 @@ const ExploreProducts = () => {
                             <div key={rowIndex} className="row three-cards">
                                 {row?.map((product) => (
                                     <div key={product.id} className={columnClass}>
-                                        <Link to={`/Product-page`} className='Right-side-link'>
+                                        <Link to={`/Product-page/${product.id}`} className='Right-side-link'>
                                             <div className="product-card-main">
                                                 <div className="product-card">
                                                     <div className="prod-image-section">
@@ -386,7 +312,7 @@ const ExploreProducts = () => {
                                                         >
                                                             {getWishlistIcon(product.id)}
                                                         </div>
-                                                        <img src={product.image} alt={product.name} />
+                                                        <img src={product.imageUrl || (product.images && product.images[0]?.url) || '/Kuppi.svg'} alt={product.name} />
                                                         <div
                                                             className={`add-icon-wrapper ${cartItems.has(product.id) ? 'in-cart' : ''}`}
                                                             onClick={(e) => handleAddToCart(e, product.id)}
@@ -397,7 +323,7 @@ const ExploreProducts = () => {
                                                     </div>
                                                     <div className="product-details">
                                                         <h3>{product.name}</h3>
-                                                        <h4>Available in <span>{product?.variants?.length || 1} colors</span></h4>
+                                                        <h4>₹{product.price || product.sellingPrice}</h4>
                                                     </div>
                                                 </div>
                                             </div>

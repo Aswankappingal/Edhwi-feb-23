@@ -4,6 +4,7 @@ import { FiHeart, FiShoppingBag, FiUser, FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
+import { fetchCart } from '../../redux/slices/cartSlice';
 import LoginModal from '../Theams/LoginModal/LoginModal';
 import OtpVerificationModal from '../Theams/LoginModal/OtpVerificationModal';
 import SignupModal from '../Theams/LoginModal/SignupModal';
@@ -18,6 +19,13 @@ const Navbar = ({ setCurrentPage }) => {
 
     const dispatch = useDispatch();
     const { user, token } = useSelector((state) => state.auth);
+    const { items: cartItems } = useSelector((state) => state.cart);
+
+    React.useEffect(() => {
+        if (token) {
+            dispatch(fetchCart());
+        }
+    }, [dispatch, token]);
 
     // 🔥 NEW: Get current route
     const location = useLocation();
@@ -125,10 +133,25 @@ const Navbar = ({ setCurrentPage }) => {
                     {/* Right Actions */}
                     <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-4 mt-lg-0 navbar__actions" style={{ zIndex: 10 }}>
 
-                        <div className="navbar__action-icon" style={{ color: isHome ? "#fff" : "#000" }} data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">
-                            <FiHeart size={22} color={isHome ? "#fff" : "#000"} className="d-none d-lg-block px-0" />
-                            <span className="mobile-nav-text">Wishlist</span>
-                        </div>
+                       <Link 
+                            to="/my-account" 
+                            state={{ activeTab: 'wishlist' }}
+                            className={`navbar__action-icon ${location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? 'active-icon' : ''}`} 
+                            style={{ textDecoration: "none", color: location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000") }} 
+                            onClick={handleNavClick}
+                        >
+                            <FiHeart 
+                                size={22} 
+                                color={location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000")} 
+                                fill={location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : 'none'}
+                                className="d-none d-lg-block px-0" 
+                            />
+                            <span 
+                                className="mobile-nav-text"
+                            >
+                                Wishlist
+                            </span>
+                        </Link>
 
                         <Link
                             to="/cart"
@@ -138,7 +161,7 @@ const Navbar = ({ setCurrentPage }) => {
                         >
                             <div className="position-relative d-none d-lg-flex align-items-center justify-content-center">
                                 <FiShoppingBag size={22} color={isHome ? "#fff" : "#000"} />
-                                <span className="navbar__cart-badge">0</span>
+                                <span className="navbar__cart-badge">{cartItems?.length || 0}</span>
                             </div>
                             <span className="mobile-nav-text">Cart</span>
                         </Link>
