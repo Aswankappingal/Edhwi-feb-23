@@ -20,6 +20,7 @@ import Footer from "./components/Common/Footer/Footer";
 import Cart from "./components/Pages/Cart/Cart";
 import Address from "./components/Pages/Address/Address";
 import Payment from "./components/Pages/Payment/Payment";
+import ContactUs from "./components/Pages/ContactUs/ContactUs";
 import BlogSub from './components/BlogSub/BlogSub';
 
 import useFetchData from './hooks/useFetchData';
@@ -68,6 +69,7 @@ function App() {
           <Route path='/cart' element={<Cart />} />
           <Route path='/address' element={<Address />} />
           <Route path='/payment' element={<Payment />} />
+          <Route path='/contact-us' element={<ContactUs />} />
 
 
 

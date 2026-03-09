@@ -112,7 +112,7 @@ const Navbar = ({ setCurrentPage }) => {
                         </li>
 
                         <li className="nav-item navbar__nav-item">
-                            <Link className="nav-link" to="/blogs" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Blogs</Link>
+                            <Link className="nav-link" to="/contact-us" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Contact Us</Link>
                         </li>
 
                         <li className="nav-item navbar__nav-item">
@@ -136,20 +136,20 @@ const Navbar = ({ setCurrentPage }) => {
                     {/* Right Actions */}
                     <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-4 mt-lg-0 navbar__actions" style={{ zIndex: 10 }}>
 
-                       <Link 
-                            to="/my-account" 
+                        <Link
+                            to="/my-account"
                             state={{ activeTab: 'wishlist' }}
-                            className={`navbar__action-icon ${location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? 'active-icon' : ''}`} 
-                            style={{ textDecoration: "none", color: location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000") }} 
+                            className={`navbar__action-icon ${location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? 'active-icon' : ''}`}
+                            style={{ textDecoration: "none", color: location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000") }}
                             onClick={handleNavClick}
                         >
-                            <FiHeart 
-                                size={22} 
-                                color={location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000")} 
+                            <FiHeart
+                                size={22}
+                                color={location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000")}
                                 fill={location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : 'none'}
-                                className="d-none d-lg-block px-0" 
+                                className="d-none d-lg-block px-0"
                             />
-                            <span 
+                            <span
                                 className="mobile-nav-text"
                             >
                                 Wishlist
