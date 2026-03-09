@@ -39,11 +39,6 @@ const Address = () => {
         if (!addressLoading) {
             if (addresses.length > 0 && !selectedAddressId) {
                 setSelectedAddressId(addresses[0].id || addresses[0]._id); // fallback depending on backend ID key
-            } else if (addresses.length === 0) {
-                // Auto-open add address modal if no addresses
-                setModalMode('add');
-                setEditingAddressData(null);
-                setIsEditModalOpen(true);
             }
         }
     }, [addresses, addressLoading, selectedAddressId]);
@@ -71,12 +66,8 @@ const Address = () => {
                     {/* Left Column - Addresses */}
                     <div className="address-items-section">
                         {addresses.length === 0 ? (
-                            <div className="no-address-state" style={{ padding: '40px 20px', textAlign: 'center', background: '#fff', borderRadius: '8px', border: '1px solid #e0e0e0' }}>
-                                <h3 style={{ fontSize: '18px', marginBottom: '15px', color: '#333' }}>No addresses found</h3>
-                                <p style={{ color: '#666', marginBottom: '20px' }}>Please add a delivery address to proceed.</p>
-                                <button className="add-new-btn" onClick={handleAddNewClick} style={{ margin: '0' }}>
-                                    Add new Address
-                                </button>
+                            <div className="inline-address-form-container">
+                                <EditAddressModal isInline={true} mode="add" />
                             </div>
                         ) : (
                             <>

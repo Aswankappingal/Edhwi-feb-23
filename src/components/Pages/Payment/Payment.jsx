@@ -5,8 +5,6 @@ import CartNavbar from '../../Common/cartNavbar/CartNavbar';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { calculateTotals } from '../../../redux/slices/cartSlice';
 import { placeOrder, resetOrderState } from '../../../redux/slices/orderSlice';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
 import './Payment.scss';
 
 const Payment = () => {
@@ -134,18 +132,6 @@ const Payment = () => {
                             </label>
                         </div>
 
-                        <div className="payment-phone-section">
-                            <h3 className="payment-section-heading">CONFIRM PHONE NUMBER FOR ORDER UPDATES</h3>
-                            <PhoneInput
-                                country={'in'}
-                                value={selectedAddress.phone}
-                                onChange={phone => setSelectedAddress({ ...selectedAddress, phone })}
-                                inputStyle={{ width: '100%', height: '45px', fontSize: '16px', borderRadius: '4px' }}
-                                containerStyle={{ marginTop: '10px' }}
-                                enableSearch={true}
-                                disableSearchIcon={true}
-                            />
-                        </div>
                     </div>
 
                     <div className="payment-summary-section">

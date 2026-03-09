@@ -6,7 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import './EditAddressModal.scss';
 
-const EditAddressModal = ({ isOpen, onClose, addressData, mode = 'edit' }) => {
+const EditAddressModal = ({ isOpen, onClose, addressData, mode = 'edit', isInline = false }) => {
     const dispatch = useDispatch();
     const { loading: addressLoading } = useSelector((state) => state.address);
 
@@ -53,7 +53,19 @@ const EditAddressModal = ({ isOpen, onClose, addressData, mode = 'edit' }) => {
         }
     }, [addressData, isOpen, mode]);
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        if (isOpen && !isInline) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen, isInline]);
+
+    if (!isOpen && !isInline) return null;
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -127,136 +139,148 @@ const EditAddressModal = ({ isOpen, onClose, addressData, mode = 'edit' }) => {
         }
 
         if (updateAddress.fulfilled.match(resultAction) || addAddress.fulfilled.match(resultAction)) {
-            onClose();
+            if (onClose) onClose();
         } else {
             alert(resultAction.payload || `Failed to ${mode} address`);
         }
     };
 
-    return (
-        <div className="edit-modal-overlay">
-            <div className="edit-modal-content">
+    const formContent = (
+        <div className={`edit-modal-content ${isInline ? 'inline-form' : ''}`}>
+            {!isInline && (
                 <div className="edit-modal-header">
                     <h2>{mode === 'add' ? 'Add new address' : 'Edit address'}</h2>
                     <button className="close-btn" onClick={onClose}>
                         <MdClose size={24} color="#666" />
                     </button>
                 </div>
+            )}
 
-                <div className="edit-modal-body">
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Your full name*</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                name="fullName"
-                                value={formData.fullName}
-                                onChange={handleInputChange}
-                                placeholder="James Jacobe |"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Phone</label>
-                            <div className="phone-input-wrapper">
-                                <PhoneInput
-                                    country={'in'}
-                                    value={formData.phone}
-                                    onChange={phone => setFormData(prev => ({ ...prev, phone }))}
-                                    inputStyle={{ width: '100%', height: '42px', fontSize: '15px' }}
-                                    containerStyle={{ marginTop: '5px' }}
-                                    enableSearch={true}
-                                    disableSearchIcon={true}
-                                />
-                            </div>
-                        </div>
+            <div className={`edit-modal-body ${isInline ? 'inline-body' : ''}`}>
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Email your full name*</label>
+                        <input
+                            type="text"
+                            className="modal-input"
+                            name="fullName"
+                            value={formData.fullName}
+                            onChange={handleInputChange}
+                            placeholder="James Jacobe |"
+                        />
                     </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>Address line 1</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                name="addressLine1"
-                                value={formData.addressLine1}
-                                onChange={handleInputChange}
-                                placeholder="Enter address here"
+                    <div className="form-group">
+                        <label>Phone</label>
+                        <div className="phone-input-wrapper">
+                            <PhoneInput
+                                country={'in'}
+                                value={formData.phone}
+                                onChange={phone => setFormData(prev => ({ ...prev, phone }))}
+                                inputStyle={{ width: '100%', height: '42px', fontSize: '15px' }}
+                                containerStyle={{ marginTop: '5px' }}
+                                enableSearch={true}
+                                disableSearchIcon={true}
                             />
-                        </div>
-                        <div className="form-group">
-                            <label>Address line 2</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                name="addressLine2"
-                                value={formData.addressLine2}
-                                onChange={handleInputChange}
-                                placeholder="Enter address here"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label>State</label>
-                            <input
-                                type="text"
-                                className="modal-input"
-                                name="state"
-                                value={formData.state}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Pin code</label>
-                            <input
-                                type="text"
-                                className={`modal-input ${pincodeError ? 'error' : ''}`}
-                                name="zipCode"
-                                maxLength="6"
-                                value={formData.zipCode}
-                                onChange={(e) => {
-                                    const val = e.target.value.replace(/\D/g, '');
-                                    setFormData(prev => ({ ...prev, zipCode: val }));
-                                }}
-                            />
-                            {pincodeError && <span className="error-text">{pincodeError}</span>}
-                        </div>
-                    </div>
-
-                    <div className="form-group address-type">
-                        <label>Save address as</label>
-                        <div className="type-selector">
-                            <button
-                                className={`type-btn ${formData.addressType === 'Home' ? 'active' : ''}`}
-                                onClick={() => setFormData({ ...formData, addressType: 'Home' })}
-                            >
-                                Home
-                            </button>
-                            <button
-                                className={`type-btn ${formData.addressType === 'Office' ? 'active' : ''}`}
-                                onClick={() => setFormData({ ...formData, addressType: 'Office' })}
-                            >
-                                Office
-                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div className="edit-modal-footer">
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>Address line 1</label>
+                        <input
+                            type="text"
+                            className="modal-input"
+                            name="addressLine1"
+                            value={formData.addressLine1}
+                            onChange={handleInputChange}
+                            placeholder="Enter address here"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Address line 2</label>
+                        <input
+                            type="text"
+                            className="modal-input"
+                            name="addressLine2"
+                            value={formData.addressLine2}
+                            onChange={handleInputChange}
+                            placeholder="Enter address here"
+                        />
+                    </div>
+                </div>
+
+                <div className="form-row">
+                    <div className="form-group">
+                        <label>State</label>
+                        <input
+                            type="text"
+                            className="modal-input"
+                            name="state"
+                            value={formData.state}
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Pin code</label>
+                        <input
+                            type="text"
+                            className={`modal-input ${pincodeError ? 'error' : ''}`}
+                            name="zipCode"
+                            maxLength="6"
+                            value={formData.zipCode}
+                            onChange={(e) => {
+                                const val = e.target.value.replace(/\D/g, '');
+                                setFormData(prev => ({ ...prev, zipCode: val }));
+                            }}
+                        />
+                        {pincodeError && <span className="error-text">{pincodeError}</span>}
+                    </div>
+                </div>
+
+                <div className="form-group address-type">
+                    <label>Save address as</label>
+                    <div className="type-selector">
+                        <button
+                            className={`type-btn ${formData.addressType === 'Home' ? 'active' : ''}`}
+                            onClick={() => setFormData({ ...formData, addressType: 'Home' })}
+                        >
+                            Home
+                        </button>
+                        <button
+                            className={`type-btn ${formData.addressType === 'Office' ? 'active' : ''}`}
+                            onClick={() => setFormData({ ...formData, addressType: 'Office' })}
+                        >
+                            Office
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div className={`edit-modal-footer ${isInline ? 'inline-footer' : ''}`}>
+                {!isInline && (
                     <button className="cancel-btn" onClick={onClose}>
                         Cancel
                     </button>
-                    <button
-                        className="save-btn"
-                        onClick={handleSaveAddress}
-                        disabled={addressLoading || isPincodeValidating}
-                    >
-                        {isPincodeValidating ? 'Verifying Pincode...' : (addressLoading ? 'Saving...' : 'Save address')}
-                    </button>
-                </div>
+                )}
+                <button
+                    className={`save-btn ${isInline ? 'full-width' : ''}`}
+                    onClick={handleSaveAddress}
+                    disabled={addressLoading || isPincodeValidating}
+                >
+                    {isPincodeValidating ? 'Verifying...' : (addressLoading ? 'Saving...' : (isInline ? 'Save' : 'Save address'))}
+                </button>
             </div>
+        </div>
+    );
+
+    if (isInline) {
+        return formContent;
+    }
+
+    return (
+        <div className="edit-modal-overlay">
+            {formContent}
         </div>
     );
 };
