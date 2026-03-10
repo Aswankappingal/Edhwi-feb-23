@@ -19,9 +19,9 @@
             .breadcrumb-link {
                 color: #000000;
                 text-decoration: none;
-                font-family: General Sans, sans-serif;
+                font-family: "General Sans", sans-serif;
                 font-size: 14px;
-                font-weight: 800;
+                font-weight: 400;
 
                 &:hover {
                     color: #000;
@@ -35,9 +35,9 @@
 
             .breadcrumb-current {
                 color: #1c1c1c;
-                font-family: General Sans, sans-serif;
+                font-family: "General Sans", sans-serif;
                 font-size: 14px;
-                font-weight: 800;
+                font-weight: 600;
             }
         }
 
@@ -59,7 +59,7 @@
                 padding: 1rem 2.8rem;
 
                 h3 {
-                    font-family: Nohemi;
+                    font-family:  "General Sans", sans-serif;
                     font-weight: 600;
                     font-size: 32px;
                     line-height: 105%;
@@ -74,7 +74,7 @@
 
                 .choose-section {
                     p {
-                        font-family: General sans-serif;
+                        font-family: "General Sans", sans-serif-serif;
                         font-weight: 500;
                         font-style: Medium;
                         font-size: 18px;
@@ -169,7 +169,7 @@
             .loading {
                 p {
                     //   margin: 0;
-                    font-family: General Sans;
+                    font-family: "General Sans", sans-serif;
                     font-weight: 500;
                     font-size: 18px;
                     line-height: 130%;
@@ -182,7 +182,7 @@
                     padding: 7px 7px 7px 18px;
                     background-color: transparent;
                     border: 1px solid black;
-                    font-family: General Sans;
+                    font-family: "General Sans", sans-serif;
                     font-weight: 500;
                     font-size: 16px;
                     line-height: 125%;
@@ -327,7 +327,7 @@
                         }
 
                         h4 {
-                            font-family: General Sans;
+                            font-family: "General Sans", sans-serif;
                             font-weight: 400;
                             font-size: 16px;
                             line-height: 130%;
@@ -342,7 +342,7 @@
 
                         p {
                             color: #1B1919;
-                            font-family: General Sans;
+                            font-family: "General Sans", sans-serif;
                             font-weight: 600;
                             font-size: 20px;
                             line-height: 130%;
@@ -458,7 +458,7 @@
                             }
 
                             h4 {
-                                font-family: General Sans;
+                                font-family: "General Sans", sans-serif;
                                 font-weight: 600;
                                 font-size: 14px;
                                 line-height: 130%;
@@ -467,7 +467,7 @@
                             }
 
                             p {
-                                font-family: General Sans;
+                                font-family: "General Sans", sans-serif;
                                 font-weight: 600;
                                 font-size: 16px;
                                 line-height: 130%;

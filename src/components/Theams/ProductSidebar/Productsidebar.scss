@@ -14,7 +14,7 @@
         margin-bottom: 1.5rem;
 
         h3 {
-            font-family: General Sans;
+            font-family: "General Sans", sans-serif;
             font-weight: 600;
             font-size: 20px;
             line-height: 130%;
@@ -66,8 +66,8 @@
             }
 
             .filter-title {
-                font-family: General Sans;
-                font-weight: 800;
+                font-family: "General Sans", sans-serif;
+                font-weight: 400;
                 font-size: 18px;
                 line-height: 130%;
                 letter-spacing: 0%;
@@ -99,7 +99,7 @@
                     padding: 0.5rem 0.75rem;
                     border: 1px solid #d1d5db;
                     border-radius: 4px;
-                    font-family: 'General Sans', sans-serif;
+                    font-family: '"General Sans", sans-serif', sans-serif;
                     font-size: 14px;
                     outline: none;
 
@@ -130,7 +130,7 @@
                 align-items: center;
                 padding: 0.5rem 0;
                 cursor: pointer;
-                font-family: 'General Sans', sans-serif;
+                font-family: '"General Sans", sans-serif', sans-serif;
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 110%;
@@ -185,7 +185,7 @@
                 }
 
                 .option-text {
-                    font-family: General Sans;
+                    font-family: "General Sans", sans-serif;
                     font-weight: 400;
                     font-size: 15px;
                     line-height: 110.00000000000001%;

@@ -115,9 +115,8 @@
         align-items: center;
 
         .family-title {
-            font-family: 'Inter Tight', sans-serif;
-            font-family: General Sans;
-            font-weight: 800;
+            font-family: "General Sans", sans-serif;
+            font-weight: 600;
             font-style: Semibold;
             font-size: 32px;
             leading-trim: NONE;
@@ -129,8 +128,7 @@
         }
 
         .family-description {
-            font-family: 'General Sans', sans-serif;
-            font-family: General Sans;
+            font-family: "General Sans", sans-serif;
             font-weight: 400;
             font-style: Regular;
             font-size: 20px;
@@ -148,8 +146,8 @@
             gap: 8px;
             text-decoration: none;
             color: #1B1919;
-            font-family: 'General Sans', sans-serif;
-            font-weight: 700;
+            font-family: "General Sans", sans-serif;
+            font-weight: 500;
             font-size: 18px;
             transition: opacity 0.3s ease;
 
@@ -165,7 +163,7 @@
             }
 
             .insta-text {
-                font-family: 'General Sans', sans-serif;
+                font-family: '"General Sans", sans-serif', sans-serif;
                 font-weight: 1200;
                 font-style: Medium;
                 font-size: 26.67px;

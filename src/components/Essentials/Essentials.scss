@@ -112,8 +112,7 @@
 
     &__title {
         font-family: "General Sans", sans-serif;
-        font-family: General Sans;
-        font-weight: 800;
+        font-weight: 600;
         font-style: Semibold;
         font-size: 24px;
         leading-trim: NONE;
@@ -123,8 +122,8 @@
     }
 
     &__desc {
-        font-family: General Sans;
-        font-weight: 900;
+        font-family: "General Sans", sans-serif;
+        font-weight:600;
         font-style: Regular;
         font-size: 13px;
         leading-trim: NONE;
@@ -144,7 +143,7 @@
         font-weight: 600;
         font-size: 14px;
         transition: opacity 0.3s ease;
-        font-family: "General Sans", sans-serif;
+        font-family: "" General Sans", sans-serif", sans-serif;
         text-decoration: none;
 
         .arrow-icon {
