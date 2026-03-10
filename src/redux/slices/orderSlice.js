@@ -11,6 +11,7 @@ export const placeOrder = createAsyncThunk(
             const token = getToken();
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const response = await axios.post(`${BaseUrl}/place-order`, orderData, config);
+            console.log(response.data);
             return response.data;
         } catch (error) {
             console.error('Place order failed:', error.response?.data);
