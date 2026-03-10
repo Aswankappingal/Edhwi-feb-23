@@ -17,7 +17,7 @@ const Orders = ({ setActiveTab }) => {
     // Format Date string helper
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A';
-        const date = new Date(dateString);
+        const date = dateString._seconds ? new Date(dateString._seconds * 1000) : new Date(dateString);
         return date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
@@ -45,12 +45,17 @@ const Orders = ({ setActiveTab }) => {
         );
     }
 
+    const getSortTime = (dateVal) => {
+        if (!dateVal) return 0;
+        return dateVal._seconds ? dateVal._seconds * 1000 : new Date(dateVal).getTime() || 0;
+    };
+
     return (
         <section className="dashboard-section figma-orders-section">
             <h2 className="section-heading figma-heading">ORDERS</h2>
 
             <div className="figma-orders-list">
-                {orders.map((order) => {
+                {[...orders].sort((a, b) => getSortTime(b.createdAt) - getSortTime(a.createdAt)).map((order) => {
                     const isDelivered = order.orderStage === 'delivered';
                     const isProcessing = ['placed', 'processing', 'packed', 'shipped'].includes(order.orderStage);
                     const isCancelled = order.orderStage === 'cancelled';
@@ -96,7 +101,7 @@ const Orders = ({ setActiveTab }) => {
                             )}
 
                             {/* Line items for this order */}
-                            {(order.items || []).map((item, index) => (
+                            {(order.pricing?.items || order.items || []).map((item, index) => (
                                 <React.Fragment key={`${item.productId}-${index}`}>
                                     <hr className="card-divider" />
                                     <div className="card-item">
@@ -113,7 +118,7 @@ const Orders = ({ setActiveTab }) => {
                                                 {item.name} {item.weight && `(${item.weight})`}
                                             </div>
                                             <div style={{ fontSize: '13px', color: '#6B7280', marginTop: '5px' }}>
-                                                Qty: {item.quantity} × ₹{item.price}
+                                                Qty: {item.quantity} × ₹{item.price || item.unitPrice || 0}
                                             </div>
                                         </div>
                                         

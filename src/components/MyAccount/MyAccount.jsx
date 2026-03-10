@@ -26,7 +26,7 @@ const MyAccount = ({ setCurrentPage }) => {
     const renderContent = () => {
         switch (activeTab) {
             case 'overview':
-                return <Overview />;
+                return <Overview setActiveTab={setActiveTab} />;
             case 'orders':
                 return <Orders setActiveTab={setActiveTab} />;
             case 'returns':

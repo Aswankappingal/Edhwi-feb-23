@@ -4,7 +4,7 @@ import { FiEdit2, FiTrash2, FiHeart, FiPlus, FiMinus, FiUser } from 'react-icons
 import { fetchMyOrders } from '../../redux/slices/orderSlice';
 import './Overview.scss';
 
-const Overview = () => {
+const Overview = ({ setActiveTab }) => {
     const dispatch = useDispatch();
     const { orders, loading } = useSelector((state) => state.order);
     const { user } = useSelector((state) => state.auth);
@@ -15,15 +15,22 @@ const Overview = () => {
 
     // Flattens the order lines to list them individually in "Recent Orders"
     // Sorted by most recent
+    const getSortTime = (dateVal) => {
+        if (!dateVal) return 0;
+        return dateVal._seconds ? dateVal._seconds * 1000 : new Date(dateVal).getTime() || 0;
+    };
+
     const recentItems = orders
         ?.flatMap(order => 
-            (order.items || []).map(item => ({
+            (order.pricing?.items || order.items || []).map(item => ({
                 ...item,
+                price: item.price || item.unitPrice || 0,
                 orderId: order.orderId,
                 orderNumber: order.orderNumber,
                 orderDate: order.createdAt,
             }))
         )
+        .sort((a, b) => getSortTime(b.orderDate) - getSortTime(a.orderDate)) // Sort by newest orderDate first
         .slice(0, 3) || []; // Show only top 3 recent items
     return (
         <div className="overview-container">
@@ -90,6 +97,15 @@ const Overview = () => {
                                 </div>
                             </div>
                         ))}
+                        <div style={{ marginTop: '20px' }}>
+                            <a 
+                                href="#orders" 
+                                style={{ color: '#0066FF', textDecoration: 'underline', fontWeight: '500', fontSize: '14px', cursor: 'pointer' }}
+                                onClick={(e) => { e.preventDefault(); if (setActiveTab) setActiveTab('orders'); }}
+                            >
+                                View all orders
+                            </a>
+                        </div>
                     </div>
                 )}
             </section>
