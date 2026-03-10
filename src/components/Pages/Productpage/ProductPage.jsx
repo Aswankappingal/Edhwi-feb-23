@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { addToCart } from '../../../redux/slices/cartSlice'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
+import { toast } from 'react-toastify';
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
 import { BsBoxSeam, BsHeadset, BsPlus } from 'react-icons/bs'
@@ -94,16 +95,20 @@ const ProductPage = () => {
     // Check if the current product is already in the cart
     const isProductInCart = cartItems.some(item => item.productId === productData.id.toString() || item.productId === productData.id);
 
-    const handleCartAction = () => {
+    const handleCartAction = async () => {
         if (isProductInCart) {
             navigate('/cart');
         } else {
-            // For now, we assume a static product ID and a quantity of 1 for the 'Buy now' action wrapper.
-            // If the backend requires a string, converting it.
-            dispatch(addToCart({
-                productId: productData.id.toString(),
-                quantity: 1
-            }));
+            try {
+                // For now, we assume a static product ID and a quantity of 1 for the 'Buy now' action wrapper.
+                await dispatch(addToCart({
+                    productId: productData.id.toString(),
+                    quantity: 1
+                })).unwrap();
+                toast.success(`${productData.name} added to cart!`);
+            } catch (error) {
+                toast.error(error || "Failed to add product to cart");
+            }
         }
     };
 

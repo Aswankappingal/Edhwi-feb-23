@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals } from '../../../redux/slices/cartSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Cart.scss';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { FiTrash2 } from 'react-icons/fi';
@@ -30,8 +31,13 @@ const Cart = () => {
         }
     };
 
-    const handleRemoveItem = (productId) => {
-        dispatch(removeFromCart({ productId }));
+    const handleRemoveItem = async (productId) => {
+        try {
+            await dispatch(removeFromCart({ productId })).unwrap();
+            toast.success("Item removed from cart");
+        } catch (error) {
+            toast.error(error || "Failed to remove item");
+        }
     };
 
     return (
@@ -49,84 +55,96 @@ const Cart = () => {
                 <h1 className="cart-page-title">My Cart ({cartItems.length})</h1>
 
                 <div className="cart-main-grid">
-                    {/* Left Column - Cart Items */}
-                    <div className="cart-items-section">
-                        {cartItems.map((item) => (
-                            <div key={item.productId} className="cart-item-card">
-                                <div className="item-image-container">
-                                    {/* Using a placeholder div for the image to match structure */}
-                                    <div className="image-placeholder">
-                                        <img src={item.productDetails?.image || item.image || '/Edhwi-bottle.svg'} alt={item.productDetails?.name || 'Product Image'} />
-                                    </div>
-                                </div>
-
-                                <div className="item-details-container">
-                                    <div className="item-title-row">
-                                        <h3 className="item-title">{item.productDetails?.name || item.title || 'Product'}</h3>
-                                        <span className="item-volume-badge">{item.productDetails?.volume || item.volume || '1 LTR'}</span>
-                                    </div>
-
-                                    <div className="item-actions-and-price">
-                                        <div className="item-actions">
-                                            <button className="action-btn text-grey" onClick={() => handleRemoveItem(item.productId)} disabled={loading}>
-                                                <FiTrash2 /> Remove
-                                            </button>
-                                            <span className="action-divider">|</span>
-                                            <button className="action-btn text-grey">
-                                                <BiHeart /> Add to wishlist
-                                            </button>
+                    {cartItems.length > 0 ? (
+                        <>
+                            {/* Left Column - Cart Items */}
+                            <div className="cart-items-section">
+                                {cartItems.map((item) => (
+                                    <div key={item.productId} className="cart-item-card">
+                                        <div className="item-image-container">
+                                            {/* Using a placeholder div for the image to match structure */}
+                                            <div className="image-placeholder">
+                                                <img src={item.productDetails?.image || item.image || '/Edhwi-bottle.svg'} alt={item.productDetails?.name || 'Product Image'} />
+                                            </div>
                                         </div>
 
-                                        <div className="item-controls-price">
-                                            <div className="quantity-selector">
-                                                <button onClick={() => handleUpdateQuantity(item.productId, -1, item.quantity)} disabled={loading}>−</button>
-                                                <span>{item.quantity}</span>
-                                                <button onClick={() => handleUpdateQuantity(item.productId, 1, item.quantity)} disabled={loading}>+</button>
+                                        <div className="item-details-container">
+                                            <div className="item-title-row">
+                                                <h3 className="item-title">{item.productDetails?.name || item.title || 'Product'}</h3>
+                                                <span className="item-volume-badge">{item.productDetails?.volume || item.volume || '1 LTR'}</span>
                                             </div>
 
-                                            <div className="price-details">
-                                                <div className="current-price">₹{(item.productDetails?.price || item.price || 0) * item.quantity}</div>
-                                                <div className="original-price-row">
-                                                    {/* Hide strike price for now since we have realistic calculations */}
+                                            <div className="item-actions-and-price">
+                                                <div className="item-actions">
+                                                    <button className="action-btn text-grey" onClick={() => handleRemoveItem(item.productId)} disabled={loading}>
+                                                        <FiTrash2 /> Remove
+                                                    </button>
+                                                    <span className="action-divider">|</span>
+                                                    <button className="action-btn text-grey">
+                                                        <BiHeart /> Add to wishlist
+                                                    </button>
+                                                </div>
+
+                                                <div className="item-controls-price">
+                                                    <div className="quantity-selector">
+                                                        <button onClick={() => handleUpdateQuantity(item.productId, -1, item.quantity)} disabled={loading}>−</button>
+                                                        <span>{item.quantity}</span>
+                                                        <button onClick={() => handleUpdateQuantity(item.productId, 1, item.quantity)} disabled={loading}>+</button>
+                                                    </div>
+
+                                                    <div className="price-details">
+                                                        <div className="current-price">₹{(item.productDetails?.price || item.price || 0) * item.quantity}</div>
+                                                        <div className="original-price-row">
+                                                            {/* Hide strike price for now since we have realistic calculations */}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+
+                            {/* Right Column - Payment Summary & Coupons */}
+                            <div className="cart-summary-section">
+                                {/* Apply Coupons Box */}
+                                <div className="apply-coupons-card">
+                                    <div className="coupon-left">
+                                        <MdOutlineLocalOffer className="coupon-icon yellow" />
+                                        <span className="coupon-label">Apply coupons</span>
+                                    </div>
+                                    <button className="apply-btn">Apply</button>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
 
-                    {/* Right Column - Payment Summary & Coupons */}
-                    <div className="cart-summary-section">
-                        {/* Apply Coupons Box */}
-                        <div className="apply-coupons-card">
-                            <div className="coupon-left">
-                                <MdOutlineLocalOffer className="coupon-icon yellow" />
-                                <span className="coupon-label">Apply coupons</span>
+                                {/* Payment Summary */}
+                                <PaymentSummary
+                                    totalMrp={summary.totalMrp}
+                                    discountOnMrp={summary.discount}
+                                    couponSavings={summary.couponSavings}
+                                    applicableGst={summary.gst}
+                                    delivery={summary.delivery}
+                                    total={summary.total}
+                                    buttonText="Continue"
+                                    onButtonClick={() => navigate('/address')}
+                                    showButton={true} className="desktop-payment-summary"
+                                    disabled={cartItems.length === 0}
+                                />
+
+                                {/* Mobile specific button, shown only on mobile */}
+                                <button className="mobile-proceed-btn" onClick={() => navigate('/address')} disabled={cartItems.length === 0}>
+                                    Proceed to checkout
+                                </button>
                             </div>
-                            <button className="apply-btn">Apply</button>
+                        </>
+                    ) : (
+                        <div className="empty-cart-message" style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '80px 20px', backgroundColor: '#fafafa', borderRadius: '16px', marginTop: '20px' }}>
+                            <h2 style={{ fontSize: '28px', color: '#1c1c1c', marginBottom: '12px', fontWeight: '600' }}>Your cart is empty</h2>
+                            <p style={{ color: '#666', marginBottom: '32px', fontSize: '16px' }}>There are no products in your cart yet.</p>
+                            <button onClick={() => navigate('/our-products')} style={{ padding: '14px 36px', backgroundColor: '#2d68f8', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '16px', fontWeight: '500' }}>
+                                Continue Shopping
+                            </button>
                         </div>
-
-                        {/* Payment Summary */}
-                        <PaymentSummary
-                            totalMrp={summary.totalMrp}
-                            discountOnMrp={summary.discount}
-                            couponSavings={summary.couponSavings}
-                            applicableGst={summary.gst}
-                            delivery={summary.delivery}
-                            total={summary.total}
-                            buttonText="Continue"
-                            onButtonClick={() => navigate('/address')}
-                            showButton={true} className="desktop-payment-summary"
-                            disabled={cartItems.length === 0}
-                        />
-
-                        {/* Mobile specific button, shown only on mobile */}
-                        <button className="mobile-proceed-btn" onClick={() => navigate('/address')} disabled={cartItems.length === 0}>
-                            Proceed to checkout
-                        </button>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

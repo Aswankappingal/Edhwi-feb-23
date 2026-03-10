@@ -3,8 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
-import { calculateTotals } from '../../../redux/slices/cartSlice';
+import { calculateTotals, clearCart } from '../../../redux/slices/cartSlice';
 import { placeOrder, resetOrderState } from '../../../redux/slices/orderSlice';
+import BaseUrl from '../../../../BaseUrl';
+import { toast } from 'react-toastify';
 import './Payment.scss';
 
 const Payment = () => {
@@ -41,26 +43,27 @@ const Payment = () => {
 
     useEffect(() => {
         if (success) {
-            alert('Order placed successfully!');
+            toast.success('Order placed successfully!');
+            dispatch(clearCart());
             dispatch(resetOrderState());
-            // Redirect to success page or home
-            navigate('/my-account'); // temp redirect
+            // Redirect to success page
+            navigate('/payment-success', {
+                state: {
+                    orderId: success.orderId || (success.order && success.order.orderId),
+                    totalAmount: summary.total,
+                    paymentMethod: paymentMethod
+                }
+            });
         }
 
         if (error) {
-            alert(`Error placing order: ${error}`);
+            toast.error(`Error placing order: ${error}`);
             dispatch(resetOrderState());
         }
-    }, [success, error, navigate, dispatch]);
+    }, [success, error, navigate, dispatch, summary.total, paymentMethod]);
 
-    const handleMakePayment = () => {
+    const handleMakePayment = async () => {
         if (!selectedAddress) return;
-
-        if (paymentMethod === 'online') {
-            alert('UPI/Card payment flow implementation pending. Proceeding with COD for testing or cancel.');
-            // Add Razorpay flow here later
-            return;
-        }
 
         const orderData = {
             items: cartItems.map(item => ({
@@ -72,7 +75,7 @@ const Payment = () => {
             })),
             deliveryAddress: {
                 fullName: selectedAddress.fullName,
-                phone: selectedAddress.phone.replace(/\D/g, ''), // Send all digits
+                phone: selectedAddress.phone.replace(/\D/g, ''),
                 email: selectedAddress.email || 'customer@example.com',
                 addressLine1: selectedAddress.addressLine1,
                 addressLine2: selectedAddress.addressLine2 || '',
@@ -81,13 +84,84 @@ const Payment = () => {
                 pincode: selectedAddress.zipCode,
                 addressType: selectedAddress.addressType || 'Home'
             },
-            paymentMethod: paymentMethod, // 'cod'
+            paymentMethod: paymentMethod,
             deliveryCharge: summary.delivery,
             discountAmount: summary.discount,
-            couponCode: null // If applicable
+            couponCode: null
         };
 
-        console.log("Placing order with payload:", orderData);
+        if (paymentMethod === 'online') {
+            try {
+                // 1. Fetch Razorpay Key
+                const keyRes = await fetch(`${BaseUrl}/razorpay-key`);
+                const keyData = await keyRes.json();
+
+                // 2. Create Order in Backend
+                const orderRes = await fetch(`${BaseUrl}/create-order`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    // body: JSON.stringify({ amount: summary.total })
+                    body: JSON.stringify({ amount: 1 })
+                });
+                const orderRespData = await orderRes.json();
+
+                // 3. Open Razorpay Checkout
+                const options = {
+                    key: keyData.keyId,
+                    amount: orderRespData.amount,
+                    currency: "INR",
+                    name: "Edhwi Store",
+                    description: "Order Payment",
+                    order_id: orderRespData.orderId,
+                    handler: async function (response) {
+                        try {
+                            const verifyRes = await fetch(`${BaseUrl}/verify-payment`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_signature: response.razorpay_signature
+                                })
+                            });
+
+                            const verifyData = await verifyRes.json();
+                            if (verifyData.status === 'success') {
+                                orderData.paymentDetails = {
+                                    transactionId: response.razorpay_payment_id,
+                                    paymentId: response.razorpay_payment_id
+                                };
+                                console.log("Placing online order with payload:", orderData);
+                                dispatch(placeOrder(orderData));
+                            } else {
+                                toast.error("Payment verification failed. Please contact support.");
+                            }
+                        } catch (err) {
+                            toast.error("Payment verification error.");
+                        }
+                    },
+                    prefill: {
+                        name: selectedAddress.fullName,
+                        email: selectedAddress.email || 'customer@example.com',
+                        contact: selectedAddress.phone.replace(/\D/g, '')
+                    },
+                    theme: { color: "#3399cc" }
+                };
+
+                const rzp = new window.Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    toast.error(`Payment Failed: ${response.error.description}`);
+                });
+                rzp.open();
+            } catch (error) {
+                console.error("Error initiating Razorpay checkout:", error);
+                toast.error("Could not initiate payment. Please try again.");
+            }
+            return;
+        }
+
+        // COD Flow
+        console.log("Placing COD order with payload:", orderData);
         dispatch(placeOrder(orderData));
     };
 

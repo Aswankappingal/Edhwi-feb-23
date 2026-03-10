@@ -90,17 +90,23 @@ const cartSlice = createSlice({
             state.items.forEach(item => {
                 const price = item.productDetails?.price || 0;
                 const quantity = item.quantity || 1;
-                // Assuming no discount fields strictly from typical cart payload unless structured so,
-                // Calculate just total price for now. 
-                // If the backend has originalPrice vs price, we can refine this.
                 totalMrp += price * quantity;
                 total += price * quantity;
             });
 
-            // Simple GST calculation (e.g., 5% inclusive or exclusive based on requirement).
-            // Assuming total is incl. GST here for simplicity or $0 GST explicit.
             state.summary.totalMrp = totalMrp;
             state.summary.total = total;
+        },
+        clearCart: (state) => {
+            state.items = [];
+            state.summary = {
+                totalMrp: 0,
+                discount: 0,
+                couponSavings: 0,
+                gst: 0,
+                delivery: 0,
+                total: 0
+            };
         }
     },
     extraReducers: (builder) => {
@@ -108,7 +114,6 @@ const cartSlice = createSlice({
             .addCase(fetchCart.pending, (state) => { state.loading = true; state.error = null; })
             .addCase(fetchCart.fulfilled, (state, action) => {
                 state.loading = false;
-                // If API returns cart with productDetails array via Promise.all
                 state.items = action.payload.cart || [];
             })
             .addCase(fetchCart.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
@@ -127,5 +132,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { calculateTotals } = cartSlice.actions;
+export const { calculateTotals, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

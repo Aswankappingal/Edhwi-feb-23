@@ -22,6 +22,11 @@ import Address from "./components/Pages/Address/Address";
 import Payment from "./components/Pages/Payment/Payment";
 import ContactUs from "./components/Pages/ContactUs/ContactUs";
 import BlogSub from './components/BlogSub/BlogSub';
+import PaymentSuccess from './components/Pages/PaymentSuccess/PaymentSuccess';
+import ScrollToTop from './components/ScrollToTop';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import useFetchData from './hooks/useFetchData';
 
@@ -33,6 +38,7 @@ function App() {
       <div className="app">
         {/* Global Navbar removed: <Navbar /> */}
 
+        <ScrollToTop />
         <Routes> {/* 🔹 NEW: Routes section */}
 
           {/* 🔹 Home Page */}
@@ -74,8 +80,10 @@ function App() {
 
 
 
+          <Route path='/payment-success' element={<PaymentSuccess />} />
         </Routes>
         <Footer />
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
       </div>
     </>
   );
