@@ -22,13 +22,32 @@ export const placeOrder = createAsyncThunk(
     }
 );
 
+export const fetchMyOrders = createAsyncThunk(
+    'order/fetchMyOrders',
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const response = await axios.get(`${BaseUrl}/get-orders`, config);
+            return response.data; // { success: true, count: X, orders: [...] }
+        } catch (error) {
+            console.error('Fetch orders failed:', error.response?.data);
+            const errorMessage = error.response?.data?.errors
+                ? error.response.data.errors.join(', ')
+                : (error.response?.data?.error || error.response?.data?.message || 'Failed to fetch orders');
+            return rejectWithValue(errorMessage);
+        }
+    }
+);
+
 const orderSlice = createSlice({
     name: 'order',
     initialState: {
         loading: false,
         error: null,
         success: false,
-        currentOrder: null
+        currentOrder: null,
+        orders: [] // Array to hold fetched orders
     },
     reducers: {
         resetOrderState: (state) => {
@@ -54,6 +73,19 @@ const orderSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 state.success = false;
+            })
+            // Fetch Orders
+            .addCase(fetchMyOrders.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchMyOrders.fulfilled, (state, action) => {
+                state.loading = false;
+                state.orders = action.payload.orders || [];
+            })
+            .addCase(fetchMyOrders.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
     }
 });

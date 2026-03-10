@@ -9,7 +9,7 @@ import MySettings from './MySettings';
 import SavedCards from './SavedCards';
 import Coupons from './Coupons';
 import Notifications from './Notifications';
-import Cancelorder from './Cancelorder';
+import CancelOrder from './CancelOrder';
 import Wishlist from './Wishlist';
 import Navbar from '../Navbar/Navbar';
 
@@ -40,7 +40,7 @@ const MyAccount = ({ setCurrentPage }) => {
             case 'notifications':
                 return <Notifications />;
             case 'cancel-order':
-                return <Cancelorder setActiveTab={setActiveTab} />;
+                return <CancelOrder setActiveTab={setActiveTab} />;
             case 'wishlist':
                 return <Wishlist />;
             default:

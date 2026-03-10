@@ -2,7 +2,7 @@ import React from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
 import './CancelOrder.scss';
 
-const Cancelorder = ({ setActiveTab }) => {
+const CancelOrder = ({ setActiveTab }) => {
     return (
         <div className="cancel-order-container">
             <h1 className="cancel-title">
@@ -80,4 +80,4 @@ const Cancelorder = ({ setActiveTab }) => {
     );
 };
 
-export default Cancelorder;
+export default CancelOrder;

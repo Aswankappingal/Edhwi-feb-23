@@ -1,59 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiEdit2, FiTrash2, FiHeart, FiPlus, FiMinus, FiUser } from 'react-icons/fi';
+import { fetchMyOrders } from '../../redux/slices/orderSlice';
 import './Overview.scss';
 
 const Overview = () => {
-    // dummy data for orders
-    const [orders, setOrders] = useState([
-        {
-            id: 1,
-            name: 'Coconut oil pet bottle',
-            description: '(Pet bottle)...',
-            size: '1 LTR',
-            originalPrice: 1200,
-            discountedPrice: 1000,
-            discountPercentage: '10% OFF',
-            quantity: 2,
-            image: '../../../public/product-placeholder.png'
-        },
-        {
-            id: 2,
-            name: 'Coconut Oil - pouch',
-            description: '',
-            size: '1 LTR',
-            originalPrice: 1200,
-            discountedPrice: 560,
-            discountPercentage: '10% OFF',
-            quantity: 2,
-            image: '../../../public/product-placeholder.png'
-        },
-        {
-            id: 3,
-            name: 'Coconut oil pet bottle',
-            description: '(Pet bottle)...',
-            size: '1 LTR',
-            originalPrice: 1200,
-            discountedPrice: 1000,
-            discountPercentage: '10% OFF',
-            quantity: 2,
-            image: '../../../public/product-placeholder.png'
-        }
-    ]);
+    const dispatch = useDispatch();
+    const { orders, loading } = useSelector((state) => state.order);
+    const { user } = useSelector((state) => state.auth);
 
-    const updateQuantity = (id, delta) => {
-        setOrders(orders.map(order => {
-            if (order.id === id) {
-                const newQuantity = order.quantity + delta;
-                return { ...order, quantity: newQuantity > 0 ? newQuantity : 1 };
-            }
-            return order;
-        }));
-    };
+    useEffect(() => {
+        dispatch(fetchMyOrders());
+    }, [dispatch]);
 
-    const removeOrder = (id) => {
-        setOrders(orders.filter(order => order.id !== id));
-    };
-
+    // Flattens the order lines to list them individually in "Recent Orders"
+    // Sorted by most recent
+    const recentItems = orders
+        ?.flatMap(order => 
+            (order.items || []).map(item => ({
+                ...item,
+                orderId: order.orderId,
+                orderNumber: order.orderNumber,
+                orderDate: order.createdAt,
+            }))
+        )
+        .slice(0, 3) || []; // Show only top 3 recent items
     return (
         <div className="overview-container">
             {/* Profile Overview */}
@@ -65,63 +36,62 @@ const Overview = () => {
                             <FiUser />
                         </div>
                         <div className="profile-details">
-                            <h3>Critina James</h3>
-                            <p>1234 Green town, TRG Metro</p>
-                            <p>Germany</p>
+                            <h3>{user?.name || 'Customer'}</h3>
+                            <p>{user?.email || 'No email provided'}</p>
+                            <p>{user?.phone || 'No phone provided'}</p>
                         </div>
                     </div>
-                    <button className="edit-btn">Edit</button>
                 </div>
             </section>
 
             {/* Recent Orders */}
             <section className="dashboard-section">
                 <h2 className="section-heading">RECENT ORDERS</h2>
-                <div className="orders-list">
-                    {orders.map((order) => (
-                        <div className="order-card" key={order.id}>
-                            <div className="order-product-info">
-                                <div className="product-image-placeholder">
-                                    {/* Fallback image style if image doesn't exist */}
-                                    <div className="bottle-mock"></div>
+                {loading ? (
+                    <p>Loading recent orders...</p>
+                ) : recentItems.length === 0 ? (
+                    <p>No recent orders found.</p>
+                ) : (
+                    <div className="orders-list">
+                        {recentItems.map((item, index) => (
+                            <div className="order-card" key={`${item.productId}-${index}`}>
+                                <div className="order-product-info">
+                                    <div className="product-image-placeholder">
+                                        {item.image ? (
+                                            <img src={item.image} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                        ) : (
+                                            <div className="bottle-mock"></div>
+                                        )}
+                                    </div>
+                                    <div className="product-details">
+                                        <h4>
+                                            {item.name}{' '}
+                                            <span className="product-size">{item.weight || item.variant || ''}</span>
+                                        </h4>
+                                        <p style={{ fontSize: '12px', color: '#6B7280', margin: '4px 0 0 0' }}>
+                                            Order #{item.orderNumber}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="product-details">
-                                    <h4>
-                                        {order.name}{' '}
-                                        {order.description && <span className="product-desc">{order.description}</span>}{' '}
-                                        <span className="product-size">{order.size}</span>
-                                    </h4>
-                                    <div className="product-actions">
-                                        <button onClick={() => removeOrder(order.id)} className="action-btn text-muted">
-                                            <FiTrash2 /> Remove
-                                        </button>
-                                        <span className="divider">|</span>
-                                        <button className="action-btn text-muted">
-                                            <FiHeart /> Add to wishlist
-                                        </button>
+
+                                <div className="order-controls">
+                                    <div className="quantity-selector" style={{ border: 'none', padding: '0', background: 'transparent' }}>
+                                        <span style={{ fontSize: '14px', fontWeight: '500', color: '#4B5563' }}>Qty: {item.quantity}</span>
+                                    </div>
+
+                                    <div className="pricing-details">
+                                        <div className="current-price">₹{item.price}</div>
+                                        {item.mrp && item.mrp > item.price && (
+                                            <div className="price-meta">
+                                                <span className="original-price">₹{item.mrp}</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="order-controls">
-                                <div className="quantity-selector">
-                                    <button onClick={() => updateQuantity(order.id, -1)}><FiMinus /></button>
-                                    <span>{order.quantity}</span>
-                                    <button onClick={() => updateQuantity(order.id, 1)}><FiPlus /></button>
-                                </div>
-
-                                <div className="pricing-details">
-                                    <div className="current-price">₹{order.discountedPrice}</div>
-                                    <div className="price-meta">
-                                        <span className="original-price">₹{order.originalPrice}</span>
-                                        <span className="discount-badge">{order.discountPercentage}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <a href="#all-orders" className="view-all-link">View all orders</a>
+                        ))}
+                    </div>
+                )}
             </section>
         </div>
     );

@@ -9,6 +9,7 @@ import { fetchWishlist } from '../../redux/slices/wishlistSlice';
 import LoginModal from '../Theams/LoginModal/LoginModal';
 import OtpVerificationModal from '../Theams/LoginModal/OtpVerificationModal';
 import SignupModal from '../Theams/LoginModal/SignupModal';
+import LogoutModal from '../Theams/LogoutModal/LogoutModal';
 
 const Navbar = ({ setCurrentPage }) => {
 
@@ -16,6 +17,7 @@ const Navbar = ({ setCurrentPage }) => {
     const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
     const [isOtpModalOpen, setIsOtpModalOpen] = React.useState(false);
     const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
     const [otpSessionData, setOtpSessionData] = React.useState(null);
 
     const dispatch = useDispatch();
@@ -182,7 +184,7 @@ const Navbar = ({ setCurrentPage }) => {
                         {token || user ? (
                             <button
                                 className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
-                                onClick={() => dispatch(logout())}
+                                onClick={() => setIsLogoutModalOpen(true)}
                                 style={{ backgroundColor: "#dc3545", color: "white", borderColor: "#dc3545" }}
                             >
                                 Logout
@@ -203,7 +205,7 @@ const Navbar = ({ setCurrentPage }) => {
                                 data-bs-toggle="collapse"
                                 data-bs-target=".navbar-collapse.show"
                                 onClick={() => {
-                                    dispatch(logout());
+                                    setIsLogoutModalOpen(true);
                                     handleMenuClose();
                                 }}
                             >
@@ -257,6 +259,11 @@ const Navbar = ({ setCurrentPage }) => {
                 onClose={() => setIsSignupModalOpen(false)}
                 initialEmail={otpSessionData?.value || ''}
                 onSuccess={() => setIsSignupModalOpen(false)}
+            />
+
+            <LogoutModal 
+                isOpen={isLogoutModalOpen} 
+                onClose={() => setIsLogoutModalOpen(false)} 
             />
         </nav>
     );
