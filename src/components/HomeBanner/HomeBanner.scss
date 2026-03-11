@@ -1,11 +1,14 @@
 .home-banner {
     position: relative;
     width: 100%;
+    // Changed to exactly 100vh as requested
+    height: 100vh;
     min-height: 100vh;
     background-color: #2c2c2c;
     /* Fallback background */
     background-size: cover;
-    background-position: center bottom;
+    // Changed to center center for better responsiveness
+    background-position: center center;
     background-repeat: no-repeat;
     transition: background-image 0.5s ease-in-out;
     display: flex;
@@ -67,6 +70,7 @@
         letter-spacing: -2%;
         opacity: 0.9;
         text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        max-width: 90%; // Added max width constraint
     }
 
     &__indicators {
@@ -107,18 +111,65 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+    .home-banner {
+        &__title {
+            font-size: 52px;
+        }
+        &__subtitle {
+            font-size: 20px;
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .home-banner {
         &__content {
-            align-items: flex-end;
-            /* Mobile might look better with text lower */
-            padding-bottom: 100px;
+            align-items: center; // Center on mobile
+            justify-content: center;
+            text-align: center;
+            padding-bottom: 0;
+            padding-top: 60px; // account for navbar
+        }
+        
+        &__text-container {
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         &__title {
+            font-size: 40px;
+            br {
+                display: none; // often better to let it wrap naturally on mobile
+            }
+        }
+        
+        &__subtitle {
+            font-size: 16px;
+            max-width: 100%;
             br {
                 display: none;
             }
+        }
+        
+        &__indicators {
+            bottom: 20px;
+            right: 50%;
+            transform: translateX(50%);
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .home-banner {
+        &__title {
+            font-size: 32px;
+        }
+        
+        &__subtitle {
+            font-size: 14px;
         }
     }
 }

@@ -10,6 +10,7 @@ const CouponModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const { items: coupons, status, error } = useSelector(state => state.coupons);
+    const { rates: shippingRates } = useSelector((state) => state.shipping);
 
     useEffect(() => {
         if (isOpen && status === 'idle') {
@@ -28,7 +29,7 @@ const CouponModal = ({ isOpen, onClose }) => {
         
         if (fullCoupon) {
             dispatch(applyCoupon(fullCoupon));
-            dispatch(calculateTotals());
+            dispatch(calculateTotals(shippingRates));
             toast.success(`Coupon applied successfully!`);
             onClose();
         } else {

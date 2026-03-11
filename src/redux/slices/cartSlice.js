@@ -90,10 +90,14 @@ const cartSlice = createSlice({
         removeCoupon: (state) => {
             state.appliedCoupon = null;
         },
-        calculateTotals: (state) => {
+        calculateTotals: (state, action) => {
             let totalMrp = 0;
             let total = 0;
             let couponSavings = 0;
+            let delivery = 0;
+
+            // Optional: retrieve shippingRates from action payload if passed explicitly from the component
+            const shippingRates = action.payload || [];
 
             // 1. Calculate Initial Items Total
             state.items.forEach(item => {
@@ -102,6 +106,8 @@ const cartSlice = createSlice({
                 totalMrp += price * quantity;
                 total += price * quantity;
             });
+
+            const totalBeforeCoupon = total;
 
             // 2. Apply Coupon if exists
             if (state.appliedCoupon) {
@@ -125,9 +131,33 @@ const cartSlice = createSlice({
                 total -= couponSavings;
             }
 
+            // 3. Dynamic Delivery based on total order price
+            if (shippingRates && shippingRates.length > 0) {
+                 // Sort rates by minPrice ascending to logic check properly or simply find matching tier
+                let applicableRate = null;
+                
+                for (const rate of shippingRates) {
+                    if (rate.isActive) {
+                        const min = rate.minPrice || 0;
+                        const max = rate.maxPrice || Infinity;
+                        
+                        // Check if total falls within [min, max]
+                        if (totalBeforeCoupon >= min && totalBeforeCoupon <= max) {
+                            applicableRate = rate;
+                            break; 
+                        }
+                    }
+                }
+                
+                if (applicableRate) {
+                   delivery = applicableRate.isFree ? 0 : applicableRate.price;
+                }
+            }
+
             state.summary.totalMrp = totalMrp;
             state.summary.couponSavings = couponSavings;
-            state.summary.total = total;
+            state.summary.delivery = delivery;
+            state.summary.total = total + delivery;
         },
         clearCart: (state) => {
             state.items = [];

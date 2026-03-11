@@ -6,6 +6,7 @@ import addressReducer from './slices/addressSlice';
 import orderReducer from './slices/orderSlice';
 import wishlistReducer from './slices/wishlistSlice';
 import couponReducer from './slices/couponSlice';
+import shippingReducer from './slices/shippingSlice';
 
 const store = configureStore({
     reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
         address: addressReducer,
         order: orderReducer,
         wishlist: wishlistReducer,
-        coupons: couponReducer
+        coupons: couponReducer,
+        shipping: shippingReducer
     }
 });
 

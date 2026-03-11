@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
+import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Cart.scss';
@@ -16,14 +17,16 @@ const Cart = () => {
     const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
     const navigate = useNavigate();
     const { items: cartItems, summary, loading, appliedCoupon } = useSelector((state) => state.cart);
+    const { rates: shippingRates } = useSelector((state) => state.shipping);
 
     useEffect(() => {
         dispatch(fetchCart());
+        dispatch(fetchShippingRates());
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(calculateTotals());
-    }, [cartItems, dispatch]);
+        dispatch(calculateTotals(shippingRates));
+    }, [cartItems, appliedCoupon, shippingRates, dispatch]);
 
 
     const handleUpdateQuantity = (productId, change, currentQty) => {
@@ -123,7 +126,7 @@ const Cart = () => {
                                             className="apply-btn remove-btn" 
                                             onClick={() => {
                                                 dispatch(removeCoupon());
-                                                dispatch(calculateTotals());
+                                                dispatch(calculateTotals(shippingRates));
                                                 toast.info("Coupon removed");
                                             }}
                                             style={{ color: '#e74c3c', backgroundColor: 'transparent', padding: '0', fontWeight: '600' }}

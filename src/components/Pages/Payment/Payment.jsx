@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { calculateTotals, clearCart } from '../../../redux/slices/cartSlice';
+import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
 import { placeOrder, resetOrderState } from '../../../redux/slices/orderSlice';
 import BaseUrl from '../../../../BaseUrl';
 import { toast } from 'react-toastify';
@@ -17,12 +18,17 @@ const Payment = () => {
     // Get the address ID selected in the previous step
     const { addressId } = location.state || {};
 
-    const { items: cartItems, summary, loading: cartLoading } = useSelector((state) => state.cart);
+    const { items: cartItems, summary, loading: cartLoading, appliedCoupon } = useSelector((state) => state.cart);
     const { addresses } = useSelector((state) => state.address);
     const { loading: orderLoading, success, error } = useSelector((state) => state.order);
+    const { rates: shippingRates } = useSelector((state) => state.shipping);
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
     const [selectedAddress, setSelectedAddress] = useState(null);
+
+    useEffect(() => {
+        dispatch(fetchShippingRates());
+    }, [dispatch]);
 
     useEffect(() => {
         // If no address selected or cart empty, go back
@@ -38,8 +44,8 @@ const Payment = () => {
             navigate('/address');
         }
 
-        dispatch(calculateTotals());
-    }, [addressId, addresses, cartItems.length, navigate, dispatch]);
+        dispatch(calculateTotals(shippingRates));
+    }, [addressId, addresses, cartItems.length, appliedCoupon, shippingRates, navigate, dispatch]);
 
     useEffect(() => {
         if (success) {
