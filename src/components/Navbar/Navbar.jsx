@@ -261,9 +261,9 @@ const Navbar = ({ setCurrentPage }) => {
                 onSuccess={() => setIsSignupModalOpen(false)}
             />
 
-            <LogoutModal 
-                isOpen={isLogoutModalOpen} 
-                onClose={() => setIsLogoutModalOpen(false)} 
+            <LogoutModal
+                isOpen={isLogoutModalOpen}
+                onClose={() => setIsLogoutModalOpen(false)}
             />
         </nav>
     );

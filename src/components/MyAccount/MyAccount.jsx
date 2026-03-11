@@ -16,6 +16,7 @@ import Navbar from '../Navbar/Navbar';
 const MyAccount = ({ setCurrentPage }) => {
     const location = useLocation();
     const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'overview');
+    const [cancelOrderId, setCancelOrderId] = useState(null);
 
     useEffect(() => {
         if (location.state?.activeTab) {
@@ -28,7 +29,7 @@ const MyAccount = ({ setCurrentPage }) => {
             case 'overview':
                 return <Overview setActiveTab={setActiveTab} />;
             case 'orders':
-                return <Orders setActiveTab={setActiveTab} />;
+                return <Orders setActiveTab={setActiveTab} setCancelOrderId={setCancelOrderId} />;
             case 'returns':
                 return <Returns />;
             case 'settings':
@@ -40,7 +41,7 @@ const MyAccount = ({ setCurrentPage }) => {
             case 'notifications':
                 return <Notifications />;
             case 'cancel-order':
-                return <CancelOrder setActiveTab={setActiveTab} />;
+                return <CancelOrder setActiveTab={setActiveTab} cancelOrderId={cancelOrderId} setCancelOrderId={setCancelOrderId} />;
             case 'wishlist':
                 return <Wishlist />;
             default:

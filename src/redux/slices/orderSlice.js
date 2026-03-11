@@ -41,6 +41,27 @@ export const fetchMyOrders = createAsyncThunk(
     }
 );
 
+export const cancelOrder = createAsyncThunk(
+    'order/cancelOrder',
+    async ({ orderId, reason, categoryName, feedback }, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const payload = {
+                reason,
+                categoryName,
+                feedback
+            };
+            const response = await axios.post(`${BaseUrl}/cancel-order/${orderId}`, payload, config);
+            return response.data;
+        } catch (error) {
+            console.error('Cancel order failed:', error.response?.data);
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Failed to cancel order';
+            return rejectWithValue(errorMessage);
+        }
+    }
+);
+
 const orderSlice = createSlice({
     name: 'order',
     initialState: {
@@ -85,6 +106,19 @@ const orderSlice = createSlice({
                 state.orders = action.payload.orders || [];
             })
             .addCase(fetchMyOrders.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
+            // Cancel Order
+            .addCase(cancelOrder.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(cancelOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+            })
+            .addCase(cancelOrder.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
             });

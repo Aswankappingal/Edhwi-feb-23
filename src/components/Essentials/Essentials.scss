@@ -41,10 +41,13 @@
     }
 
     &__products-carousel {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
         margin-bottom: 2rem;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+
+        .slick-slide {
+            padding: 0 0.75rem;
+        }
     }
 
     &__product-card {
@@ -123,7 +126,7 @@
 
     &__desc {
         font-family: "General Sans", sans-serif;
-        font-weight:600;
+        font-weight: 600;
         font-style: Regular;
         font-size: 13px;
         leading-trim: NONE;
@@ -143,7 +146,7 @@
         font-weight: 600;
         font-size: 14px;
         transition: opacity 0.3s ease;
-        font-family: "" General Sans", sans-serif", sans-serif;
+        font-family: "General Sans", sans-serif;
         text-decoration: none;
 
         .arrow-icon {
@@ -162,9 +165,6 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .essentials__products-carousel {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
     .essentials__footer {
         align-items: flex-start;
@@ -187,11 +187,5 @@
 
     .desktop-br {
         display: none;
-    }
-}
-
-@media (max-width: 640px) {
-    .essentials__products-carousel {
-        grid-template-columns: 1fr;
     }
 }

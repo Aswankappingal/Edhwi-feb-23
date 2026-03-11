@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { fetchMyOrders } from '../../redux/slices/orderSlice';
 import './Orders.scss';
 
-const Orders = ({ setActiveTab }) => {
+const Orders = ({ setActiveTab, setCancelOrderId }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
@@ -126,7 +126,10 @@ const Orders = ({ setActiveTab }) => {
                                         {index === 0 && !isDelivered && !isCancelled && (
                                             <div className="item-actions-box">
                                                 <button onClick={() => {
-                                                    if (setActiveTab) {
+                                                    if (typeof setActiveTab === 'function') {
+                                                        if (typeof setCancelOrderId === 'function') {
+                                                            setCancelOrderId(order.orderId || order.id);
+                                                        }
                                                         setActiveTab('cancel-order');
                                                     } else {
                                                         navigate('/cancel-order');

@@ -5,7 +5,6 @@
 
     // 1st
 
-
     .product-page-sub {
         .product-page-card {
             background-color: #f6f6f6;
@@ -43,7 +42,7 @@
             padding: 2rem 4rem;
 
             h2 {
-                font-family: Nohemi;
+                font-family: "General Sans", sans-serif;
                 font-weight: 600;
                 font-size: 32px;
                 line-height: 105%;
@@ -54,7 +53,7 @@
             }
 
             p {
-                font-family: "General Sans", sans-serif-serif;
+                font-family: "General Sans", sans-serif;
                 font-weight: 500;
                 font-style: Medium;
                 font-size: 16px;
@@ -67,7 +66,7 @@
 
             #price {
                 font-family: "General Sans", sans-serif;
-                font-weight: 600;
+                font-weight: 400;
                 font-style: Regular;
                 font-size: 15px;
                 leading-trim: NONE;
@@ -77,8 +76,8 @@
             }
 
             .price-range {
-                font-family: DM Sans;
-                font-weight: 700;
+                font-family: "General Sans", sans-serif;
+                font-weight: 500;
                 font-size: 25px;
                 line-height: 130%;
                 letter-spacing: 0%;
@@ -96,8 +95,8 @@
 
             .packageing-select {
                 font-family: "General Sans", sans-serif, sans-serif;
-                font-weight: 700;
-                font-size: 16px;
+                font-weight: 600;
+                font-size: 18px;
                 line-height: 130%;
                 color: #1a1a1a;
                 margin-top: 1rem;
@@ -173,7 +172,7 @@
 
                 .bulk-sections-content {
                     margin: 1rem 20px;
-                    font-family: "General Sans", sans-serif, sans-serif;
+                    font-family: "General Sans", sans-serif;
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 140%;
@@ -195,7 +194,12 @@
                         flex: 1;
                         text-align: left;
                         color: #000000;
-                        font-weight: 600;
+                        font-family: "General Sans", sans-serif;
+                        font-weight: 400;
+                        font-size: 16px;
+                        line-height: 130%;
+                        letter-spacing: 0%;
+
                     }
                 }
             }
@@ -240,9 +244,9 @@
         .text-sections-whole {
             p {
                 font-family: "General Sans", sans-serif, sans-serif;
-                font-weight: 600;
+                font-weight: 400;
                 font-style: Semibold;
-                font-size: 17px;
+                font-size: 16px;
                 leading-trim: NONE;
                 line-height: 130%;
                 letter-spacing: -2%;
@@ -251,18 +255,16 @@
             }
 
             h6 {
-                font-family: "General Sans", sans-serif-serif;
-                font-weight: 800;
+                font-family: "General Sans", sans-serif;
+                font-weight: 600;
                 font-size: 20px;
                 line-height: 130%;
                 letter-spacing: -2%;
 
                 span {
-                    font-family: "General Sans", sans-serif-serif;
+                    font-family: "General Sans", sans-serif;
                     font-weight: 400;
-                    font-style: Regular;
                     font-size: 20px;
-                    leading-trim: NONE;
                     line-height: 130%;
                     letter-spacing: -2%;
 
