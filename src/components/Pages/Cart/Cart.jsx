@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals } from '../../../redux/slices/cartSlice';
+import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Cart.scss';
@@ -9,11 +9,13 @@ import { FiTrash2 } from 'react-icons/fi';
 import { BiHeart } from 'react-icons/bi';
 import { MdOutlineLocalOffer } from "react-icons/md";
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
+import CouponModal from './CouponModal';
 
 const Cart = () => {
     const dispatch = useDispatch();
+    const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
     const navigate = useNavigate();
-    const { items: cartItems, summary, loading } = useSelector((state) => state.cart);
+    const { items: cartItems, summary, loading, appliedCoupon } = useSelector((state) => state.cart);
 
     useEffect(() => {
         dispatch(fetchCart());
@@ -43,6 +45,8 @@ const Cart = () => {
     return (
         <div className="cart-page-container">
             <CartNavbar currentStep="cart" />
+            
+            <CouponModal isOpen={isCouponModalOpen} onClose={() => setIsCouponModalOpen(false)} />
 
             <div className="cart-content-wrapper">
                 {/* Breadcrumb */}
@@ -107,14 +111,35 @@ const Cart = () => {
 
                             {/* Right Column - Payment Summary & Coupons */}
                             <div className="cart-summary-section">
-                                {/* Apply Coupons Box */}
-                                <div className="apply-coupons-card">
-                                    <div className="coupon-left">
-                                        <MdOutlineLocalOffer className="coupon-icon yellow" />
-                                        <span className="coupon-label">Apply coupons</span>
+                                {appliedCoupon ? (
+                                    <div className="apply-coupons-card" style={{ backgroundColor: '#f0f5ff', borderColor: '#2d68f8' }}>
+                                        <div className="coupon-left">
+                                            <MdOutlineLocalOffer className="coupon-icon" style={{ color: '#2d68f8' }} />
+                                            <span className="coupon-label" style={{ color: '#2d68f8', fontWeight: '600' }}>
+                                                {appliedCoupon.code || appliedCoupon.couponId || 'Coupon'} Applied
+                                            </span>
+                                        </div>
+                                        <button 
+                                            className="apply-btn remove-btn" 
+                                            onClick={() => {
+                                                dispatch(removeCoupon());
+                                                dispatch(calculateTotals());
+                                                toast.info("Coupon removed");
+                                            }}
+                                            style={{ color: '#e74c3c', backgroundColor: 'transparent', padding: '0', fontWeight: '600' }}
+                                        >
+                                            Remove
+                                        </button>
                                     </div>
-                                    <button className="apply-btn">Apply</button>
-                                </div>
+                                ) : (
+                                    <div className="apply-coupons-card">
+                                        <div className="coupon-left">
+                                            <MdOutlineLocalOffer className="coupon-icon yellow" />
+                                            <span className="coupon-label">Apply coupons</span>
+                                        </div>
+                                        <button className="apply-btn" onClick={() => setIsCouponModalOpen(true)}>Apply</button>
+                                    </div>
+                                )}
 
                                 {/* Payment Summary */}
                                 <PaymentSummary

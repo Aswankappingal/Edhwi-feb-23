@@ -71,6 +71,7 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState: {
         items: [],
+        appliedCoupon: null,
         summary: {
             totalMrp: 0,
             discount: 0,
@@ -83,10 +84,18 @@ const cartSlice = createSlice({
         error: null
     },
     reducers: {
+        applyCoupon: (state, action) => {
+            state.appliedCoupon = action.payload;
+        },
+        removeCoupon: (state) => {
+            state.appliedCoupon = null;
+        },
         calculateTotals: (state) => {
             let totalMrp = 0;
             let total = 0;
+            let couponSavings = 0;
 
+            // 1. Calculate Initial Items Total
             state.items.forEach(item => {
                 const price = item.productDetails?.price || 0;
                 const quantity = item.quantity || 1;
@@ -94,11 +103,35 @@ const cartSlice = createSlice({
                 total += price * quantity;
             });
 
+            // 2. Apply Coupon if exists
+            if (state.appliedCoupon) {
+                const coupon = state.appliedCoupon;
+                const discountValue = coupon.discountValue || 0;
+                
+                // Assuming "PERCENTAGE" vs "FLAT" based on the schema
+                const discountType = coupon.discountType || 'PERCENTAGE';
+                
+                if (discountType === 'PERCENTAGE' || discountType === 'percentage' || String(coupon.discount).includes('%')) {
+                    couponSavings = (total * discountValue) / 100;
+                } else {
+                    couponSavings = discountValue;
+                }
+
+                // Make sure we don't discount more than the total order amount
+                if (couponSavings > total) {
+                    couponSavings = total;
+                }
+                
+                total -= couponSavings;
+            }
+
             state.summary.totalMrp = totalMrp;
+            state.summary.couponSavings = couponSavings;
             state.summary.total = total;
         },
         clearCart: (state) => {
             state.items = [];
+            state.appliedCoupon = null;
             state.summary = {
                 totalMrp: 0,
                 discount: 0,
@@ -132,5 +165,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { calculateTotals, clearCart } = cartSlice.actions;
+export const { calculateTotals, clearCart, applyCoupon, removeCoupon } = cartSlice.actions;
 export default cartSlice.reducer;
