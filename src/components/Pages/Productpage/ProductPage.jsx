@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { addToCart } from '../../../redux/slices/cartSlice'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
+import { setLoginModalOpen } from '../../../redux/slices/authSlice'
 import { toast } from 'react-toastify';
 import './ProductPage.scss'
 import Navbar from '../../Navbar/Navbar'
@@ -57,6 +58,7 @@ const ProductPage = () => {
     const navigate = useNavigate();
     const { items: cartItems, loading } = useSelector((state) => state.cart);
     const { products, status: productStatus } = useSelector((state) => state.data);
+    const { token, user } = useSelector((state) => state.auth);
 
     useEffect(() => {
         if (productStatus === 'idle') {
@@ -96,6 +98,11 @@ const ProductPage = () => {
     const isProductInCart = cartItems.some(item => item.productId === productData.id.toString() || item.productId === productData.id);
 
     const handleCartAction = async () => {
+        if (!token && !user) {
+            dispatch(setLoginModalOpen(true));
+            return;
+        }
+
         if (isProductInCart) {
             navigate('/cart');
         } else {
@@ -242,22 +249,33 @@ const ProductPage = () => {
                         <h3 className='Other-pro'>Other products</h3>
 
                         <div className="row">
-                            {[
-                                { id: 1, name: 'Whole Nutmeg', available: '40g', price: '125', img: 'Bottle-Coconut.svg' },
-                                { id: 2, name: 'Coconut Oil - pouch', available: '1L', price: '145', img: 'packet edhwi.svg' }
-                            ].map((item) => (
+                            {products
+                                ?.filter(item => item.id !== productData.id)
+                                .slice(0, 3)
+                                .map((item) => (
                                 <div key={item.id} className="col-lg-4 col-md-6 col-sm-12">
-                                    <div className="other-product-card">
+                                    <div 
+                                        className="other-product-card" 
+                                        onClick={() => {
+                                            navigate(`/Product-page/${item.id}`);
+                                            window.scrollTo(0, 0);
+                                        }} 
+                                        style={{ cursor: 'pointer' }}
+                                    >
                                         <div className="other-product-image">
-                                            <img src={item.img} alt={item.name} />
-                                            <div className="add-to-cart-btn">
+                                            <img src={item.imageUrl || (item.images && item.images[0]?.url) || '/Kuppi.svg'} alt={item.name} />
+                                            <div className="add-to-cart-btn" onClick={(e) => {
+                                                e.stopPropagation();
+                                                navigate(`/Product-page/${item.id}`);
+                                                window.scrollTo(0, 0);
+                                            }}>
                                                 <BsPlus />
                                             </div>
                                         </div>
                                         <div className="other-product-details">
                                             <h5>{item.name}</h5>
-                                            <p className="other-product-features">Available in <span>{item.available}</span></p>
-                                            <p className="other-product-price">₹{item.price}</p>
+                                            <p className="other-product-features">Available in <span>{item.variantCombinations && item.variantCombinations.length > 0 ? (item.variantCombinations[0].amount || item.variantCombinations[0].weight || item.variantCombinations[0].volume) : (item.sizes ? item.sizes[0] : 'Various Sizes')}</span></p>
+                                            <p className="other-product-price">₹{item.price || item.sellingPrice || item.priceNumber || 0}</p>
                                         </div>
                                     </div>
                                 </div>

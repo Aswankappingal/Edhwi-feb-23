@@ -94,7 +94,8 @@ const authSlice = createSlice({
         loading: false,
         error: null,
         otpSessionData: null, // Stores email/mobile when moving from Login to OTP Modal
-        isNewUser: false
+        isNewUser: false,
+        isLoginModalOpen: false
     },
     reducers: {
         logout: (state) => {
@@ -110,6 +111,9 @@ const authSlice = createSlice({
         },
         clearOtpSessionData: (state) => {
             state.otpSessionData = null;
+        },
+        setLoginModalOpen: (state, action) => {
+            state.isLoginModalOpen = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -168,5 +172,5 @@ const authSlice = createSlice({
     }
 });
 
-export const { logout, clearError, setOtpSessionData, clearOtpSessionData } = authSlice.actions;
+export const { logout, clearError, setOtpSessionData, clearOtpSessionData, setLoginModalOpen } = authSlice.actions;
 export default authSlice.reducer;

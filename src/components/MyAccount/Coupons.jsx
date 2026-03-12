@@ -13,8 +13,8 @@ const Coupons = () => {
         {
             id: 2,
             code: 'FIRSTBUY2025',
-            discount: '20%',
-            description: 'Get extra 30% off on RS. 1490 and above on first purchase',
+            discount: '20₹',
+            description: 'Get extra 30₹ off on RS. 1490 and above on first purchase',
             validity: '12/2025'
         }
     ];

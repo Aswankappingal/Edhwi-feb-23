@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
 import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
+import { setLoginModalOpen } from '../../../redux/slices/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Cart.scss';
@@ -18,11 +19,17 @@ const Cart = () => {
     const navigate = useNavigate();
     const { items: cartItems, summary, loading, appliedCoupon } = useSelector((state) => state.cart);
     const { rates: shippingRates } = useSelector((state) => state.shipping);
+    const { token, user } = useSelector((state) => state.auth);
 
     useEffect(() => {
+        if (!token && !user) {
+            dispatch(setLoginModalOpen(true));
+            navigate('/');
+            return;
+        }
         dispatch(fetchCart());
         dispatch(fetchShippingRates());
-    }, [dispatch]);
+    }, [dispatch, token, user, navigate]);
 
     useEffect(() => {
         dispatch(calculateTotals(shippingRates));

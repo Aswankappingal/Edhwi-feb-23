@@ -13,6 +13,8 @@ import Navbar from '../../Navbar/Navbar'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
 import { addToWishlist, removeFromWishlist } from '../../../redux/slices/wishlistSlice'
+import { addToCart } from '../../../redux/slices/cartSlice'
+import { setLoginModalOpen } from '../../../redux/slices/authSlice'
 import ToastModal from '../../common/ToastModal/ToastModal'
 
 const ExploreProducts = () => {
@@ -25,8 +27,8 @@ const ExploreProducts = () => {
     const [mobileSideBarIsOpen, setMobileSideBarIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
-    // Cart state
-    const [cartItems, setCartItems] = useState(new Set());
+    // Cart state - loaded from Redux
+    const [loadingProducts, setLoadingProducts] = useState(new Set());
 
     // Toast state
     const [toastConfig, setToastConfig] = useState({
@@ -49,6 +51,8 @@ const ExploreProducts = () => {
     const dispatch = useDispatch();
     const { products: reduxProducts, status } = useSelector((state) => state.data);
     const { items: wishlistItems } = useSelector((state) => state.wishlist);
+    const { token, user } = useSelector((state) => state.auth);
+    const { items: cartItems } = useSelector((state) => state.cart);
 
     useEffect(() => {
         if (status === 'idle') {
@@ -63,6 +67,11 @@ const ExploreProducts = () => {
     const handleWishlistToggle = useCallback((e, productId) => {
         e.preventDefault();
         e.stopPropagation();
+
+        if (!token && !user) {
+            dispatch(setLoginModalOpen(true));
+            return;
+        }
 
         const isInWishlist = wishlistItems.some(item => item.productId?.toString() === productId?.toString() || item.productId == productId);
         
@@ -83,7 +92,7 @@ const ExploreProducts = () => {
                 });
             });
         }
-    }, [wishlistItems, dispatch]);
+    }, [wishlistItems, dispatch, token, user]);
 
     // Get wishlist icon based on Redux state
     const getWishlistIcon = useCallback((productId) => {
@@ -98,30 +107,65 @@ const ExploreProducts = () => {
         );
     }, [wishlistItems]);
 
-    // Cart toggle (local only)
-    const handleAddToCart = useCallback((e, productId) => {
+    // Cart toggle via Redux
+    const handleAddToCart = useCallback(async (e, product) => {
         e.preventDefault();
         e.stopPropagation();
 
-        setCartItems(prev => {
-            const newSet = new Set(prev);
-            if (newSet.has(productId)) {
-                newSet.delete(productId);
-            } else {
-                newSet.add(productId);
-            }
-            return newSet;
-        });
-    }, []);
+        if (!token && !user) {
+            dispatch(setLoginModalOpen(true));
+            return;
+        }
+
+        setLoadingProducts(prev => new Set(prev).add(product.id));
+
+        let variantCombination = null;
+        if (product.variantCombinations && product.variantCombinations.length > 0) {
+            variantCombination = product.variantCombinations[0].amount || product.variantCombinations[0].weight || product.variantCombinations[0].volume;
+        } else if (product.sizes && product.sizes.length > 0) {
+            variantCombination = product.sizes[0];
+        }
+
+        try {
+            await dispatch(addToCart({
+                productId: product.id.toString(),
+                quantity: 1,
+                ...(variantCombination && { variantCombination })
+            })).unwrap();
+
+            setToastConfig({
+                isOpen: true,
+                message: 'Product added to cart!',
+                type: 'success'
+            });
+
+        } catch (error) {
+            setToastConfig({
+                isOpen: true,
+                message: error || 'Failed to add product to cart',
+                type: 'error'
+            });
+        } finally {
+            setLoadingProducts(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(product.id);
+                return newSet;
+            });
+        }
+    }, [dispatch, token, user]);
 
     // Get cart button content
     const getAddButtonContent = useCallback((productId) => {
-        const isProductInCart = cartItems.has(productId);
+        if (loadingProducts.has(productId)) {
+            return <div className="spinner-border spinner-border-sm" role="status" style={{color: '#4CAF50'}} />;
+        }
+
+        const isProductInCart = cartItems.some(item => item.productId === productId?.toString() || item.productId === productId);
         if (isProductInCart) {
             return <FaCheck className='check-icon' style={{ color: '#4CAF50' }} />;
         }
         return <GoPlus className='add-icon' />;
-    }, [cartItems]);
+    }, [cartItems, loadingProducts]);
 
     // Apply filters and sorting
     const products = useMemo(() => {
@@ -333,9 +377,9 @@ const ExploreProducts = () => {
                                                         </div>
                                                         <img src={product.imageUrl || (product.images && product.images[0]?.url) || '/Kuppi.svg'} alt={product.name} />
                                                         <div
-                                                            className={`add-icon-wrapper ${cartItems.has(product.id) ? 'in-cart' : ''}`}
-                                                            onClick={(e) => handleAddToCart(e, product.id)}
-                                                            title={cartItems.has(product.id) ? 'Remove from cart' : 'Add to cart'}
+                                                            className={`add-icon-wrapper ${cartItems.some(item => item.productId === product.id?.toString() || item.productId === product.id) ? 'in-cart' : ''}`}
+                                                            onClick={(e) => handleAddToCart(e, product)}
+                                                            title={cartItems.some(item => item.productId === product.id?.toString() || item.productId === product.id) ? 'Added to cart' : 'Add to cart'}
                                                         >
                                                             {getAddButtonContent(product.id)}
                                                         </div>

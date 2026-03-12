@@ -24,15 +24,19 @@ const PaymentSummary = ({
                         <span className="row-value">₹{totalMrp.toFixed(2)}</span>
                     </div>
 
-                    <div className="summary-row">
-                        <span className="row-label">Discount on MRP</span>
-                        <span className="row-value discount-value">-₹{discountOnMrp.toFixed(2)}</span>
-                    </div>
+                    {discountOnMrp > 0 && (
+                        <div className="summary-row">
+                            <span className="row-label">Discount on MRP</span>
+                            <span className="row-value discount-value">-₹{discountOnMrp.toFixed(2)}</span>
+                        </div>
+                    )}
 
-                    <div className="summary-row">
-                        <span className="row-label">Coupon savings</span>
-                        <span className="row-value discount-value">-₹{couponSavings.toFixed(2)}</span>
-                    </div>
+                    {couponSavings > 0 && (
+                        <div className="summary-row">
+                            <span className="row-label">Coupon savings</span>
+                            <span className="row-value discount-value">-₹{couponSavings.toFixed(2)}</span>
+                        </div>
+                    )}
 
                     <div className="summary-row">
                         <span className="row-label">Applicable GST</span>

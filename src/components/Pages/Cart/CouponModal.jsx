@@ -4,11 +4,16 @@ import { IoClose } from 'react-icons/io5';
 import { fetchCoupons } from '../../../redux/slices/couponSlice';
 import { applyCoupon, calculateTotals } from '../../../redux/slices/cartSlice';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 import './CouponModal.scss';
+import BaseUrl from '../../../../BaseUrl';
 
 const CouponModal = ({ isOpen, onClose }) => {
     const dispatch = useDispatch();
     const [selectedCoupon, setSelectedCoupon] = useState(null);
+    const [manualCode, setManualCode] = useState('');
+    const [isChecking, setIsChecking] = useState(false);
+    
     const { items: coupons, status, error } = useSelector(state => state.coupons);
     const { rates: shippingRates } = useSelector((state) => state.shipping);
 
@@ -33,7 +38,36 @@ const CouponModal = ({ isOpen, onClose }) => {
             toast.success(`Coupon applied successfully!`);
             onClose();
         } else {
-            toast.error("Could not find coupon details.");
+            toast.error("Could not find coupon details. Please type it in the check box above.");
+        }
+    };
+
+    const handleManualCheck = async () => {
+        if (!manualCode.trim()) {
+            toast.error("Please enter a coupon code");
+            return;
+        }
+
+        setIsChecking(true);
+        try {
+            const response = await axios.get(`${BaseUrl}/coupons/verify/${manualCode.trim()}`);
+            
+            if (response.data.success && response.data.coupon) {
+                const coupon = response.data.coupon;
+                dispatch(applyCoupon(coupon));
+                dispatch(calculateTotals(shippingRates));
+                toast.success(`Coupon '${coupon.code}' applied successfully!`);
+                setManualCode('');
+                onClose();
+            } else {
+                toast.error(response.data.message || "Invalid coupon code");
+            }
+        } catch (error) {
+            console.error("Error verifying coupon:", error);
+            const errorMsg = error.response?.data?.message || "Invalid or expired coupon code";
+            toast.error(errorMsg);
+        } finally {
+            setIsChecking(false);
         }
     };
 
@@ -51,8 +85,20 @@ const CouponModal = ({ isOpen, onClose }) => {
 
                 <div className="modal-body">
                     <div className="coupon-input-wrapper">
-                        <input type="text" placeholder="Enter coupon code" />
-                        <span className="check-text">Check</span>
+                        <input 
+                            type="text" 
+                            placeholder="Enter coupon code" 
+                            value={manualCode}
+                            onChange={(e) => setManualCode(e.target.value.toUpperCase())}
+                            onKeyDown={(e) => e.key === 'Enter' && handleManualCheck()}
+                        />
+                        <span 
+                            className="check-text" 
+                            onClick={handleManualCheck}
+                            style={{ opacity: isChecking ? 0.5 : 1, cursor: isChecking ? 'not-allowed' : 'pointer' }}
+                        >
+                            {isChecking ? "Checking" : "Check"}
+                        </span>
                     </div>
 
                     <div className="unlock-heading">Unlock coupon</div>

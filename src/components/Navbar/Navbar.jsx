@@ -3,7 +3,7 @@ import './Navbar.scss';
 import { FiHeart, FiShoppingBag, FiUser, FiMenu } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../redux/slices/authSlice';
+import { logout, setLoginModalOpen } from '../../redux/slices/authSlice';
 import { fetchCart } from '../../redux/slices/cartSlice';
 import { fetchWishlist } from '../../redux/slices/wishlistSlice';
 import LoginModal from '../Theams/LoginModal/LoginModal';
@@ -14,14 +14,13 @@ import LogoutModal from '../Theams/LogoutModal/LogoutModal';
 const Navbar = ({ setCurrentPage }) => {
 
     // Login Modal State
-    const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
     const [isOtpModalOpen, setIsOtpModalOpen] = React.useState(false);
     const [isSignupModalOpen, setIsSignupModalOpen] = React.useState(false);
     const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
     const [otpSessionData, setOtpSessionData] = React.useState(null);
 
     const dispatch = useDispatch();
-    const { user, token } = useSelector((state) => state.auth);
+    const { user, token, isLoginModalOpen } = useSelector((state) => state.auth);
     const { items: cartItems } = useSelector((state) => state.cart);
     const { items: wishlistItems } = useSelector((state) => state.wishlist);
 
@@ -139,11 +138,18 @@ const Navbar = ({ setCurrentPage }) => {
                     <div className="d-flex align-items-center justify-content-center flex-column flex-lg-row gap-4 mt-lg-0 navbar__actions" style={{ zIndex: 10 }}>
 
                         <Link
-                            to="/my-account"
+                            to={token || user ? "/my-account" : "#"}
                             state={{ activeTab: 'wishlist' }}
                             className={`navbar__action-icon ${location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? 'active-icon' : ''}`}
                             style={{ textDecoration: "none", color: location.pathname === '/my-account' && location.state?.activeTab === 'wishlist' ? '#13368e' : (isHome ? "#fff" : "#000") }}
-                            onClick={handleNavClick}
+                            onClick={(e) => {
+                                if (!token && !user) {
+                                    e.preventDefault();
+                                    dispatch(setLoginModalOpen(true));
+                                } else {
+                                    handleNavClick();
+                                }
+                            }}
                         >
                             <FiHeart
                                 size={22}
@@ -159,10 +165,17 @@ const Navbar = ({ setCurrentPage }) => {
                         </Link>
 
                         <Link
-                            to="/cart"
+                            to={token || user ? "/cart" : "#"}
                             className="navbar__action-icon navbar__cart-wrapper"
                             style={{ textDecoration: "none", color: isHome ? "#fff" : "#000" }}
-                            onClick={handleNavClick}
+                            onClick={(e) => {
+                                if (!token && !user) {
+                                    e.preventDefault();
+                                    dispatch(setLoginModalOpen(true));
+                                } else {
+                                    handleNavClick();
+                                }
+                            }}
                         >
                             <div className="position-relative d-none d-lg-flex align-items-center justify-content-center">
                                 <FiShoppingBag size={22} color={isHome ? "#fff" : "#000"} />
@@ -192,7 +205,7 @@ const Navbar = ({ setCurrentPage }) => {
                         ) : (
                             <button
                                 className="navbar__contact-btn w-100 w-lg-auto mt-3 mt-lg-0 ms-lg-3 d-none d-lg-block"
-                                onClick={() => setIsLoginModalOpen(true)}
+                                onClick={() => dispatch(setLoginModalOpen(true))}
                             >
                                 Login/Register
                             </button>
@@ -218,7 +231,7 @@ const Navbar = ({ setCurrentPage }) => {
                                 data-bs-toggle="collapse"
                                 data-bs-target=".navbar-collapse.show"
                                 onClick={() => {
-                                    setIsLoginModalOpen(true);
+                                    dispatch(setLoginModalOpen(true));
                                     handleMenuClose();
                                 }}
                             >
@@ -232,15 +245,15 @@ const Navbar = ({ setCurrentPage }) => {
             {/* Login Modal */}
             <LoginModal
                 isOpen={isLoginModalOpen}
-                onClose={() => setIsLoginModalOpen(false)}
+                onClose={() => dispatch(setLoginModalOpen(false))}
                 onOtpRequest={(data) => {
                     setOtpSessionData(data);
-                    setIsLoginModalOpen(false);
+                    dispatch(setLoginModalOpen(false));
                     setIsOtpModalOpen(true);
                 }}
                 onSignupRequest={(email) => {
                     setOtpSessionData({ value: email });
-                    setIsLoginModalOpen(false);
+                    dispatch(setLoginModalOpen(false));
                     setIsSignupModalOpen(true);
                 }}
             />
