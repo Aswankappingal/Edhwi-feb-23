@@ -6,7 +6,7 @@ const Aboutus = () => {
     return (
         <div className="about-us-page">
             <Navbar />
-            
+
             {/* 1. Hero Section */}
             <section className="about-hero">
                 <div className="container">
@@ -17,28 +17,26 @@ const Aboutus = () => {
                                 perfected by purpose
                             </h1>
                             <p className="about-hero__description">
-                                At Edhwi, we believe in the purity of nature. Our journey began with a simple mission: 
-                                to bring the authentic, traditional flavors of Kerala to your table. 
-                                From handpicked coconuts to time-honored recipes, every product tells a story of quality and care.
+                                At Edhwi, we believe nature holds the purest answers to modern needs. Rooted in Kerala’s rich coconut heritage, we create products that blend traditional wisdom with sustainable innovation.
                             </p>
                         </div>
                         <div className="col-lg-7 about-hero__collage">
                             <div className="collage-grid">
-                                <div className="collage-item collage-item--main">
-                                    <img src="/Images/gallery4.svg" alt="Natural source" />
+                                {/* Background Roller */}
+                                <div className="background-roller">
+                                    <img src="/Images/background roller.svg" alt="Background Swirl" />
                                 </div>
-                                <div className="collage-item collage-item--top-right">
-                                    <img src="/Images/Coconut-green.svg" alt="Fresh coconut" />
+                                <div className="collage-item item-green">
+                                    <img src="/Images/coc-baby.svg" alt="Green coconuts" />
                                 </div>
-                                <div className="collage-item collage-item--mid-right">
-                                    <img src="/Images/Coconut-dry.svg" alt="Coconuts" />
+                                <div className="collage-item item-workers">
+                                    <img src="/Images/Coconut-lights.svg" alt="Workers" />
                                 </div>
-                                <div className="collage-item collage-item--bottom-right">
-                                    <img src="/Images/Second.svg" alt="Split coconut" />
+                                <div className="collage-item item-bw">
+                                    <img src="/Images/black-white.svg" alt="Black and white" />
                                 </div>
-                                {/* Leaf Overlay */}
-                                <div className="leaf-overlay">
-                                    <img src="/Images/img_greenleafe (1).svg" alt="" />
+                                <div className="collage-item item-split">
+                                    <img src="/Images/Coconut-muri.svg" alt="Split coconut" />
                                 </div>
                             </div>
                         </div>
@@ -84,8 +82,8 @@ const Aboutus = () => {
                                 Through Nature
                             </h2>
                             <p className="innovation-description">
-                                We combine traditional wisdom with modern innovation to ensure 
-                                that you receive the best nature has to offer. Our sustainable 
+                                We combine traditional wisdom with modern innovation to ensure
+                                that you receive the best nature has to offer. Our sustainable
                                 practices and commitment to purity are at the heart of everything we do.
                             </p>
                             <button className="btn-know-more">
@@ -100,4 +98,4 @@ const Aboutus = () => {
     );
 };
 
-export default Aboutus;
+export default Aboutus;
