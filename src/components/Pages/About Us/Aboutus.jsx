@@ -49,16 +49,7 @@ const Aboutus = () => {
             {/* 2. Product Showcase */}
             <section className="about-products">
                 <div className="container text-center">
-                    <div className="product-display-wrapper">
-                        <img src="/Images/Group-bottles.svg" alt="Edhwi Products" className="main-product-img" />
-                        {/* Static Accents around the products */}
-                        <div className="product-accent product-accent--left">
-                            <img src="/Images/success-coconut.svg" alt="" />
-                        </div>
-                        <div className="product-accent product-accent--right">
-                            <img src="/Images/Coconut.svg" alt="" />
-                        </div>
-                    </div>
+                    <img src="/Images/coconut-graphics-removebg-preview.png" alt="Edhwi Products" className="main-product-img" />
                 </div>
             </section>
 

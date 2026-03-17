@@ -41,7 +41,7 @@
                 .background-roller {
                     position: absolute;
                     left: 20px;
-                    bottom: 0px;
+                    bottom: -5px;
                     width: 320px;
                     height: 320px;
                     z-index: 0;
@@ -50,6 +50,7 @@
 
                     img {
                         width: 100%;
+                        opacity: 20%;
                         height: 100%;
                         object-fit: contain;
                     }
@@ -120,38 +121,12 @@
         padding: 4rem 0;
         background: radial-gradient(circle at center, rgba(31, 97, 225, 0.05) 0%, transparent 70%);
 
-        .product-display-wrapper {
-            position: relative;
-            display: inline-block;
-
-            .main-product-img {
-                max-width: 800px;
-                width: 100%;
-                z-index: 2;
-                position: relative;
-            }
-
-            .product-accent {
-                position: absolute;
-                z-index: 1;
-                pointer-events: none;
-
-                &--left {
-                    left: -100px;
-                    bottom: 20px;
-                    width: 200px;
-                }
-
-                &--right {
-                    right: -100px;
-                    top: 20px;
-                    width: 250px;
-                }
-
-                img {
-                    width: 100%;
-                }
-            }
+        .main-product-img {
+            max-width: 900px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
         }
     }
 
