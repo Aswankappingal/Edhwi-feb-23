@@ -81,9 +81,20 @@ const cartSlice = createSlice({
             total: 0
         },
         loading: false,
-        error: null
+        error: null,
+        // Single Product Checkout state
+        checkoutItem: null, 
+        isBuyNow: false
     },
     reducers: {
+        setBuyNowItem: (state, action) => {
+            state.checkoutItem = action.payload;
+            state.isBuyNow = true;
+        },
+        resetCheckoutMode: (state) => {
+            state.checkoutItem = null;
+            state.isBuyNow = false;
+        },
         applyCoupon: (state, action) => {
             state.appliedCoupon = action.payload;
         },
@@ -97,7 +108,9 @@ const cartSlice = createSlice({
 
             const shippingRates = action.payload || [];
 
-            state.items.forEach(item => {
+            const itemsToCalculate = state.isBuyNow && state.checkoutItem ? [state.checkoutItem] : state.items;
+
+            itemsToCalculate.forEach(item => {
                 const price = item.productDetails?.price || item.price || 0;
                 const quantity = item.quantity || 1;
                 initialTotalInclusive += price * quantity;
@@ -196,5 +209,5 @@ const cartSlice = createSlice({
     }
 });
 
-export const { calculateTotals, clearCart, applyCoupon, removeCoupon } = cartSlice.actions;
+export const { calculateTotals, clearCart, applyCoupon, removeCoupon, setBuyNowItem, resetCheckoutMode } = cartSlice.actions;
 export default cartSlice.reducer;

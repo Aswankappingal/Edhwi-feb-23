@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { addToCart } from '../../../redux/slices/cartSlice'
+import { addToCart, setBuyNowItem, resetCheckoutMode } from '../../../redux/slices/cartSlice'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
 import { setLoginModalOpen } from '../../../redux/slices/authSlice'
 import { toast } from 'react-toastify';
@@ -32,19 +32,19 @@ const processData = {
     title: "100% Pure Coconut Oil",
     steps: [
         {
-            image: "Edhwi-bottle.svg",
+            image: "/Images/Edhwi-bottle.svg",
             stepNumber: "01",
             title: "Fine & Matured Coconuts",
             description: "Harvested at the perfect age for best quality."
         },
         {
-            image: "Edhwi-bottle.svg",
+            image: "/Images/Edhwi-bottle.svg",
             stepNumber: "02",
             title: "Premium Quality Copra",
             description: "Extracted gently preserving nutrients and aroma."
         },
         {
-            image: "Edhwi-bottle.svg",
+            image: "/Images/Edhwi-bottle.svg",
             stepNumber: "03",
             title: "Hygienically Packed",
             description: "Packed without additives or preservatives."
@@ -119,6 +119,26 @@ const ProductPage = () => {
         }
     };
 
+    const handleBuyNow = () => {
+        if (!token && !user) {
+            dispatch(setLoginModalOpen(true));
+            return;
+        }
+
+        const checkoutItem = {
+            productId: productData.id.toString(),
+            quantity: 1,
+            productDetails: {
+                name: productData.name,
+                price: productData.price,
+                image: productData.imageUrl
+            }
+        };
+
+        dispatch(setBuyNowItem(checkoutItem));
+        navigate('/address');
+    };
+
     return (
         <div className="Product-page-wrapper">
             <Navbar />
@@ -182,11 +202,15 @@ const ProductPage = () => {
                         </div>
 
                         {/* Buttons (UI) */}
-                        <div className='buy-now'>
-                            <button className='Link w-100' onClick={handleCartAction} disabled={loading && !isProductInCart}>
+                        <div className='buy-now-container'>
+                            <button className='add-to-cart-btn btn' onClick={handleCartAction} disabled={loading && !isProductInCart}>
                                 {isProductInCart ? 'Go to Cart' : (loading ? 'Adding...' : 'Add to cart')}
                             </button>
+                            <button className='buy-now-btn btn' onClick={handleBuyNow}>
+                                Buy Now
+                            </button>
                         </div>
+
                     </div>
                 </div>
 

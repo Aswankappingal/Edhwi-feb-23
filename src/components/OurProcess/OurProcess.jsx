@@ -14,7 +14,7 @@ const OurProcess = () => {
                     <div className="process-step">
                         <div className="image-wrapper">
                             {/* User will add their image here */}
-                            <img src="/Edhwi-tree.svg" alt="Procurement" className="step-image" />
+                            <img src="/Images/Edhwi-tree.svg" alt="Procurement" className="step-image" />
                         </div>
                         <div className="text-content">
                             <span className="step-number">Step 01</span>
@@ -35,7 +35,7 @@ const OurProcess = () => {
                     <div className="process-step">
                         <div className="image-wrapper">
                             {/* User will add their image here */}
-                            <img src="/floor.svg" alt="Hygienic Copra Processing" className="step-image" />
+                            <img src="/Images/floor.svg" alt="Hygienic Copra Processing" className="step-image" />
                         </div>
                         <div className="text-content">
                             <span className="step-number">Step 02</span>
@@ -56,7 +56,7 @@ const OurProcess = () => {
                     <div className="process-step">
                         <div className="image-wrapper">
                             {/* User will add their image here */}
-                            <img src="/Packets.svg" alt="Pure Extraction & Packaging" className="step-image" />
+                            <img src="/Images/Packets.svg" alt="Pure Extraction & Packaging" className="step-image" />
                         </div>
                         <div className="text-content">
                             <span className="step-number">Step 03</span>

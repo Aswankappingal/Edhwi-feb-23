@@ -52,16 +52,32 @@ const addressSlice = createSlice({
     name: 'address',
     initialState: {
         addresses: [],
+        selectedAddressId: localStorage.getItem('selectedAddressId') || null,
         loading: false,
         error: null
     },
-    reducers: {},
+    reducers: {
+        setSelectedAddressId: (state, action) => {
+            state.selectedAddressId = action.payload;
+            if (action.payload) {
+                localStorage.setItem('selectedAddressId', action.payload);
+            } else {
+                localStorage.removeItem('selectedAddressId');
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAddresses.pending, (state) => { state.loading = true; state.error = null; })
             .addCase(fetchAddresses.fulfilled, (state, action) => {
                 state.loading = false;
                 state.addresses = action.payload.addresses || [];
+                // If the stored ID is not in the fetched list, reset it
+                const validIds = state.addresses.map(a => a.id || a._id);
+                if (state.selectedAddressId && !validIds.includes(state.selectedAddressId)) {
+                    state.selectedAddressId = null;
+                    localStorage.removeItem('selectedAddressId');
+                }
             })
             .addCase(fetchAddresses.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
 
@@ -75,4 +91,5 @@ const addressSlice = createSlice({
     }
 });
 
+export const { setSelectedAddressId } = addressSlice.actions;
 export default addressSlice.reducer;

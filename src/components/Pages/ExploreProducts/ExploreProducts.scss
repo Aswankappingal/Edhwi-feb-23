@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 .Explore-Main-wrapper {
+    overflow-x: hidden; // Guard against horizontal scroll
+    width: 100%;
+    
     .filters-section-e {
         cursor: pointer;
     }
@@ -209,6 +212,9 @@
 
             .three-cards {
                 margin-bottom: 2rem;
+                margin-left: 0;
+                margin-right: 0;
+                width: 100%;
 
                 &:last-child {
                     margin-bottom: 0;
@@ -326,14 +332,27 @@
                             line-height: 130%;
                             color: #1B1919;
                         }
-
-                        h4 {
+                        .Available-section {
                             font-family: "General Sans", sans-serif;
                             font-weight: 400;
                             font-size: 16px;
+                            line-height: 120%;
+                            color: #717171;
+                            margin-bottom: 8px;
+
+                            b {
+                                font-weight: 600;
+                                color: #1B1919;
+                            }
+                        }
+
+                        h4 {
+                            font-family: "General Sans", sans-serif;
+                            font-weight: 600;
+                            font-size:20px;
                             line-height: 130%;
                             letter-spacing: 0%;
-                            color: #666666;
+                            color: #1B1919;
 
                             span {
                                 color: #3DAE4A;
@@ -370,12 +389,12 @@
             .Head-and-filter-main-flex {
 
                 gap: 1rem;
+                padding: 2rem 0 0 0;
 
                 .heading-section-explore {
-                    padding: 2 1rem;
+                    padding: 2rem 2rem;
 
                     h3 {
-                        font-family: Nohemi;
                         font-weight: 600;
                         font-style: Semi Bold;
                         font-size: 24px;
@@ -395,7 +414,9 @@
             .cards-and-filter {
                 flex-direction: column;
                 gap: 1rem;
-                padding: 0 1rem;
+                padding: 0; // Remove side padding to prevent overflow with 100% width children
+                width: 100%;
+                overflow-x: hidden;
 
                 .left-side {
                     position: static;
@@ -403,91 +424,108 @@
                     max-width: none;
                     height: auto;
                     max-height: none;
+                    width: 100%;
+                    padding: 0 1rem;
                 }
             }
 
             .cards-whole-three {
+                padding: 0 0.5rem; // Add safe padding here instead
+                width: 100%;
+                margin: 0;
+
                 .product-card-main {
                     padding: 0.25rem;
+                    display: flex;
+                    justify-content: center;
 
                     .product-card {
                         .prod-image-section {
-                            .add-icon-wrapper {
-                                // display: none;
-
-                                position: absolute;
-                                bottom: 1rem;
-                                right: 0.3rem;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                border: 1px solid rgb(72, 72, 72);
-                                border-radius: 50%;
-                                padding: 0.2rem;
-                                cursor: pointer;
-                                color: #1B1919;
-
-                                .add-icon {
-                                    font-size: 22px;
-                                }
-                            }
+                            width: 171.5px;
+                            height: 204px;
+                            background-color: #F6F6F6;
+                            border-radius: 8.74px;
+                            border: none;
+                            padding: 20px;
+                            margin-bottom: 10px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: relative;
+                            overflow: hidden;
 
                             img {
                                 width: 100%;
                                 height: 100%;
                                 object-fit: contain;
                                 transition: transform 0.3s ease;
-
                             }
+
+                            .add-icon-wrapper {
+                                position: absolute;
+                                bottom: 8px;
+                                right: 8px;
+                                padding: 4px;
+                                border: 1px solid #1B1919;
+                                .add-icon {
+                                    font-size: 18px;
+                                }
+                            }
+
+                            .wishlist-icon-container {
+                                top: 6px;
+                                right: 6px;
+                                padding: 4px !important;
+                                .heart-icon {
+                                    font-size: 16px;
+                                }
+                            }
+
                         }
                     }
 
                     .product-card {
-                        height: 120px;
-                        margin-bottom: 6rem;
+                        width: 171.5px;
+                        margin-bottom: 2rem;
 
                         .product-details {
+                            padding-top: 0.5rem;
 
                             h3 {
-                                font-family: DM Sans;
+                                font-family: "General Sans", sans-serif;
                                 font-weight: 500;
                                 font-size: 14px;
-                                line-height: 130%;
-                                letter-spacing: 0%;
-                                vertical-align: middle;
+                                line-height: 120%;
+                                color: #1B1919;
+                                margin-bottom: 4px;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
 
+                            .Available-section {
+                                font-family: "General Sans", sans-serif;
+                                font-weight: 400;
+                                font-size: 11px;
+                                line-height: 120%;
+                                color: #717171;
+                                margin-bottom: 8px;
+
+                                b {
+                                    font-weight: 600;
+                                    color: #1B1919;
+                                }
                             }
 
                             h4 {
                                 font-family: "General Sans", sans-serif;
                                 font-weight: 600;
-                                font-size: 14px;
-                                line-height: 130%;
-                                letter-spacing: 0%;
-
+                                font-size: 15px;
+                                line-height: 120%;
+                                color: #1B1919;
+                                margin: 0;
                             }
-
-                            p {
-                                font-family: "General Sans", sans-serif;
-                                font-weight: 600;
-                                font-size: 16px;
-                                line-height: 130%;
-                                letter-spacing: 0%;
-
-                            }
-
                         }
-
-                        .prod-image-section {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: contain;
-                            transition: transform 0.3s ease;
-
-
-
-                        }
-
                     }
                 }
             }

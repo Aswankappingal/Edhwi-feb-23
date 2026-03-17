@@ -10,7 +10,7 @@ const Footer = () => {
                 <div className="footer__top">
                     {/* Left Section: Logo */}
                     <div className="footer__logo-container">
-                        <img src="/Footer-logo.svg" alt="Edhwi Logo" className="footer__logo-img" />
+                        <img src="/Images/Footer-logo.svg" alt="Edhwi Logo" className="footer__logo-img" />
                     </div>
 
                     {/* Right Section: Links Columns */}
@@ -61,7 +61,7 @@ const Footer = () => {
                 <div className="footer__bottom">
                     {/* Large Brand Text */}
                     <div className="footer__brand-text-wrapper">
-                        <img src="/footer-text.svg" alt="edhwi text logo" className="footer__brand-img" />
+                        <img src="/Images/footer-text.svg" alt="edhwi text logo" className="footer__brand-img" />
                     </div>
 
                     {/* Socials and Copyright */}

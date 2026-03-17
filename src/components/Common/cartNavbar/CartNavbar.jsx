@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './CartNavbar.scss';
-import { FiShoppingCart } from 'react-icons/fi';
+import { FiShoppingCart, FiMenu, FiX } from 'react-icons/fi';
 import { BiHomeAlt } from 'react-icons/bi';
 import { BsCreditCard } from 'react-icons/bs';
 import { MdVerified } from 'react-icons/md';
+import { Link } from 'react-router-dom';
 
 const CartNavbar = ({ currentStep = 'cart' }) => {
-  // currentStep can be 'cart', 'address', or 'payment'
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Close offcanvas when step changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [currentStep]);
+
+  // Disable scroll when offcanvas is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isOpen]);
 
   const steps = [
     { id: 'cart', label: 'Cart', icon: <FiShoppingCart /> },
@@ -19,15 +34,17 @@ const CartNavbar = ({ currentStep = 'cart' }) => {
 
   return (
     <nav className="cart-navbar">
+      {/* Desktop & Mobile Shared: Logo */}
       <div className="cart-navbar-left">
-        {/* You can add your actual logo image here */}
         <div className="logo-placeholder">
-          <img src="/Edhwi-logo.svg" alt="Edhwi Logo" />
-          {/* <span style={{ fontWeight: 'bold', fontSize: '1.75rem', color: '#135cdd' }}>edhwi</span> */}
+         <Link to="/">
+           <img src="/Images/Edhwi-logo.svg" alt="Edhwi Logo"/>
+         </Link>
         </div>
       </div>
 
-      <div className="cart-navbar-center">
+      {/* Desktop Stepper */}
+      <div className="cart-navbar-center desktop-only">
         {steps.map((step, index) => {
           const isActive = index === currentIndex;
           
@@ -40,7 +57,6 @@ const CartNavbar = ({ currentStep = 'cart' }) => {
                 <span className="step-label">{step.label}</span>
               </div>
               
-              {/* Add dotted connecting line between steps */}
               {index < steps.length - 1 && (
                 <div className="stepper-line"></div>
               )}
@@ -49,12 +65,67 @@ const CartNavbar = ({ currentStep = 'cart' }) => {
         })}
       </div>
 
-      <div className="cart-navbar-right">
+      {/* Desktop Security Badge */}
+      <div className="cart-navbar-right desktop-only">
         <div className="security-badge">
           <MdVerified className="security-icon" />
           <div className="security-text">
             <strong>100% Secure payments,</strong>
             <span>Shop with confidence!</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Toggle */}
+      <div className="mobile-toggle mobile-only">
+        <button className="toggle-btn" onClick={() => setIsOpen(true)}>
+          <div className={`stepper-icon-mini step-${currentStep}`}>
+             {steps[currentIndex].icon}
+          </div>
+          <FiMenu className="menu-icon" />
+        </button>
+      </div>
+
+      {/* Offcanvas Overlay */}
+      {isOpen && <div className="offcanvas-overlay" onClick={() => setIsOpen(false)}></div>}
+
+      {/* Offcanvas Drawer */}
+      <div className={`cart-offcanvas ${isOpen ? 'open' : ''}`}>
+        <div className="offcanvas-header">
+          <div className="logo-placeholder">
+            <img src="/Images/Edhwi-logo.svg" alt="Edhwi Logo" />
+          </div>
+          <button className="close-btn" onClick={() => setIsOpen(false)}>
+            <FiX />
+          </button>
+        </div>
+
+        <div className="offcanvas-body">
+          <div className="stepper-vertical">
+            {steps.map((step, index) => {
+              const isActive = index === currentIndex;
+              const isPast = index < currentIndex;
+              
+              return (
+                <div key={step.id} className={`stepper-vertical-item ${isActive ? 'active' : ''} ${isPast ? 'past' : ''}`}>
+                  <div className="step-icon-wrapper">
+                    {step.icon}
+                  </div>
+                  <div className="step-content">
+                    <span className="step-label">{step.label}</span>
+                    <span className="step-status">{isActive ? 'Current Step' : isPast ? 'Completed' : 'Upcoming'}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="security-badge-vertical">
+            <MdVerified className="security-icon" />
+            <div className="security-text">
+              <strong>100% Secure payments</strong>
+              <span>Shop with confidence!</span>
+            </div>
           </div>
         </div>
       </div>

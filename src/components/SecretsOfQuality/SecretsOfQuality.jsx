@@ -20,16 +20,16 @@ const SecretsOfQuality = () => {
                     <div className="secrets-gallery">
                         {/* User can add their responsive images here */}
                         <div className="gallery-item item-1">
-                            <img src="/Caro-first.svg" alt="Palm Trees" className="responsive-image" />
+                            <img src="/Images/Caro-first.svg" alt="Palm Trees" className="responsive-image" />
                         </div>
                         <div className="gallery-item item-2">
-                            <img src="/Coconut-green.svg" alt="Green Coconuts" className="responsive-image" />
+                            <img src="/Images/Coconut-green.svg" alt="Green Coconuts" className="responsive-image" />
                         </div>
                         <div className="gallery-item item-3">
-                            <img src="/Coconut-dry.svg" alt="Coconut Oil Bottle" className="responsive-image" />
+                            <img src="/Images/Coconut-dry.svg" alt="Coconut Oil Bottle" className="responsive-image" />
                         </div>
                         <div className="gallery-item item-4">
-                            <img src="/Bottle-coconutss.svg" alt="Edhwi Bottles" className="responsive-image" />
+                            <img src="/Images/Bottle-coconutss.svg" alt="Edhwi Bottles" className="responsive-image" />
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@ const SecretsOfQuality = () => {
                 <div className="secrets-features">
                     <div className="feature-block">
                         <div className="feature-image">
-                            <img src="/Coconut.svg" alt="Sundried Copra" className="responsive-image" />
+                            <img src="/Images/Coconut.svg" alt="Sundried Copra" className="responsive-image" />
                         </div>
                         <div className="feature-content">
                             <h4>Sundried Copra</h4>
@@ -49,7 +49,7 @@ const SecretsOfQuality = () => {
 
                     <div className="feature-block">
                         <div className="feature-image">
-                            <img src="/Group-bottles.svg" alt="Unrefined & Microfiltered" className="responsive-image" />
+                            <img src="/Images/Group-bottles.svg" alt="Unrefined & Microfiltered" className="responsive-image" />
                         </div>
                         <div className="feature-content">
                             <h4>Unrefined &amp; Microfiltered</h4>

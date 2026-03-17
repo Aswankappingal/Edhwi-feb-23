@@ -5,7 +5,7 @@ import './BlogSub.scss';
 const blogSubData = [
     {
         id: 1,
-        image: '/First.svg',
+        image: '/Images/First.svg',
         type: 'Article',
         date: 'March 4, 2024',
         title: 'Traditional Kerala Pickles: A Taste of Home',
@@ -14,7 +14,7 @@ const blogSubData = [
     },
     {
         id: 2,
-        image: '/Second.svg',
+        image: '/Images/Second.svg',
         type: 'Article',
         date: 'March 4, 2024',
         title: 'Why Unrefined Coconut Oil is Better for Your Health',
@@ -23,7 +23,7 @@ const blogSubData = [
     },
     {
         id: 3,
-        image: '/third.svg',
+        image: '/Images/third.svg',
         type: 'Article',
         date: 'March 4, 2024',
         title: 'From Farm to Bottle: The Edhwi Journey',

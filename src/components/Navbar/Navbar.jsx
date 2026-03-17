@@ -67,7 +67,7 @@ const Navbar = ({ setCurrentPage }) => {
                     className="navbar-brand d-flex align-items-center"
                     style={{ cursor: "pointer", width: "55px", marginRight: '2rem' }}
                 >
-                    <img src="/Edhwi-logo.svg" alt="edhwi" style={{ width: '100%', height: 'auto' }} />
+                    <img src="/Images/Edhwi-logo.svg" alt="edhwi" style={{ width: '100%', height: 'auto' }} />
 
                 </Link>
 
@@ -103,7 +103,7 @@ const Navbar = ({ setCurrentPage }) => {
 
                     {/* Mobile Only Logo */}
                     <div className="mobile-menu-logo d-lg-none text-center position-relative mt-5 pt-4 mb-4" style={{ zIndex: 10 }}>
-                        <img src="/Edhwi-logo.svg" alt="edhwi" style={{ width: '90px', height: 'auto' }} />
+                        <img src="/Images/Edhwi-logo.svg" alt="edhwi" style={{ width: '90px', height: 'auto' }} />
                     </div>
 
                     {/* Center Menu */}
@@ -185,10 +185,17 @@ const Navbar = ({ setCurrentPage }) => {
                         </Link>
 
                         <Link
-                            to="/my-account"
+                            to={token || user ? "/my-account" : "#"}
                             className="navbar__action-icon"
                             style={{ textDecoration: "none", color: isHome ? "#fff" : "#000" }}
-                            onClick={handleNavClick}
+                            onClick={(e) => {
+                                if (!token && !user) {
+                                    e.preventDefault();
+                                    dispatch(setLoginModalOpen(true));
+                                } else {
+                                    handleNavClick();
+                                }
+                            }}
                         >
                             <FiUser size={22} color={isHome ? "#fff" : "#000"} className="d-none d-lg-block" />
                             <span className="mobile-nav-text">Account</span>

@@ -29,6 +29,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import useFetchData from './hooks/useFetchData';
+import BlogDetailsPage from "./components/Pages/BlogDetailPage/BlogDetailPage";
 
 function App() {
   useFetchData();
@@ -64,6 +65,7 @@ function App() {
 
           {/* 🔹 Blogs Page */}
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/blog-inner" element={<BlogDetailsPage />} />
 
           {/* 🔹 My Account Page */}
           <Route path="/my-account" element={<MyAccount />} />

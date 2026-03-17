@@ -4,9 +4,9 @@ import { BiLeaf } from "react-icons/bi";
 import { TbBowl, TbDroplet } from "react-icons/tb";
 
 const products = [
-    { id: 1, src: "/Bottle-with-coconut.svg", alt: "Edhwi Blue Bottle" },
-    { id: 2, src: "/Bottle-blue.svg", alt: "Edhwi Bottle" },
-    { id: 3, src: "/Edhwi-packet.svg", alt: "Edhwi Packet" }
+    { id: 1, src: "/Images/Bottle-with-coconut.svg", alt: "Edhwi Blue Bottle" },
+    { id: 2, src: "/Images/Bottle-blue.svg", alt: "Edhwi Bottle" },
+    { id: 3, src: "/Images/Edhwi-packet.svg", alt: "Edhwi Packet" }
 ];
 
 const PuritySection = () => {
@@ -23,7 +23,7 @@ const PuritySection = () => {
     return (
         <section className="hero">
             {/* Background elements */}
-            <img src="/img_greenleafe (1).svg" alt="" className="hero__leaf hero__leaf--1" />
+            <img src="/Images/img_greenleafe (1).svg" alt="" className="hero__leaf hero__leaf--1" />
             {/* <img src="/Flowers.svg" alt="" className="hero__leaf hero__leaf--2" /> */}
 
             <div className="hero__container hero__container--vertical">
@@ -44,15 +44,15 @@ const PuritySection = () => {
 
                     <div className="hero__features-box">
                         <div className="feature">
-                            <img src="/Cup.svg" alt="" />
+                            <img src="/Images/Cup.svg" alt="" />
                             <span>Pure</span>
                         </div>
                         <div className="feature">
-                            <img src="/Flowers.svg" alt="no-flowers" />
+                            <img src="/Images/Flowers.svg" alt="no-flowers" />
                             <span>Traditional</span>
                         </div>
                         <div className="feature">
-                            <img src="/Flowerrs.svg" alt="no-flowers" />
+                            <img src="/Images/Flowerrs.svg" alt="no-flowers" />
                             <span>Fresh</span>
                         </div>
                     </div>

@@ -11,6 +11,7 @@
     padding-top: 50px;
     overflow: hidden;
 
+
     .payment-success-content {
         display: flex;
         flex-direction: column;
@@ -20,6 +21,10 @@
         max-width: 500px;
         padding-bottom: 250px;
         /* Leave space for bottom image */
+
+        &.animate-content {
+            animation: slideUpFade 0.8s ease-out forwards;
+        }
     }
 
     .success-icon-container {
@@ -28,48 +33,125 @@
         .icon-outer-circle {
             width: 80px;
             height: 80px;
-            background-color: #eaf6ee; // subtle green background matching screenshot
+            background-color: #eaf6ee;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+
+            &.animate-pulse {
+                animation: pulseOuter 2s infinite ease-in-out;
+            }
         }
 
         .icon-inner-circle {
             width: 60px;
             height: 60px;
-            background-color: #3fba54; // darker green background
+            background-color: #3fba54;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+
+            &.animate-scale {
+                animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
         }
 
         .check-icon {
             color: #ffffff;
             font-size: 34px;
+
+            &.animate-check {
+                animation: checkPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s both;
+            }
+        }
+    }
+
+    @keyframes slideUpFade {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulseOuter {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(63, 186, 84, 0.4);
+        }
+
+        70% {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 15px rgba(63, 186, 84, 0);
+        }
+
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(63, 186, 84, 0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            transform: scale(0);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes checkPop {
+        0% {
+            transform: scale(0) rotate(-45deg);
+            opacity: 0;
+        }
+
+        70% {
+            transform: scale(1.2) rotate(0deg);
+        }
+
+        100% {
+            transform: scale(1) rotate(0deg);
+            opacity: 1;
         }
     }
 
     .success-heading {
-        font-family: 'Nohemi', sans-serif;
-        font-size: 34px;
-        font-weight: 700;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 110%;
+        background: linear-gradient(90deg, #1F61E1 10%, #050E15 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        color: transparent;
         margin-bottom: 24px;
         letter-spacing: -1px;
 
-        .text-blue {
-            color: #2b5fe7; // exact blue from the screenshot
-        }
+        /* Animation */
+        opacity: 0;
+        animation: slideUpFade 0.7s ease-out 0.5s forwards;
 
-        .text-dark {
-            color: #1c1c1c;
+        @media (max-width: 768px) {
+            font-size: 28px;
         }
     }
 
     .order-details {
         margin-bottom: 32px;
         color: #4a4a4a;
+
+        /* Animation */
+        opacity: 0;
+        animation: slideUpFade 0.7s ease-out 0.8s forwards;
 
         .detail-label {
             font-size: 14px;
@@ -86,12 +168,19 @@
         }
 
         .detail-row {
-            font-size: 15px;
-            margin-bottom: 4px;
+            font-family: General Sans;
+            font-weight: 400;
+            font-style: Regular;
+            font-size: 20px;
+            leading-trim: NONE;
+            line-height: 130%;
+            letter-spacing: -2%;
+            text-align: center;
+
 
             strong {
                 color: #1c1c1c;
-                font-weight: 600;
+                font-weight: 500;
             }
         }
     }
@@ -100,6 +189,10 @@
         display: flex;
         gap: 12px;
         justify-content: center;
+
+        /* Animation */
+        opacity: 0;
+        animation: slideUpFade 0.7s ease-out 1.1s forwards;
 
         button {
             padding: 10px 22px;

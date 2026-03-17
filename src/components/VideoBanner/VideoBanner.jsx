@@ -11,7 +11,7 @@ const VideoBanner = () => {
                     {/* Placeholder image background - update with actual video later */}
                     <div
                         className="video-banner__background"
-                        style={{ backgroundImage: 'url("/Edhwi-women.svg")' }}
+                        style={{ backgroundImage: 'url("/Images/Edhwi-women.svg")' }}
                     ></div>
                     <div className="video-banner__overlay video-banner__overlay--blue"></div>
 
@@ -30,7 +30,7 @@ const VideoBanner = () => {
                     {/* Placeholder image background - update with actual video later */}
                     <div
                         className="video-banner__background"
-                        style={{ backgroundImage: 'url("/Yellow-image.svg")' }}
+                        style={{ backgroundImage: 'url("/Images/Yellow-image.svg")' }}
                     ></div>
                     <div className="video-banner__overlay video-banner__overlay--yellow"></div>
 

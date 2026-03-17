@@ -23,6 +23,25 @@ export const placeOrder = createAsyncThunk(
     }
 );
 
+export const placeSingleProductOrder = createAsyncThunk(
+    'order/placeSingleProductOrder',
+    async (orderData, { rejectWithValue }) => {
+        try {
+            const token = getToken();
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const response = await axios.post(`${BaseUrl}/single-product-place-order`, orderData, config);
+            return response.data;
+        } catch (error) {
+            console.error('Place single product order failed:', error.response?.data);
+            const errorMessage = error.response?.data?.errors
+                ? error.response.data.errors.join(', ')
+                : (error.response?.data?.error || error.response?.data?.message || 'Failed to place order');
+            return rejectWithValue(errorMessage);
+        }
+    }
+);
+
+
 export const fetchMyOrders = createAsyncThunk(
     'order/fetchMyOrders',
     async (_, { rejectWithValue }) => {
@@ -68,7 +87,7 @@ const orderSlice = createSlice({
         loading: false,
         error: null,
         success: false,
-        currentOrder: null,
+        currentOrder: JSON.parse(localStorage.getItem('currentOrder')) || null,
         orders: [] // Array to hold fetched orders
     },
     reducers: {
@@ -77,6 +96,7 @@ const orderSlice = createSlice({
             state.error = null;
             state.success = false;
             state.currentOrder = null;
+            localStorage.removeItem('currentOrder');
         }
     },
     extraReducers: (builder) => {
@@ -90,6 +110,7 @@ const orderSlice = createSlice({
                 state.loading = false;
                 state.success = true;
                 state.currentOrder = action.payload;
+                localStorage.setItem('currentOrder', JSON.stringify(action.payload));
             })
             .addCase(placeOrder.rejected, (state, action) => {
                 state.loading = false;
@@ -121,6 +142,23 @@ const orderSlice = createSlice({
             .addCase(cancelOrder.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+            // Place Single Product Order (Buy Now)
+            .addCase(placeSingleProductOrder.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.success = false;
+            })
+            .addCase(placeSingleProductOrder.fulfilled, (state, action) => {
+                state.loading = false;
+                state.success = true;
+                state.currentOrder = action.payload;
+                localStorage.setItem('currentOrder', JSON.stringify(action.payload));
+            })
+            .addCase(placeSingleProductOrder.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.success = false;
             });
     }
 });

@@ -9,12 +9,12 @@ const Essentials = () => {
     const sliderRef = useRef(null);
 
     const products = [
-        { id: 1, bgColor: '#e6efff', image: 'Edhwi-packet.svg', alt: 'Pure Coconut Oil Packet' },
-        { id: 2, bgColor: '#fbf3d3', image: 'Edhwi-bottle.svg', alt: 'Coconut Oil Bottle' },
-        { id: 3, bgColor: '#e3f5f3', image: 'Bottle-blue.svg', alt: 'Cleaning Product Bottle' },
-        { id: 4, bgColor: '#e6efff', image: 'Edhwi-packet.svg', alt: 'Pure Coconut Oil Packet' },
-        { id: 5, bgColor: '#fbf3d3', image: 'Edhwi-bottle.svg', alt: 'Coconut Oil Bottle' },
-        { id: 6, bgColor: '#e3f5f3', image: 'Bottle-blue.svg', alt: 'Cleaning Product Bottle' },
+        { id: 1, bgColor: '#e6efff', image: 'Images/Edhwi-packet.svg', alt: 'Pure Coconut Oil Packet' },
+        { id: 2, bgColor: '#fbf3d3', image: 'Images/Edhwi-bottle.svg', alt: 'Coconut Oil Bottle' },
+        { id: 3, bgColor: '#e3f5f3', image: 'Images/Bottle-blue.svg', alt: 'Cleaning Product Bottle' },
+        { id: 4, bgColor: '#e6efff', image: 'Images/Edhwi-packet.svg', alt: 'Pure Coconut Oil Packet' },
+        { id: 5, bgColor: '#fbf3d3', image: 'Images/Edhwi-bottle.svg', alt: 'Coconut Oil Bottle' },
+        { id: 6, bgColor: '#e3f5f3', image: 'Images/Bottle-blue.svg', alt: 'Cleaning Product Bottle' },
     ];
 
     const settings = {

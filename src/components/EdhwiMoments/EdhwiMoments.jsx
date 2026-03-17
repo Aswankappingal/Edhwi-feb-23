@@ -4,10 +4,10 @@ import './EdhwiMoments.scss';
 const EdhwiMoments = () => {
     // Array of placeholder images. The developer will replace these with actual image paths.
     const images = [
-        '/Component 439.svg',
-        '/Component 440.svg',
-        '/Component 441.svg',
-        '/Component 443.svg',
+        '/Images/Component 439.svg',
+        '/Images/Component 440.svg',
+        '/Images/Component 441.svg',
+        '/Images/Component 443.svg',
     ];
 
     // Duplicate images for seamless infinite auto-scrolling
@@ -41,7 +41,7 @@ const EdhwiMoments = () => {
                         richness of Kerala's coconuts.
                     </p>
                     <a href="https://instagram.com/Edhwiindia" target="_blank" rel="noopener noreferrer" className="instagram-link">
-                        <img src="/Instagram.svg" alt="Instagram" className="insta-icon" />
+                        <img src="/Images/Instagram.svg" alt="Instagram" className="insta-icon" />
                         <span className="insta-text">Edhwiindia</span>
                     </a>
                 </div>

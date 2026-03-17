@@ -386,8 +386,12 @@ const ExploreProducts = () => {
                                                     </div>
                                                     <div className="product-details">
                                                         <h3>{product.name}</h3>
+                                                        {product.variantCombinations?.length > 0 && (
+                                                            <p className='Available-section'>Available in <b>{product.variantCombinations?.[0]?.weight || product.variantCombinations?.[0]?.volume || product.variantCombinations?.[0]?.amount || ''}</b></p>
+                                                        )}
                                                         <h4>₹{product.price || product.sellingPrice}</h4>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </Link>

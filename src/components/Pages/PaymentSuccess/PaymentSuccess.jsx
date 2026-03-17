@@ -1,34 +1,66 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { MdDone } from 'react-icons/md';
+import confetti from 'canvas-confetti';
 import './PaymentSuccess.scss';
-import coconutFooter from '../../../../public/success-coconut.svg';
 
 const PaymentSuccess = () => {
-    const location = useLocation();
     const navigate = useNavigate();
+    const { currentOrder } = useSelector((state) => state.order);
 
-    // Data passed from Payment.jsx after successful order
-    // Fallback to static data if navigated directly for testing the design
-    const { orderId, totalAmount, paymentMethod } = location.state || {
-        orderId: '341234566',
-        totalAmount: 15600,
-        paymentMethod: 'online'
-    };
+    // Data passed from Redux currentOrder (persisted in localStorage)
+    const orderId = currentOrder?.orderId || currentOrder?.order?.orderId;
+    const totalAmount = currentOrder?.totalAmount || currentOrder?.order?.totalAmount;
+    const paymentMethod = currentOrder?.paymentMethod || currentOrder?.order?.paymentMethod;
+
+    useEffect(() => {
+        // Trigger confetti (cracker popper) effect
+        const duration = 3 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            // since particles fall down, start a bit higher than random
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    const isCod = paymentMethod?.toLowerCase() === 'cod';
 
     return (
         <div className="payment-success-wrapper">
-            <div className="payment-success-content">
+            <div className="payment-success-content animate-content">
                 <div className="success-icon-container">
-                    <div className="icon-outer-circle">
-                        <div className="icon-inner-circle">
-                            <MdDone className="check-icon" />
+                    <div className="icon-outer-circle animate-pulse">
+                        <div className="icon-inner-circle animate-scale">
+                            <MdDone className="check-icon animate-check" />
                         </div>
                     </div>
                 </div>
 
                 <h1 className="success-heading">
-                    <span className="text-blue">Payment</span> <span className="text-dark">Successful!</span>
+                    {isCod ? (
+                        <>
+                            <span className="text-blue">Order Placed</span> <span className="text-dark">Successful!</span>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-blue">Payment</span> <span className="text-dark">Successful!</span>
+                        </>
+                    )}
                 </h1>
 
                 <div className="order-details">
@@ -36,7 +68,7 @@ const PaymentSuccess = () => {
                     <h2 className="detail-value">{orderId || 'N/A'}</h2>
 
                     <p className="detail-row">Total Amount: <strong>₹{totalAmount || 0}</strong></p>
-                    <p className="detail-row">Payment Method: <strong>{paymentMethod === 'online' ? 'UPI' : 'Cash on Delivery'}</strong></p>
+                    <p className="detail-row">Payment Method: <strong>{isCod ? 'Cash on Delivery' : 'Online Payment'}</strong></p>
                 </div>
 
                 <div className="action-buttons">
@@ -50,7 +82,7 @@ const PaymentSuccess = () => {
             </div>
 
             <div className="footer-image-section">
-                <img src="/success-coconut.svg" alt="Coconut" className="coconut-img" />
+                <img src="/Images/success-coconut.svg" alt="Coconut" className="coconut-img" />
             </div>
         </div>
     );

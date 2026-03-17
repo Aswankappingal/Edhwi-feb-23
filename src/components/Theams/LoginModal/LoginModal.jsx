@@ -46,7 +46,7 @@ const LoginModal = ({ isOpen, onClose, onOtpRequest, onSignupRequest }) => {
                 {/* Left Side: Image */}
                 <div className="login-modal__image-wrapper">
                     <img
-                        src="/Login-modal-IM.svg"
+                        src="/Images/Login-modal-IM.svg"
                         alt="Edhwi Coconuts"
                         className="login-modal__image"
                     />

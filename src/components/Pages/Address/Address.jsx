@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAddresses, addAddress, updateAddress } from '../../../redux/slices/addressSlice';
+import { fetchAddresses, addAddress, updateAddress, setSelectedAddressId } from '../../../redux/slices/addressSlice';
 import { fetchCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
 import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -18,12 +18,11 @@ const Address = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { addresses, loading: addressLoading } = useSelector((state) => state.address);
-    const { items: cartItems, summary, loading: cartLoading, appliedCoupon } = useSelector((state) => state.cart);
+    const { addresses, selectedAddressId, loading: addressLoading } = useSelector((state) => state.address);
+    const { items: cartItems, summary, loading: cartLoading, appliedCoupon, isBuyNow } = useSelector((state) => state.cart);
     const { rates: shippingRates } = useSelector((state) => state.shipping);
 
     const [isAddingNew, setIsAddingNew] = useState(false);
-    const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [isCouponModalOpen, setIsCouponModalOpen] = useState(false);
 
     // Modal states
@@ -33,21 +32,21 @@ const Address = () => {
 
     useEffect(() => {
         dispatch(fetchAddresses());
-        dispatch(fetchCart());
+        if (!isBuyNow) {
+            dispatch(fetchCart());
+        }
         dispatch(fetchShippingRates());
-    }, [dispatch]);
+    }, [dispatch, isBuyNow]);
 
     useEffect(() => {
         dispatch(calculateTotals(shippingRates));
     }, [cartItems, appliedCoupon, shippingRates, dispatch]);
 
     useEffect(() => {
-        if (!addressLoading) {
-            if (addresses.length > 0 && !selectedAddressId) {
-                setSelectedAddressId(addresses[0].id || addresses[0]._id); // fallback depending on backend ID key
-            }
+        if (!addressLoading && addresses.length > 0 && !selectedAddressId) {
+            dispatch(setSelectedAddressId(addresses[0].id || addresses[0]._id));
         }
-    }, [addresses, addressLoading, selectedAddressId]);
+    }, [addresses, addressLoading, selectedAddressId, dispatch]);
 
     const handleAddNewClick = () => {
         setModalMode('add');
@@ -86,7 +85,7 @@ const Address = () => {
                                         <div
                                             key={addrId}
                                             className={`address-card ${selectedAddressId === addrId ? 'selected' : ''}`}
-                                            onClick={() => setSelectedAddressId(addrId)}
+                                            onClick={() => dispatch(setSelectedAddressId(addrId))}
                                         >
                                             <div className="address-card-header">
                                                 <label className="address-radio-label">
@@ -94,7 +93,7 @@ const Address = () => {
                                                         type="radio"
                                                         name="selectedAddress"
                                                         checked={selectedAddressId === addrId}
-                                                        onChange={() => setSelectedAddressId(addrId)}
+                                                        onChange={() => dispatch(setSelectedAddressId(addrId))}
                                                     />
                                                     <span className="address-name">{address.fullName}</span>
                                                 </label>

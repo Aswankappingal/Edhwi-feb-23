@@ -58,7 +58,7 @@ const OtpVerificationModal = ({ isOpen, onClose, onSuccess, formData }) => {
         <div className="login-modal-overlay" onClick={onClose}>
             <div className="login-modal-content" onClick={(e) => e.stopPropagation()}>
                 <div className="login-modal__image-wrapper">
-                    <img src="/Login-modal-IM.svg" alt="Edhwi Coconuts" className="login-modal__image" />
+                    <img src="/Images/Login-modal-IM.svg" alt="Edhwi Coconuts" className="login-modal__image" />
                 </div>
 
                 <div className="login-modal__form-wrapper">

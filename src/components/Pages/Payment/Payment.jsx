@@ -5,7 +5,7 @@ import CartNavbar from '../../Common/cartNavbar/CartNavbar';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { calculateTotals, clearCart } from '../../../redux/slices/cartSlice';
 import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
-import { placeOrder, resetOrderState } from '../../../redux/slices/orderSlice';
+import { placeOrder, placeSingleProductOrder, resetOrderState } from '../../../redux/slices/orderSlice';
 import BaseUrl from '../../../../BaseUrl';
 import { toast } from 'react-toastify';
 import './Payment.scss';
@@ -15,12 +15,15 @@ const Payment = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Get the address ID selected in the previous step
-    const { addressId } = location.state || {};
+    // Get the address ID from Redux (fallback for safety)
+    const { addressId: locationAddressId } = location.state || {};
 
-    const { items: cartItems, summary, loading: cartLoading, appliedCoupon } = useSelector((state) => state.cart);
-    const { addresses } = useSelector((state) => state.address);
+    const { items: cartItems, checkoutItem, isBuyNow, summary, loading: cartLoading, appliedCoupon } = useSelector((state) => state.cart);
+    const { addresses, selectedAddressId: reduxAddressId } = useSelector((state) => state.address);
     const { loading: orderLoading, success, error } = useSelector((state) => state.order);
+
+    const addressId = reduxAddressId || locationAddressId;
+
     const { rates: shippingRates } = useSelector((state) => state.shipping);
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
@@ -32,16 +35,17 @@ const Payment = () => {
 
     useEffect(() => {
         // If no address selected or cart empty, go back
-        if (!addressId || addresses.length === 0 || cartItems.length === 0) {
-            navigate('/cart');
-            return;
-        }
+        // if (!addressId || addresses.length === 0 || cartItems.length === 0) {
+        //     navigate('/cart');
+        //     return;
+        // }
 
         const address = addresses.find(a => (a.id || a._id) === addressId);
         if (address) {
             setSelectedAddress(address);
-        } else {
-            navigate('/address');
+        } else if (addresses.length > 0) {
+             // Fallback if the specific ID isn't found but we have addresses
+             navigate('/address');
         }
 
         dispatch(calculateTotals(shippingRates));
@@ -49,17 +53,12 @@ const Payment = () => {
 
     useEffect(() => {
         if (success) {
-            toast.success('Order placed successfully!');
+            // toast.success('Order placed successfully!');
             dispatch(clearCart());
-            dispatch(resetOrderState());
-            // Redirect to success page
-            navigate('/payment-success', {
-                state: {
-                    orderId: success.orderId || (success.order && success.order.orderId),
-                    totalAmount: summary.total,
-                    paymentMethod: paymentMethod
-                }
-            });
+            // We don't ResetOrderState here anymore because we want PaymentSuccess to read from it.
+            // Reset should happen when specifically clearing or leaving the flow.
+            
+            navigate('/payment-success');
         }
 
         if (error) {
@@ -71,7 +70,26 @@ const Payment = () => {
     const handleMakePayment = async () => {
         if (!selectedAddress) return;
 
-        const orderData = {
+        const orderData = isBuyNow && checkoutItem ? {
+            productId: checkoutItem.productId,
+            quantity: checkoutItem.quantity,
+            variant: checkoutItem.variantCombination || null,
+            deliveryAddress: {
+                fullName: selectedAddress.fullName,
+                phone: selectedAddress.phone.replace(/\D/g, ''),
+                email: selectedAddress.email || 'customer@example.com',
+                addressLine1: selectedAddress.addressLine1,
+                addressLine2: selectedAddress.addressLine2 || '',
+                city: selectedAddress.city || selectedAddress.state,
+                state: selectedAddress.state,
+                pincode: selectedAddress.zipCode,
+                addressType: selectedAddress.addressType || 'Home'
+            },
+            paymentMethod: paymentMethod,
+            deliveryCharge: summary.delivery,
+            discountAmount: summary.discount,
+            couponCode: null
+        } : {
             items: cartItems.map(item => ({
                 productId: item.productId,
                 quantity: item.quantity,
@@ -138,7 +156,11 @@ const Payment = () => {
                                     paymentId: response.razorpay_payment_id
                                 };
                                 console.log("Placing online order with payload:", orderData);
-                                dispatch(placeOrder(orderData));
+                                if (isBuyNow) {
+                                    dispatch(placeSingleProductOrder(orderData));
+                                } else {
+                                    dispatch(placeOrder(orderData));
+                                }
                             } else {
                                 toast.error("Payment verification failed. Please contact support.");
                             }
@@ -168,7 +190,11 @@ const Payment = () => {
 
         // COD Flow
         console.log("Placing COD order with payload:", orderData);
-        dispatch(placeOrder(orderData));
+        if (isBuyNow) {
+            dispatch(placeSingleProductOrder(orderData));
+        } else {
+            dispatch(placeOrder(orderData));
+        }
     };
 
     if (cartLoading || !selectedAddress) {
