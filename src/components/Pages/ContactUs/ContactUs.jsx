@@ -79,7 +79,7 @@ const ContactUs = () => {
 
         <div className="contact-info-container">
           <div className="info-block">
-            <div className="icon-wrapper">
+            <div className="  ">
               <CiLocationOn />
             </div>
             <div className="info-text">

@@ -9,13 +9,14 @@
 
 
         .blog-detail-heading {
-            font-family: Nohemi;
+            font-family: "General Sans", sans-serif-serif;
             font-weight: 600;
-            font-size: 56px;
+            font-style: Semibold;
+            font-size: 48px;
+            leading-trim: NONE;
             line-height: 105%;
-            letter-spacing: -2%;
-            text-transform: lowercase;
-            background: linear-gradient(60.37deg, #738933 6.89%, #062C0B 44.03%);
+            letter-spacing: -3%;
+            background: linear-gradient(60.37deg, #1F61E1 6.89%, #1c1c1c 44.03%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -28,7 +29,8 @@
             line-height: 125%;
             letter-spacing: 0%;
             color: #414141;
-            padding-top: 3rem;
+            padding-top: 1rem;
+            width: 65%;
         }
 
         .auther-wrapper {
@@ -134,7 +136,7 @@
                     line-height: 114.99999999999999%;
                     letter-spacing: -3%;
                     color: #191B1D;
-                  
+
                 }
 
                 p {
@@ -362,8 +364,8 @@
             .blog-detail-heading {
                 font-size: 31px !important;
 
-                .banner{
-                    img{
+                .banner {
+                    img {
                         height: 100%;
                         width: 100%;
                         object-fit: cover;
@@ -373,11 +375,11 @@
 
             }
 
-            .blogs{
-                .blog-content{
-                    .blog-description{
+            .blogs {
+                .blog-content {
+                    .blog-description {
                         font-size: 28px !important;
-                        
+
                     }
                 }
             }

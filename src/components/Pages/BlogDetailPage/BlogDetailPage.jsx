@@ -24,7 +24,7 @@ const demoBlogs = [
         content:
             "Supply chain management is evolving rapidly. AI, automation, and data analytics are helping companies optimize operations and improve efficiency.",
         category: "Technology",
-        addedByName: "John Doe",
+        addedByName: "William Harris",
         imageUrl: "/Images/blog1.png",
         createdAt: "2026-03-10",
     },
@@ -261,7 +261,7 @@ const BlogDetailsPage = () => {
 
             </div>
 
-            <Footer />
+
         </div>
     );
 };
