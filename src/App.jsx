@@ -31,6 +31,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import useFetchData from './hooks/useFetchData';
 import BlogDetailsPage from "./components/Pages/BlogDetailPage/BlogDetailPage";
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import Aboutus from "./components/Pages/About Us/Aboutus";
 
 function App() {
   useFetchData();
@@ -66,6 +67,7 @@ function App() {
 
           {/* 🔹 Blogs Page */}
           <Route path="/blogs" element={<Blogs />} />
+          <Route path="/about-us" element={<Aboutus />} />
           <Route path="/blogs-inner" element={<BlogDetailsPage />} />
 
           {/* 🔹 My Account Page */}

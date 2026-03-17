@@ -10,7 +10,7 @@ const blogSubData = [
         date: 'March 4, 2024',
         title: 'Traditional Kerala Pickles: A Taste of Home',
         description: "Explore the flavors of Kerala through Edhwi's homemade pickles. We dive into traditional recipes, natural preservation techniques, and how these condiments bring back nostalgic memories.",
-        link: '/blogs'
+        link: '/blogs-inner'
     },
     {
         id: 2,
@@ -19,7 +19,7 @@ const blogSubData = [
         date: 'March 4, 2024',
         title: 'Why Unrefined Coconut Oil is Better for Your Health',
         description: "Discover the benefits of using pure, unrefined coconut oil over processed alternatives. This blog covers the nutritional advantages, natural processing methods, and how it supports your immune system and digestion.",
-        link: '/blogs'
+        link: '/blogs-inner'
     },
     {
         id: 3,
@@ -28,7 +28,7 @@ const blogSubData = [
         date: 'March 4, 2024',
         title: 'From Farm to Bottle: The Edhwi Journey',
         description: "Get a behind-the-scenes look at how Edhwi sources matured coconuts directly from coastal farmers and transforms them into high-quality products. Learn about our sun-drying process and commitment to purity.",
-        link: '/blogs'
+        link: '/blogs-inner'
     }
 ];
 

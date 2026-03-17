@@ -311,7 +311,6 @@ const ProductPage = () => {
 
             </div>
 
-            {/* <Footer /> */}
         </div>
     )
 }

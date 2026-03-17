@@ -121,13 +121,17 @@ const Navbar = ({ setCurrentPage }) => {
                         </li>
 
                         <li className="nav-item navbar__nav-item">
+                            <Link className="nav-link" to="/gallery" style={{ color: isHome ? "#fff" : "#000" }} onClick={handleNavClick}>Gallery</Link>
+                        </li>
+
+                        <li className="nav-item navbar__nav-item">
                             <Link
                                 className="nav-link"
-                                to="/gallery"
+                                to="/about-us"
                                 style={{ color: isHome ? "#fff" : "#000" }}
                                 onClick={handleNavClick}
                             >
-                                Gallery
+                                About Us
                             </Link>
                         </li>
                     </ul>

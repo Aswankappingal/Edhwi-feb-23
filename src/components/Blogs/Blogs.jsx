@@ -83,39 +83,36 @@ const Blogs = () => {
                         <h2><span className="blogs__highlight">Our</span> Blogs</h2>
                     </div>
 
-                  <Link to="/blogs-inner" className="blogs__link">
-
                         <div className="blogs__grid">
                             {blogsData.map((blog) => (
-                                <div className="blogs__card" key={blog.id}>
-                                    <div className="blogs__image-container">
-                                        <img src={blog.image} alt={blog.title} className="blogs__image" />
-                                    </div>
-
-                                    <div className="blogs__content">
-                                        <div className="blogs__category">
-                                            {blog.category}
+                                <Link to="/blogs-inner" key={blog.id} className="blogs__card-link">
+                                    <div className="blogs__card">
+                                        <div className="blogs__image-container">
+                                            <img src={blog.image} alt={blog.title} className="blogs__image" />
                                         </div>
 
-                                        <a href={blog.link} className="blogs__title-link">
+                                        <div className="blogs__content">
+                                            <div className="blogs__category">
+                                                {blog.category}
+                                            </div>
+
                                             <h3 className="blogs__title">{blog.title}</h3>
-                                        </a>
 
-                                        <p className="blogs__description">{blog.description}</p>
+                                            <p className="blogs__description">{blog.description}</p>
 
-                                        <div className="blogs__footer">
-                                            <span className="blogs__author">{blog.author}</span>
-                                            <div className="blogs__meta">
-                                                <span>{blog.date}</span>
-                                                <span className="blogs__dot">•</span>
-                                                <span>{blog.readTime}</span>
+                                            <div className="blogs__footer">
+                                                <span className="blogs__author">{blog.author}</span>
+                                                <div className="blogs__meta">
+                                                    <span>{blog.date}</span>
+                                                    <span className="blogs__dot">•</span>
+                                                    <span>{blog.readTime}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
-                    </Link>
 
                     <div className="blogs__pagination">
                         <button className="blogs__pagination-btn prev" aria-label="Previous page">

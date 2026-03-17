@@ -6,7 +6,6 @@ import { BsArrowLeftShort, BsArrowRightShort } from 'react-icons/bs';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RxDotFilled } from 'react-icons/rx';
-import Footer from '../../Common/Footer/Footer';
 import { GoLink } from 'react-icons/go';
 
 /* =====================================================
@@ -251,7 +250,7 @@ const BlogDetailsPage = () => {
                             {currentBlogs.map((relatedBlog) => (
                                 <div key={relatedBlog.id} className="col-lg-4 col-md-6 col-sm-6 col-12">
 
-                                    <Link to="#" className="blog-link">
+                                    <Link to="/blogs-inner" className="blog-link">
 
                                         <div className="blog-card">
 

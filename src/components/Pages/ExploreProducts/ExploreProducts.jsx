@@ -419,7 +419,6 @@ const ExploreProducts = () => {
                 onClose={() => setToastConfig(prev => ({ ...prev, isOpen: false }))} 
             />
 
-            {/* <Footer /> */}
         </div>
     );
 }
