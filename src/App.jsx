@@ -30,12 +30,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import useFetchData from './hooks/useFetchData';
 import BlogDetailsPage from "./components/Pages/BlogDetailPage/BlogDetailPage";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
   useFetchData();
 
   return (
-    <>
+    <GoogleOAuthProvider clientId="702774186213-vbl6f0obdqb5ep8a4b03mmqvi5g8bncg.apps.googleusercontent.com">
       <div className="app">
         {/* Global Navbar removed: <Navbar /> */}
 
@@ -65,7 +66,7 @@ function App() {
 
           {/* 🔹 Blogs Page */}
           <Route path="/blogs" element={<Blogs />} />
-          <Route path="/blog-inner" element={<BlogDetailsPage />} />
+          <Route path="/blogs-inner" element={<BlogDetailsPage />} />
 
           {/* 🔹 My Account Page */}
           <Route path="/my-account" element={<MyAccount />} />
@@ -87,7 +88,7 @@ function App() {
         <Footer />
         <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
       </div>
-    </>
+    </GoogleOAuthProvider>
   );
 }
 

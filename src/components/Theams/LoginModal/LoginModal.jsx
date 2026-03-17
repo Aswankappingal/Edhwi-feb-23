@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendMobileOtp, sendEmailOtp } from '../../../redux/slices/authSlice';
+import { sendMobileOtp, sendEmailOtp, loginWithGoogle } from '../../../redux/slices/authSlice';
 import './LoginModal.scss';
 import { FiX } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
+import { useGoogleLogin } from '@react-oauth/google';
 
 const LoginModal = ({ isOpen, onClose, onOtpRequest, onSignupRequest }) => {
     const [loginId, setLoginId] = useState('');
@@ -11,6 +12,19 @@ const LoginModal = ({ isOpen, onClose, onOtpRequest, onSignupRequest }) => {
 
     const dispatch = useDispatch();
     const { loading, error } = useSelector((state) => state.auth);
+
+    const login = useGoogleLogin({
+        onSuccess: async (tokenResponse) => {
+            const resultAction = await dispatch(loginWithGoogle(tokenResponse.access_token));
+            if (resultAction.payload?.success) {
+                onClose();
+            }
+        },
+        onError: (error) => {
+            console.error('Google Login Failed:', error);
+            setLocalError('Google login failed. Please try again.');
+        },
+    });
 
     if (!isOpen) return null;
 
@@ -93,11 +107,11 @@ const LoginModal = ({ isOpen, onClose, onOtpRequest, onSignupRequest }) => {
                     </div>
 
                     <div className="login-modal__social-logins">
-                        <button className="social-btn google-btn">
+                        <button className="social-btn google-btn" onClick={() => login()} type="button">
                             <FcGoogle size={20} className="social-icon" />
                             Continue with Google
                         </button>
-                        <button className="social-btn facebook-btn" onClick={() => onSignupRequest(loginId)} style={{ backgroundColor: "#333", color: "white", borderColor: "#333" }}>
+                        <button className="social-btn facebook-btn" onClick={() => onSignupRequest(loginId)} style={{ backgroundColor: "#333", color: "white", borderColor: "#333" }} type="button">
                             Sign up manually
                         </button>
                     </div>

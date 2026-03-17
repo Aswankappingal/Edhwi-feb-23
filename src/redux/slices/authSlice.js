@@ -86,6 +86,21 @@ export const signupWithEmail = createAsyncThunk(
     }
 );
 
+export const loginWithGoogle = createAsyncThunk(
+    'auth/loginWithGoogle',
+    async (token, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${BaseUrl}/sign-up-with-google`, { token });
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
+            }
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Google login failed');
+        }
+    }
+);
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
@@ -168,7 +183,16 @@ const authSlice = createSlice({
                 state.user = action.payload.user;
                 state.token = action.payload.token;
             })
-            .addCase(signupWithEmail.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
+            .addCase(signupWithEmail.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+
+            // loginWithGoogle
+            .addCase(loginWithGoogle.pending, (state) => { state.loading = true; state.error = null; })
+            .addCase(loginWithGoogle.fulfilled, (state, action) => {
+                state.loading = false;
+                state.user = action.payload.user;
+                state.token = action.payload.token;
+            })
+            .addCase(loginWithGoogle.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
     }
 });
 
