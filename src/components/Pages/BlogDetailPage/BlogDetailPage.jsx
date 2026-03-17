@@ -25,7 +25,7 @@ const demoBlogs = [
             "Supply chain management is evolving rapidly. AI, automation, and data analytics are helping companies optimize operations and improve efficiency.",
         category: "Technology",
         addedByName: "William Harris",
-        imageUrl: "/Images/blog1.png",
+        imageUrl: "/Images/Blogs-inner.svg",
         createdAt: "2026-03-10",
     },
     {
@@ -37,7 +37,7 @@ const demoBlogs = [
             "Efficient logistics management plays a key role in business success. Using smart routing and predictive analytics improves delivery performance.",
         category: "Logistics",
         addedByName: "Jane Smith",
-        imageUrl: "/Images/blog2.png",
+        imageUrl: "/Images/Blogs-inner.svg",
         createdAt: "2026-03-12",
     },
     {
@@ -49,7 +49,7 @@ const demoBlogs = [
             "Modern warehouses are using robotics and AI to increase speed and accuracy in inventory management.",
         category: "Automation",
         addedByName: "Michael Lee",
-        imageUrl: "/Images/blog3.png",
+        imageUrl: "/Images/Blogs-inner.svg",
         createdAt: "2026-03-14",
     },
     {
@@ -61,7 +61,7 @@ const demoBlogs = [
             "Companies must adapt to global changes, including geopolitical risks and sustainability demands.",
         category: "Global Trade",
         addedByName: "Emily Clark",
-        imageUrl: "/Images/blog4.png",
+        imageUrl: "/Images/Blogs-inner.svg",
         createdAt: "2026-03-15",
     },
 ];
@@ -126,7 +126,7 @@ const BlogDetailsPage = () => {
                 <div className="auther-wrapper">
                     <div className="auther-left">
                         <div className="auther-image">
-                            <img src="/Images/dummy-user.svg" alt="" />
+                            <img src="/Images/Men.svg" alt="" />
                         </div>
                         <div className="auther-name">
                             <h6>{blog.addedByName}</h6>
@@ -150,8 +150,61 @@ const BlogDetailsPage = () => {
 
                 {/* Blog Content */}
                 <div className="blogs">
+                    {/* <div className="blog-content">
+                        {blog.content}      
+                    </div> */}
                     <div className="blog-content">
-                        {blog.content}
+
+                        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h3>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.                        </p>
+
+                        <h3>Lorem ipsum dolor sit amet</h3>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat. .
+                        </p>
+
+                        <div className="sub-banner">
+                            <img src="/Images/Blogs-inner.svg" alt="" />
+                        </div>
+
+                        <h3>Versatile & Easy to Serve</h3>
+
+                        <p>
+                            Karikku is incredibly versatile. Serve it chilled on its own, blend it into smoothies, use it as a base for mocktails, or incorporate it into healthy desserts. Its natural sweetness and refreshing flavor complement a wide range of dishes and beverages.
+                        </p>
+
+                        <h3>Sustainable & Ethical Sourcing</h3>
+
+                        <p>
+                            We source our coconuts responsibly, supporting local farmers and ensuring sustainable harvesting practices. When you choose Karikku, you’re not just offering a premium product — you’re supporting ethical sourcing and environmental responsibility.
+                        </p>
+
+                        <div className="sub-banner">
+                            <img src="/Images/Coconut-s.svg" alt="" />
+                        </div>
+
+
+
+
+                        <p>
+                            Join the growing number of businesses that are embracing natural hydration. Karikku Tender Coconut Water is more than just a beverage — it’s a statement of quality, health, and natural goodness.
+                        </p>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
+                        </p>
+
+
+                        <h3>Lorem ipsum dolor</h3>
+
+                        <p>
+                            We source our coconuts responsibly, supporting local farmers and ensuring sustainable harvesting practices. When you choose Karikku, you’re not just offering a premium product — you’re supporting ethical sourcing and environmental responsibility.
+                        </p>
                     </div>
                 </div>
             </div>
