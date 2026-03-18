@@ -159,28 +159,26 @@ const Aboutus = () => {
             {/* 5. Mission Vision Value Section */}
             <section className="about-mvv">
                 <div className="container mvv-container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-6">
-                            <div className="mvv-list">
-                                {Object.keys(mvvData).map((key) => (
-                                    <div 
-                                        key={key} 
-                                        className={`mvv-item ${activeMvv === key ? 'active' : ''}`}
-                                        onMouseEnter={() => setActiveMvv(key)}
-                                        onClick={() => setActiveMvv(key)}
-                                    >
+                    <div className="mvv-list">
+                        {Object.keys(mvvData).map((key) => (
+                            <div 
+                                key={key} 
+                                className={`mvv-item ${activeMvv === key ? 'active' : ''}`}
+                                onMouseEnter={() => setActiveMvv(key)}
+                                onClick={() => setActiveMvv(key)}
+                            >
+                                <div className="mvv-item-row">
+                                    <div className="mvv-title-box">
                                         <h3>{mvvData[key].title}</h3>
                                     </div>
-                                ))}
+                                    <div className="mvv-desc-box">
+                                        <p className="mvv-description">
+                                            {mvvData[key].description}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div className="col-lg-6">
-                            <div className="mvv-content">
-                                <p className="mvv-description">
-                                    {mvvData[activeMvv].description}
-                                </p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                     {/* Background Leaf/Logo SVG for the blue section */}
                     <div className="mvv-background">

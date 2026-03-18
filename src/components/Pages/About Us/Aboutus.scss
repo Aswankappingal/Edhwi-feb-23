@@ -292,7 +292,7 @@
 
     .about-mvv {
         background-color: #1150CB;
-        padding: 8rem 0;
+        padding: 6rem 0;
         position: relative;
         overflow: hidden;
         color: #ffffff;
@@ -307,69 +307,86 @@
             flex-direction: column;
 
             .mvv-item {
-                padding: 2.5rem 0;
+                padding: 1rem 0;
                 border-top: 1px solid rgba(255, 255, 255, 0.2);
                 cursor: pointer;
-                transition: all 0.3s ease;
-                opacity: 0.6;
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 
                 &:first-child {
                     border-top: none;
-                    padding-top: 0;
                 }
 
-                &:last-child {
-                    padding-bottom: 0;
+                .mvv-item-row {
+                    display: flex;
+                    align-items: center;
+                    gap: 3rem;
+                    transition: all 0.5s ease;
                 }
 
-                &.active {
-                    opacity: 1;
+                .mvv-title-box {
+                    transition: all 0.5s ease;
                     
                     h3 {
-                        font-size: 56px;
+                        font-family: "General Sans", sans-serif;
+                        font-weight: 300;
+                        font-size: 85px;
+                        color: #ffffff;
+                        margin: 0;
+                        transition: all 0.5s ease;
+                        white-space: nowrap;
+                        opacity: 0.8;
                     }
                 }
 
-                &:hover {
-                    opacity: 1;
+                .mvv-desc-box {
+                    max-height: 0;
+                    overflow: hidden;
+                    opacity: 0;
+                    transition: all 0.5s ease;
+                    transform: translateX(-20px);
+
+                    .mvv-description {
+                        font-family: "General Sans", sans-serif;
+                        font-size: 18px;
+                        line-height: 1.4;
+                        font-weight: 400;
+                        max-width: 650px;
+                        margin: 0;
+                    }
                 }
 
-                h3 {
-                    font-family: "General Sans", sans-serif;
-                    font-weight: 600;
-                    font-size: 46px;
-                    color: #ffffff;
-                    margin: 0;
-                    transition: all 0.3s ease;
+                &.active {
+                    padding: 3rem 0;
+
+                    .mvv-title-box h3 {
+                        font-size: 42px;
+                        font-weight: 600;
+                        opacity: 1;
+                    }
+
+                    .mvv-desc-box {
+                        max-height: 200px;
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
                 }
-            }
-        }
 
-        .mvv-content {
-            padding-left: 2rem;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-
-            .mvv-description {
-                font-family: "General Sans", sans-serif;
-                font-size: 20px;
-                line-height: 1.5;
-                font-weight: 400;
-                max-width: 500px;
-                margin: 0;
-                animation: fadeIn 0.5s ease;
+                &:hover:not(.active) {
+                    .mvv-title-box h3 {
+                        opacity: 1;
+                    }
+                }
             }
         }
 
         .mvv-background {
             position: absolute;
             right: -100px;
-            top: 50%;
+            top: 100%;
             transform: translateY(-50%);
-            width: 800px;
-            height: 800px;
-            opacity: 0.15;
+            width: 300px;
+            height: 300px;
+            opacity: 1;
             z-index: 1;
             pointer-events: none;
 
@@ -381,9 +398,26 @@
         }
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes slideInLeft {
+        from { 
+            opacity: 0; 
+            transform: translateX(-30px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateX(0); 
+        }
+    }
+
+    @media (max-width: 1199px) {
+        .about-mvv .mvv-list .mvv-item {
+            .mvv-title-box h3 {
+                font-size: 65px;
+            }
+            &.active .mvv-title-box h3 {
+                font-size: 38px;
+            }
+        }
     }
 
     @media (max-width: 991px) {
@@ -429,8 +463,28 @@
         }
 
         .about-mvv {
-            .mvv-item h3 {
-                font-size: 36px;
+            padding: 4rem 0;
+            
+            .mvv-list .mvv-item {
+                .mvv-item-row {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 1rem;
+                }
+
+                .mvv-title-box h3 {
+                    font-size: 50px;
+                }
+
+                &.active {
+                    padding: 2rem 0;
+                    .mvv-title-box h3 {
+                        font-size: 32px;
+                    }
+                    .mvv-desc-box .mvv-description {
+                        font-size: 16px;
+                    }
+                }
             }
         }
     }
@@ -475,18 +529,27 @@
         .about-mvv {
             padding: 3rem 0;
 
-            .mvv-item {
-                padding: 2rem 0;
+            .mvv-list .mvv-item {
+                .mvv-title-box h3 {
+                    font-size: 40px;
+                }
 
-                h3 {
-                    font-size: 28px;
+                &.active {
+                    padding: 1.5rem 0;
+                    .mvv-title-box h3 {
+                        font-size: 28px;
+                    }
+                }
+
+                .mvv-desc-box .mvv-description {
+                    font-size: 14px;
                 }
             }
 
             .mvv-background {
-                width: 300px;
-                height: 300px;
-                right: -50px;
+                width: 200px;
+                height: 200px;
+                right: -30px;
             }
         }
     }
