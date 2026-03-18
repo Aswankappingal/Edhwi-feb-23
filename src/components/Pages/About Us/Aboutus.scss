@@ -171,17 +171,22 @@
         .innovation-title {
             font-family: "General Sans", sans-serif;
             font-weight: 600;
-            font-size: 48px;
-            line-height: 1.1;
-            color: #1F61E1;
+            letter-spacing: 3%;
+            font-size: 55px;
+            line-height: 122%;
+            background: linear-gradient(60.37deg, #1F61E1 6.89%, #1c1c1c 44.03%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; // Eye-catching blue from the image
             margin-bottom: 2rem;
         }
 
         .innovation-description {
-            font-family: "Helvetica", sans-serif;
-            font-size: 18px;
-            color: #414141;
-            line-height: 1.6;
+            font-family: "General Sans", sans-serif;
+            font-size: 21px;
+            font-weight: 400;
+            letter-spacing: 2%;
+            color: #1B1919;
+            line-height: 128%;
             margin-bottom: 3rem;
         }
 

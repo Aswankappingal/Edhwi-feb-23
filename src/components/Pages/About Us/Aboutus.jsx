@@ -60,25 +60,24 @@ const Aboutus = () => {
                         <div className="col-lg-6 about-innovation__images">
                             <div className="innovation-grid">
                                 <div className="innovation-item innovation-item--vertical">
-                                    <img src="/Images/Edhwi-tree.svg" alt="Nature" />
+                                    <img src="/Images/Banner-About.svg" alt="Nature" />
                                 </div>
                                 <div className="innovation-item innovation-item--large">
-                                    <img src="/Images/Coconut-s.svg" alt="Innovation" />
+                                    <img src="/Images/Banner-2nd-about.svg" alt="Innovation" />
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-6 about-innovation__content">
-                            <h2 className="innovation-title">
+                            <h6 className="innovation-title">
                                 Innovating <br />
                                 Through Nature
-                            </h2>
+                            </h6>
                             <p className="innovation-description">
-                                We combine traditional wisdom with modern innovation to ensure
-                                that you receive the best nature has to offer. Our sustainable
-                                practices and commitment to purity are at the heart of everything we do.
+                                We don’t just make products.
+                                We nurture a promise — of quality, sustainability, and the timeless goodness of nature..
                             </p>
                             <button className="btn-know-more">
-                                Know more
+                                Explore Products
                             </button>
                         </div>
                     </div>
