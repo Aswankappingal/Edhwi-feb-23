@@ -209,6 +209,183 @@
         }
     }
 
+    .about-promise {
+        padding: 5rem 0;
+        background-color: #f3f8fd;
+
+        .promise-header {
+            margin-bottom: 4rem;
+
+            .promise-title {
+                font-family: "General Sans", sans-serif;
+                font-weight: 600;
+                font-size: 56px;
+                line-height: 105%;
+                letter-spacing: -3%;
+                background: linear-gradient(60.37deg, #1F61E1 6.89%, #1c1c1c 44.03%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 1rem;
+
+                span {
+                    background: linear-gradient(60.37deg, #1F61E1 6.89%, #1c1c1c 44.03%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    font-weight: 600;
+                    font-size: 56px;
+                    line-height: 105%;
+                    letter-spacing: -3%;
+                }
+            }
+
+            .promise-subtitle {
+                font-family: "General Sans", sans-serif;
+                font-weight: 400;
+                font-size: 20px;
+                line-height: 130%;
+                letter-spacing: -2%;
+                color: #1B1919;
+            }
+        }
+
+        .promise-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+
+            .promise-item {
+                .promise-icon {
+                    width: 78px;
+                    height: 78px;
+                    margin-bottom: 1rem;
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+
+                    img,
+                    svg {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+
+                &-title {
+                    font-family: "General Sans", sans-serif;
+                    font-weight: 600;
+                    font-size: 20px;
+                    color: #1B1919;
+                    line-height: 130%;
+                    margin-bottom: 0.8rem;
+                }
+
+                &-desc {
+                    font-family: "General Sans", sans-serif;
+                    font-weight: 400;
+                    font-size: 16px;
+                    color: #1B1919;
+                    line-height: 130%;
+                }
+            }
+        }
+    }
+
+    .about-mvv {
+        background-color: #1150CB;
+        padding: 8rem 0;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+
+        .mvv-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .mvv-list {
+            display: flex;
+            flex-direction: column;
+
+            .mvv-item {
+                padding: 2.5rem 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+                cursor: pointer;
+                transition: all 0.3s ease;
+                opacity: 0.6;
+
+                &:first-child {
+                    border-top: none;
+                    padding-top: 0;
+                }
+
+                &:last-child {
+                    padding-bottom: 0;
+                }
+
+                &.active {
+                    opacity: 1;
+                    
+                    h3 {
+                        font-size: 56px;
+                    }
+                }
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                h3 {
+                    font-family: "General Sans", sans-serif;
+                    font-weight: 600;
+                    font-size: 46px;
+                    color: #ffffff;
+                    margin: 0;
+                    transition: all 0.3s ease;
+                }
+            }
+        }
+
+        .mvv-content {
+            padding-left: 2rem;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+
+            .mvv-description {
+                font-family: "General Sans", sans-serif;
+                font-size: 20px;
+                line-height: 1.5;
+                font-weight: 400;
+                max-width: 500px;
+                margin: 0;
+                animation: fadeIn 0.5s ease;
+            }
+        }
+
+        .mvv-background {
+            position: absolute;
+            right: -100px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 800px;
+            height: 800px;
+            opacity: 0.15;
+            z-index: 1;
+            pointer-events: none;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
     @media (max-width: 991px) {
         .about-hero {
             padding: 6rem 0;
@@ -243,6 +420,19 @@
                 font-size: 36px;
             }
         }
+
+        .about-promise {
+            .promise-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 3rem 2rem;
+            }
+        }
+
+        .about-mvv {
+            .mvv-item h3 {
+                font-size: 36px;
+            }
+        }
     }
 
     @media (max-width: 575px) {
@@ -270,6 +460,34 @@
         .item-split,
         .background-roller {
             display: none !important;
+        }
+
+        .about-promise {
+            .promise-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .promise-title {
+                font-size: 32px;
+            }
+        }
+
+        .about-mvv {
+            padding: 3rem 0;
+
+            .mvv-item {
+                padding: 2rem 0;
+
+                h3 {
+                    font-size: 28px;
+                }
+            }
+
+            .mvv-background {
+                width: 300px;
+                height: 300px;
+                right: -50px;
+            }
         }
     }
 }
