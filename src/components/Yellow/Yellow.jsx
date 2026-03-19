@@ -16,7 +16,6 @@ const Yellow = () => {
                 {/* Left Side: Product Images */}
                 <div className="yellow-section__left">
                     <div className="yellow-section__product-group">
- 
                         <img 
                             src="/Images/bottles-coconut.svg" 
                             alt="Edhwi Coconut Oil Bottles" 
