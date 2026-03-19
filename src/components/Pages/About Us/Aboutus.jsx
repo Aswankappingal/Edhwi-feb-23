@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import Navbar from '../../Navbar/Navbar';
+import EdhwiMoments from '../../EdhwiMoments/EdhwiMoments';
+import OurProcess from '../../OurProcess/OurProcess';
 import './Aboutus.scss';
+import BlogSub from '../../BlogSub/BlogSub';
 
 const Aboutus = () => {
     const [activeMvv, setActiveMvv] = useState('mission');
@@ -161,8 +164,8 @@ const Aboutus = () => {
                 <div className="container mvv-container">
                     <div className="mvv-list">
                         {Object.keys(mvvData).map((key) => (
-                            <div 
-                                key={key} 
+                            <div
+                                key={key}
                                 className={`mvv-item ${activeMvv === key ? 'active' : ''}`}
                                 onMouseEnter={() => setActiveMvv(key)}
                                 onClick={() => setActiveMvv(key)}
@@ -185,7 +188,22 @@ const Aboutus = () => {
                         <img src="/Images/bg-image.svg" alt="Graphic Base" onError={(e) => { e.target.onerror = null; e.target.style.display = "none"; }} />
                     </div>
                 </div>
+
+
+
             </section>
+
+            <div>
+                <EdhwiMoments />
+            </div>
+
+            <div>
+                <OurProcess />
+            </div>
+
+            <div>
+                <BlogSub />
+            </div>
 
         </div>
     );

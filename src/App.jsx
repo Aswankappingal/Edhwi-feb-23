@@ -32,6 +32,7 @@ import useFetchData from './hooks/useFetchData';
 import BlogDetailsPage from "./components/Pages/BlogDetailPage/BlogDetailPage";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Aboutus from "./components/Pages/About Us/Aboutus";
+import Yellow from "./components/Yellow/Yellow";
 
 function App() {
   useFetchData();
@@ -51,9 +52,11 @@ function App() {
               <>
                 <Navbar />
                 <HomeBanner />
+
                 <Essentials />
                 <PuritySection />
                 <SecretsOfQuality />
+                <Yellow />
                 <OurProducts />
                 <OurProcess />
                 <EdhwiMoments />

@@ -310,7 +310,7 @@
                 padding: 1rem 0;
                 border-top: 1px solid rgba(255, 255, 255, 0.2);
                 cursor: pointer;
-                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
 
                 &:first-child {
                     border-top: none;
@@ -320,20 +320,21 @@
                     display: flex;
                     align-items: center;
                     gap: 3rem;
-                    transition: all 0.5s ease;
+                    transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
                 }
 
                 .mvv-title-box {
-                    transition: all 0.5s ease;
-                    
+                    transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+
                     h3 {
                         font-family: "General Sans", sans-serif;
-                        font-weight: 300;
-                        font-size: 85px;
+                        font-weight: 600;
+                        font-size: 72px;
                         color: #ffffff;
                         margin: 0;
-                        transition: all 0.5s ease;
+                        transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
                         white-space: nowrap;
+                        line-height: 120%;
                         opacity: 0.8;
                     }
                 }
@@ -342,13 +343,13 @@
                     max-height: 0;
                     overflow: hidden;
                     opacity: 0;
-                    transition: all 0.5s ease;
-                    transform: translateX(-20px);
+                    transition: all 2.5s cubic-bezier(0.16, 1, 0.3, 1);
+                    transform: translateX(-15px);
 
                     .mvv-description {
                         font-family: "General Sans", sans-serif;
-                        font-size: 18px;
-                        line-height: 1.4;
+                        font-size: 20px;
+                        line-height: 150%;
                         font-weight: 400;
                         max-width: 650px;
                         margin: 0;
@@ -365,7 +366,7 @@
                     }
 
                     .mvv-desc-box {
-                        max-height: 200px;
+                        max-height: 250px;
                         opacity: 1;
                         transform: translateX(0);
                     }
@@ -382,7 +383,7 @@
         .mvv-background {
             position: absolute;
             right: -100px;
-            top: 100%;
+            top: 65%;
             transform: translateY(-50%);
             width: 300px;
             height: 300px;
@@ -399,13 +400,14 @@
     }
 
     @keyframes slideInLeft {
-        from { 
-            opacity: 0; 
-            transform: translateX(-30px); 
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
         }
-        to { 
-            opacity: 1; 
-            transform: translateX(0); 
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
         }
     }
 
@@ -414,6 +416,7 @@
             .mvv-title-box h3 {
                 font-size: 65px;
             }
+
             &.active .mvv-title-box h3 {
                 font-size: 38px;
             }
@@ -464,7 +467,7 @@
 
         .about-mvv {
             padding: 4rem 0;
-            
+
             .mvv-list .mvv-item {
                 .mvv-item-row {
                     flex-direction: column;
@@ -478,9 +481,11 @@
 
                 &.active {
                     padding: 2rem 0;
+
                     .mvv-title-box h3 {
                         font-size: 32px;
                     }
+
                     .mvv-desc-box .mvv-description {
                         font-size: 16px;
                     }
@@ -536,6 +541,7 @@
 
                 &.active {
                     padding: 1.5rem 0;
+
                     .mvv-title-box h3 {
                         font-size: 28px;
                     }
