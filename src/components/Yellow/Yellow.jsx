@@ -4,7 +4,9 @@ import './Yellow.scss';
 const Yellow = () => {
     return (
         <section className="yellow-section">
+
             {/* Background Elements */}
+
             <div className="yellow-section__bg-shade">
                 <img src="/Images/Yellow-shade.svg" alt="" />
             </div>
@@ -13,7 +15,9 @@ const Yellow = () => {
             </div>
 
             <div className="yellow-section__container">
+                
                 {/* Left Side: Product Images */}
+
                 <div className="yellow-section__left">
                     <div className="yellow-section__product-group">
                         <img 
