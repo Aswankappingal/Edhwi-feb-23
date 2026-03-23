@@ -11,11 +11,11 @@ const Yellow = () => {
                 <img src="/Images/Yellow-shade.svg" alt="" />
             </div>
             <div className="yellow-section__bg-pattern">
-                <img src="/Images/Rounded-item-ball-type.svg" alt="" />
+                <img src="/Images/Rounded-item-ball-type.svg" alt="no-image" />
             </div>
 
             <div className="yellow-section__container">
-                
+
                 {/* Left Side: Product Images */}
 
                 <div className="yellow-section__left">
