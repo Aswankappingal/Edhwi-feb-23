@@ -28,6 +28,7 @@ const Aboutus = () => {
             <Navbar />
 
             {/* 1. Hero Section */}
+
             <section className="about-hero">
                 <div className="container">
                     <div className="row align-items-center">
@@ -42,7 +43,9 @@ const Aboutus = () => {
                         </div>
                         <div className="col-lg-7 about-hero__collage">
                             <div className="collage-grid">
+                                
                                 {/* Background Roller */}
+
                                 <div className="background-roller">
                                     <img src="/Images/background roller.svg" alt="Background Swirl" />
                                 </div>
