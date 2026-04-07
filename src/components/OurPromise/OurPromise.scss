@@ -82,6 +82,12 @@ $text-gray: #555;
             /* Add a slight stroke to icons to make them bolder similar to the original design */
             stroke-width: 1px;
         }
+
+        &:hover svg {
+            transform: translateY(-12px) scale(0.88); // move up + slight zoom
+            transition: all 1s ease;
+            cursor: pointer;
+        }
     }
 
     &__title {
