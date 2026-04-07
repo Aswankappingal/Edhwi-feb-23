@@ -7,6 +7,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RxDotFilled } from 'react-icons/rx';
 import { GoLink } from 'react-icons/go';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchBlogPostById, fetchBlogPosts } from '../../../redux/slices/blogSlice';
+import { useEffect } from 'react';
 
 /* =====================================================
    DEMO BLOG DATA (NEW SECTION ADDED)
@@ -70,26 +74,37 @@ const demoBlogs = [
 ===================================================== */
 
 const BlogDetailsPage = () => {
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const { currentBlog: blog, blogs, loading, error } = useSelector((state) => state.blog);
+
+    useEffect(() => {
+        if (id) {
+            dispatch(fetchBlogPostById(id));
+        }
+        if (blogs.length === 0) {
+            dispatch(fetchBlogPosts());
+        }
+    }, [dispatch, id, blogs.length]);
+
     /* ------------------------------
        Pagination state
     ------------------------------ */
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 3;
 
-    /* ------------------------------
-       Current Blog (First one)
-       NOTE: Previously this used
-       useParams + API data
-    ------------------------------ */
-    const blog = demoBlogs[0];
+    if (loading && !blog) return <div className="blog-details-loading">Loading...</div>;
+    if (error) return <div className="blog-details-error">Error: {error}</div>;
+    if (!blog) return <div className="blog-details-not-found">Blog post not found.</div>;
 
     /* ------------------------------
-       Pagination calculation
+       Related Blogs Pagination calculation
     ------------------------------ */
-    const totalPages = Math.ceil(demoBlogs.length / itemsPerPage);
+    const relatedBlogs = blogs.filter(b => b.id !== id);
+    const totalPages = Math.ceil(relatedBlogs.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentBlogs = demoBlogs.slice(startIndex, endIndex);
+    const currentRelatedBlogs = relatedBlogs.slice(startIndex, endIndex);
 
     /* ------------------------------
        Pagination handlers
@@ -144,66 +159,12 @@ const BlogDetailsPage = () => {
 
                 {/* Banner */}
                 <div className="banner">
-                    <img src={blog.imageUrl} alt={blog.title} />
+                    <img src={blog.imageUrl || blog.image} alt={blog.title} />
                 </div>
 
                 {/* Blog Content */}
                 <div className="blogs">
-                    {/* <div className="blog-content">
-                        {blog.content}      
-                    </div> */}
-                    <div className="blog-content">
-
-                        <h3>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </h3>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.                        </p>
-
-                        <h3>Lorem ipsum dolor sit amet</h3>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat. .
-                        </p>
-
-                        <div className="sub-banner">
-                            <img src="/Images/Blogs-inner.svg" alt="" />
-                        </div>
-
-                        <h3>Versatile & Easy to Serve</h3>
-
-                        <p>
-                            Karikku is incredibly versatile. Serve it chilled on its own, blend it into smoothies, use it as a base for mocktails, or incorporate it into healthy desserts. Its natural sweetness and refreshing flavor complement a wide range of dishes and beverages.
-                        </p>
-
-                        <h3>Sustainable & Ethical Sourcing</h3>
-
-                        <p>
-                            We source our coconuts responsibly, supporting local farmers and ensuring sustainable harvesting practices. When you choose Karikku, you’re not just offering a premium product — you’re supporting ethical sourcing and environmental responsibility.
-                        </p>
-
-                        <div className="sub-banner">
-                            <img src="/Images/Coconut-s.svg" alt="" />
-                        </div>
-
-
-
-
-                        <p>
-                            Join the growing number of businesses that are embracing natural hydration. Karikku Tender Coconut Water is more than just a beverage — it’s a statement of quality, health, and natural goodness.
-                        </p>
-
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla est odio, sodales ac aliquam sit amet, consectetur vel lectus. Cras pellentesque vel sem ut placerat. Sed ante sem, fermentum non dolor ac, volutpat hendrerit erat.
-                        </p>
-
-
-                        <h3>Lorem ipsum dolor</h3>
-
-                        <p>
-                            We source our coconuts responsibly, supporting local farmers and ensuring sustainable harvesting practices. When you choose Karikku, you’re not just offering a premium product — you’re supporting ethical sourcing and environmental responsibility.
-                        </p>
+                    <div className="blog-content" dangerouslySetInnerHTML={{ __html: blog.content }}>
                     </div>
                 </div>
             </div>
@@ -247,16 +208,16 @@ const BlogDetailsPage = () => {
                     <div className="container-fluid">
                         <div className="row">
 
-                            {currentBlogs.map((relatedBlog) => (
+                            {currentRelatedBlogs.map((relatedBlog) => (
                                 <div key={relatedBlog.id} className="col-lg-4 col-md-6 col-sm-6 col-12">
 
-                                    <Link to="/blogs-inner" className="blog-link">
+                                    <Link to={`/blogs-inner/${relatedBlog.id}`} className="blog-link">
 
                                         <div className="blog-card">
 
                                             <div className="blog-image">
                                                 <img
-                                                    src={relatedBlog.imageUrl}
+                                                    src={relatedBlog.imageUrl || relatedBlog.image}
                                                     alt={relatedBlog.title}
                                                 />
                                             </div>
@@ -268,11 +229,11 @@ const BlogDetailsPage = () => {
                                                 </div>
 
                                                 <h2 className="blog-title">
-                                                    {relatedBlog.title.slice(0, 20)}
+                                                    {relatedBlog.title}
                                                 </h2>
 
                                                 <h4 className="blog-description">
-                                                    {relatedBlog.description.slice(0, 50)}...
+                                                    {relatedBlog.description}
                                                 </h4>
 
                                                 <h5 className="blogged-user">
@@ -281,14 +242,7 @@ const BlogDetailsPage = () => {
 
                                                 <div className="date-wrapper">
                                                     <div className="date">
-                                                        {new Date(relatedBlog.createdAt).toLocaleDateString(
-                                                            "en-US",
-                                                            {
-                                                                day: "numeric",
-                                                                month: "short",
-                                                                year: "numeric",
-                                                            }
-                                                        )}
+                                                        {relatedBlog.date || (relatedBlog.createdAt?._seconds ? new Date(relatedBlog.createdAt._seconds * 1000).toLocaleDateString() : 'No date')}
                                                     </div>
 
                                                     <div>

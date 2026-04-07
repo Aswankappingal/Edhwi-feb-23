@@ -67,7 +67,7 @@ const PaymentSuccess = () => {
                     <p className="detail-label">Order ID:</p>
                     <h2 className="detail-value">{orderId || 'N/A'}</h2>
 
-                    <p className="detail-row">Total Amount: <strong>₹{totalAmount || 0}</strong></p>
+                    <p className="detail-row">Total Amount: <strong>₹{Math.round(totalAmount || 0).toLocaleString()}</strong></p>
                     <p className="detail-row">Payment Method: <strong>{isCod ? 'Cash on Delivery' : 'Online Payment'}</strong></p>
                 </div>
 

@@ -30,11 +30,29 @@ export const fetchShippingRates = createAsyncThunk(
     }
 );
 
+// Async thunk to fetch payment settings
+export const fetchPaymentSettings = createAsyncThunk(
+    'shipping/fetchPaymentSettings',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axios.get(`${BaseUrl}/get-payment-settings`);
+            if (response.data.success) {
+                return response.data.settings;
+            } else {
+                return rejectWithValue('Failed to fetch payment settings');
+            }
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || error.message);
+        }
+    }
+);
+
 const shippingSlice = createSlice({
     name: 'shipping',
     initialState: {
         rates: [],
-        status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
+        codCharge: 30, // Default fallback
+        status: 'idle',
         error: null
     },
     reducers: {},
@@ -51,6 +69,10 @@ const shippingSlice = createSlice({
             .addCase(fetchShippingRates.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload;
+            })
+            // Payment Settings
+            .addCase(fetchPaymentSettings.fulfilled, (state, action) => {
+                state.codCharge = action.payload.codCharge || 30;
             });
     }
 });

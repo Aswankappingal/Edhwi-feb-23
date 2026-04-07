@@ -1,5 +1,9 @@
 
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./redux/slices/authSlice";
+import { toast } from "react-toastify";
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
 import MyAccount from './components/MyAccount/MyAccount';
@@ -35,7 +39,36 @@ import Aboutus from "./components/Pages/About Us/Aboutus";
 import Yellow from "./components/Yellow/Yellow";
 
 function App() {
+  const dispatch = useDispatch();
+  const { token, loginTimestamp } = useSelector((state) => state.auth);
+
   useFetchData();
+
+  useEffect(() => {
+    let logoutTimer;
+    if (token && loginTimestamp) {
+      const loginTime = parseInt(loginTimestamp);
+      const currentTime = Date.now();
+      const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
+      const elapsedTime = currentTime - loginTime;
+
+      if (elapsedTime >= oneHour) {
+        // Session already expired
+        dispatch(logout());
+        toast.info("Session expired. Please log in again.");
+      } else {
+        // Set timer for the remaining time
+        const remainingTime = oneHour - elapsedTime;
+        logoutTimer = setTimeout(() => {
+          dispatch(logout());
+          toast.info("Session expired. Please log in again.");
+        }, remainingTime);
+      }
+    }
+    return () => {
+      if (logoutTimer) clearTimeout(logoutTimer);
+    };
+  }, [token, loginTimestamp, dispatch]);
 
   return (
     <GoogleOAuthProvider clientId="702774186213-vbl6f0obdqb5ep8a4b03mmqvi5g8bncg.apps.googleusercontent.com">
@@ -71,7 +104,7 @@ function App() {
           {/* 🔹 Blogs Page */}
           <Route path="/blogs" element={<Blogs />} />
           <Route path="/about-us" element={<Aboutus />} />
-          <Route path="/blogs-inner" element={<BlogDetailsPage />} />
+          <Route path="/blogs-inner/:id" element={<BlogDetailsPage />} />
 
           {/* 🔹 My Account Page */}
           <Route path="/my-account" element={<MyAccount />} />

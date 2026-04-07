@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import BaseUrl from '../../../BaseUrl';
+import { calculateCartTotals } from '../../utils/pricing';
 
 // Get token helper
 const getToken = () => localStorage.getItem('token');
@@ -74,10 +75,14 @@ const cartSlice = createSlice({
         appliedCoupon: null,
         summary: {
             totalMrp: 0,
+            basePrice: 0,
             discount: 0,
-            couponSavings: 0,
-            gst: 0,
+            taxableValue: 0,
+            gstAmount: 0,
+            cgst: 0,
+            sgst: 0,
             delivery: 0,
+            codCharge: 0,
             total: 0
         },
         loading: false,
@@ -102,86 +107,82 @@ const cartSlice = createSlice({
             state.appliedCoupon = null;
         },
         calculateTotals: (state, action) => {
-            let initialTotalInclusive = 0;
-            let couponSavings = 0;
-            let delivery = 0;
-
-            const shippingRates = action.payload || [];
-
+            // Handle both { shippingRates } and potentially direct arrays (defensive)
+            const payload = Array.isArray(action.payload) ? { shippingRates: action.payload } : (action.payload || {});
+            const { shippingRates = [], paymentMethod = 'prepaid', codCharge = 30 } = payload;
             const itemsToCalculate = state.isBuyNow && state.checkoutItem ? [state.checkoutItem] : state.items;
 
-            itemsToCalculate.forEach(item => {
-                const price = item.productDetails?.price || item.price || 0;
-                const quantity = item.quantity || 1;
-                initialTotalInclusive += price * quantity;
-            });
+            // Determine total discount from coupon
+            let totalDiscount = 0;
+            const subtotalInclusive = itemsToCalculate.reduce((sum, item) => sum + (item.productDetails?.price || item.price || 0) * (item.quantity || 1), 0);
 
             if (state.appliedCoupon) {
                 const coupon = state.appliedCoupon;
-                const discountValue = coupon.discountValue || 0;
+                const discountValue = parseFloat(coupon.discountValue || 0);
                 const discountType = coupon.discountType || 'PERCENTAGE';
-                
-                if (discountType === 'PERCENTAGE' || discountType === 'percentage' || String(coupon.discount).includes('%')) {
-                    couponSavings = (initialTotalInclusive * discountValue) / 100;
-                } else {
-                    couponSavings = discountValue;
-                }
 
-                if (couponSavings > initialTotalInclusive) {
-                    couponSavings = initialTotalInclusive;
+                if (discountType === 'PERCENTAGE' || discountType === 'percentage' || String(coupon.discount).includes('%')) {
+                    totalDiscount = (subtotalInclusive * discountValue) / 100;
+                } else {
+                    totalDiscount = discountValue;
                 }
             }
-            
-            let totalAfterCoupon = initialTotalInclusive - couponSavings;
 
+            // Determine delivery charge
+            let delivery = 0;
             if (shippingRates && shippingRates.length > 0) {
                 let applicableRate = null;
                 for (const rate of shippingRates) {
                     if (rate.isActive) {
                         const min = rate.minPrice || 0;
                         const max = rate.maxPrice || Infinity;
-                        if (initialTotalInclusive >= min && initialTotalInclusive <= max) {
+                        if (subtotalInclusive >= min && subtotalInclusive <= max) {
                             applicableRate = rate;
-                            break; 
+                            break;
                         }
                     }
                 }
-                
                 if (applicableRate) {
-                   delivery = applicableRate.isFree ? 0 : applicableRate.price;
+                    delivery = applicableRate.isFree ? 0 : applicableRate.price;
                 }
             }
 
-            const gstRate = 0.05; // 5% GST calculated on the Inclusive Prices
-            
-            // The applied coupon value shouldn't visually lose its value to tax math. 
-            // Flat -30 stays exactly -30 on the subtotal.
-            const visualCouponSavings = couponSavings;
-            
-            // Applicable GST is tax mathematically apportioned on the final post-discount value:
-            const finalSubtotalExcludingTax = totalAfterCoupon / (1 + gstRate);
-            const applicableGst = totalAfterCoupon - finalSubtotalExcludingTax;
+            // Use the shared utility for calculations
+            const result = calculateCartTotals(
+                itemsToCalculate,
+                totalDiscount,
+                delivery,
+                codCharge,
+                paymentMethod
+            );
 
-            // To ensure the visual addition: Total = Total MRP - visualCouponSavings + applicableGst + delivery
-            // We reverse-derive the visual 'Total MRP':
-            const totalMrp = totalAfterCoupon - delivery + visualCouponSavings - applicableGst;
-
-            state.summary.totalMrp = totalMrp;
-            state.summary.discount = 0;
-            state.summary.couponSavings = visualCouponSavings;
-            state.summary.delivery = delivery;
-            state.summary.gst = applicableGst;
-            state.summary.total = totalAfterCoupon + delivery;
+            // Update summary state
+            state.summary = {
+                totalMrp: result.totalMrp,
+                basePrice: result.basePrice,
+                discount: result.discount,
+                taxableValue: result.taxableValue,
+                gstAmount: result.gstAmount,
+                cgst: result.cgst,
+                sgst: result.sgst,
+                delivery: result.delivery,
+                codCharge: result.codCharge,
+                total: result.total
+            };
         },
         clearCart: (state) => {
             state.items = [];
             state.appliedCoupon = null;
             state.summary = {
                 totalMrp: 0,
+                basePrice: 0,
                 discount: 0,
-                couponSavings: 0,
-                gst: 0,
+                taxableValue: 0,
+                gstAmount: 0,
+                cgst: 0,
+                sgst: 0,
                 delivery: 0,
+                codCharge: 0,
                 total: 0
             };
         }

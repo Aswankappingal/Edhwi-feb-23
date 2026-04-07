@@ -3,10 +3,12 @@ import './PaymentSummary.scss';
 
 const PaymentSummary = ({
     totalMrp,
-    discountOnMrp,
-    couponSavings,
-    applicableGst,
+    basePrice,
+    discount,
+    taxableValue,
+    gstAmount,
     delivery,
+    codCharge,
     total,
     buttonText = 'Continue',
     onButtonClick,
@@ -20,38 +22,41 @@ const PaymentSummary = ({
 
                 <div className="summary-details">
                     <div className="summary-row">
-                        <span className="row-label">Total MRP</span>
-                        <span className="row-value">₹{totalMrp.toFixed(2)}</span>
+                        <span className="row-label">Subtotal (Excl. GST)</span>
+                        <span className="row-value">₹{basePrice?.toFixed(2) || '0.00'}</span>
                     </div>
 
-                    {discountOnMrp > 0 && (
+                    {discount > 0 && (
                         <div className="summary-row">
-                            <span className="row-label">Discount on MRP</span>
-                            <span className="row-value discount-value">-₹{discountOnMrp.toFixed(2)}</span>
+                            <span className="row-label">Discount</span>
+                            <span className="row-value discount-value">-₹{discount?.toFixed(2) || '0.00'}</span>
                         </div>
                     )}
 
-                    {couponSavings > 0 && (
-                        <div className="summary-row">
-                            <span className="row-label">Coupon savings</span>
-                            <span className="row-value discount-value">-₹{couponSavings.toFixed(2)}</span>
-                        </div>
-                    )}
 
-                    <div className="summary-row">
-                        <span className="row-label">Applicable GST</span>
-                        <span className="row-value">₹{applicableGst.toFixed(2)}</span>
+                    <div className="summary-row gst-row">
+                        <div className="row-label-group">
+                            <span className="row-label">Applicable GST</span>
+                        </div>
+                        <span className="row-value">₹{gstAmount?.toFixed(2) || '0.00'}</span>
                     </div>
 
                     <div className="summary-row">
                         <span className="row-label">Delivery</span>
-                        <span className="row-value">{delivery === 0 ? 'Free' : `₹${delivery.toFixed(2)}`}</span>
+                        <span className="row-value">{delivery === 0 ? 'Free' : `₹${delivery?.toFixed(2) || '0.00'}`}</span>
                     </div>
+
+                    {codCharge > 0 && (
+                        <div className="summary-row">
+                            <span className="row-label">COD Charge</span>
+                            <span className="row-value">₹{codCharge?.toFixed(2) || '0.00'}</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="summary-total-row">
                     <span className="total-label">Total</span>
-                    <span className="total-value">₹{total.toFixed(2)}</span>
+                    <span className="total-value">₹{Math.round(total || 0).toLocaleString()}</span>
                 </div>
             </div>
 

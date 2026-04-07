@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CartNavbar from '../../Common/cartNavbar/CartNavbar';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
 import { calculateTotals, clearCart } from '../../../redux/slices/cartSlice';
-import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
+import { fetchShippingRates, fetchPaymentSettings } from '../../../redux/slices/shippingSlice';
 import { placeOrder, placeSingleProductOrder, resetOrderState } from '../../../redux/slices/orderSlice';
 import BaseUrl from '../../../../BaseUrl';
 import { toast } from 'react-toastify';
@@ -24,13 +24,14 @@ const Payment = () => {
 
     const addressId = reduxAddressId || locationAddressId;
 
-    const { rates: shippingRates } = useSelector((state) => state.shipping);
+    const { rates: shippingRates, codCharge: serverCodCharge, status: shippingStatus } = useSelector((state) => state.shipping);
 
     const [paymentMethod, setPaymentMethod] = useState('cod');
     const [selectedAddress, setSelectedAddress] = useState(null);
 
     useEffect(() => {
         dispatch(fetchShippingRates());
+        dispatch(fetchPaymentSettings());
     }, [dispatch]);
 
     useEffect(() => {
@@ -48,8 +49,12 @@ const Payment = () => {
              navigate('/address');
         }
 
-        dispatch(calculateTotals(shippingRates));
-    }, [addressId, addresses, cartItems.length, appliedCoupon, shippingRates, navigate, dispatch]);
+        dispatch(calculateTotals({ 
+            shippingRates, 
+            paymentMethod, 
+            codCharge: serverCodCharge 
+        }));
+    }, [addressId, addresses, cartItems.length, appliedCoupon, shippingRates, navigate, dispatch, paymentMethod, serverCodCharge]);
 
     useEffect(() => {
         if (success) {
@@ -86,9 +91,19 @@ const Payment = () => {
                 addressType: selectedAddress.addressType || 'Home'
             },
             paymentMethod: paymentMethod,
-            deliveryCharge: summary.delivery,
-            discountAmount: summary.discount,
-            couponCode: null
+            pricing: {
+                totalMrp: summary.totalMrp,
+                basePrice: summary.basePrice,
+                discount: summary.discount,
+                taxableValue: summary.taxableValue,
+                gst: summary.gstAmount,
+                cgst: summary.cgst,
+                sgst: summary.sgst,
+                delivery: summary.delivery,
+                codCharge: summary.codCharge,
+                total: summary.total
+            },
+            couponCode: appliedCoupon ? appliedCoupon.code : null
         } : {
             items: cartItems.map(item => ({
                 productId: item.productId,
@@ -109,9 +124,19 @@ const Payment = () => {
                 addressType: selectedAddress.addressType || 'Home'
             },
             paymentMethod: paymentMethod,
-            deliveryCharge: summary.delivery,
-            discountAmount: summary.discount,
-            couponCode: null
+            pricing: {
+                totalMrp: summary.totalMrp,
+                basePrice: summary.basePrice,
+                discount: summary.discount,
+                taxableValue: summary.taxableValue,
+                gst: summary.gstAmount,
+                cgst: summary.cgst,
+                sgst: summary.sgst,
+                delivery: summary.delivery,
+                codCharge: summary.codCharge,
+                total: summary.total
+            },
+            couponCode: appliedCoupon ? appliedCoupon.code : null
         };
 
         if (paymentMethod === 'online') {
@@ -243,10 +268,14 @@ const Payment = () => {
                     <div className="payment-summary-section">
                         <PaymentSummary
                             totalMrp={summary.totalMrp}
-                            discountOnMrp={summary.discount}
-                            couponSavings={summary.couponSavings}
-                            applicableGst={summary.gst}
+                            basePrice={summary.basePrice}
+                            discount={summary.discount}
+                            taxableValue={summary.taxableValue}
+                            gstAmount={summary.gstAmount}
+                            cgst={summary.cgst}
+                            sgst={summary.sgst}
                             delivery={summary.delivery}
+                            codCharge={summary.codCharge}
                             total={summary.total}
                             buttonText={orderLoading ? "Processing..." : "Make payment"}
                             onButtonClick={handleMakePayment}

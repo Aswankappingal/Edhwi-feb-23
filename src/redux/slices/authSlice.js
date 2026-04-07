@@ -101,11 +101,38 @@ export const loginWithGoogle = createAsyncThunk(
     }
 );
 
+export const verifyPasswordChangeOtp = createAsyncThunk(
+    'auth/verifyPasswordChangeOtp',
+    async ({ type, value, otp, newPassword }, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${BaseUrl}/verify-password-change-otp`, { type, value, otp, newPassword });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Password update failed');
+        }
+    }
+);
+
+export const softDeleteAccount = createAsyncThunk(
+    'auth/softDeleteAccount',
+    async (_, { rejectWithValue, getState }) => {
+        try {
+            const token = getState().auth.token;
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const response = await axios.post(`${BaseUrl}/soft-delete-account`, {}, config);
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || 'Account deletion failed');
+        }
+    }
+);
+
 const authSlice = createSlice({
     name: 'auth',
     initialState: {
         user: null,
         token: localStorage.getItem('token') || null,
+        loginTimestamp: localStorage.getItem('loginTimestamp') || null,
         loading: false,
         error: null,
         otpSessionData: null, // Stores email/mobile when moving from Login to OTP Modal
@@ -116,7 +143,9 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.token = null;
+            state.loginTimestamp = null;
             localStorage.removeItem('token');
+            localStorage.removeItem('loginTimestamp');
         },
         clearError: (state) => {
             state.error = null;
@@ -146,7 +175,12 @@ const authSlice = createSlice({
             .addCase(verifyMobileOtp.fulfilled, (state, action) => {
                 state.loading = false;
                 if (action.payload.user) state.user = action.payload.user;
-                if (action.payload.token) state.token = action.payload.token;
+                if (action.payload.token) {
+                    state.token = action.payload.token;
+                    const now = Date.now().toString();
+                    state.loginTimestamp = now;
+                    localStorage.setItem('loginTimestamp', now);
+                }
             })
             .addCase(verifyMobileOtp.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
 
@@ -163,7 +197,12 @@ const authSlice = createSlice({
             .addCase(verifyEmailOtp.fulfilled, (state, action) => {
                 state.loading = false;
                 if (action.payload.user) state.user = action.payload.user;
-                if (action.payload.token) state.token = action.payload.token;
+                if (action.payload.token) {
+                    state.token = action.payload.token;
+                    const now = Date.now().toString();
+                    state.loginTimestamp = now;
+                    localStorage.setItem('loginTimestamp', now);
+                }
             })
             .addCase(verifyEmailOtp.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
 
@@ -173,6 +212,9 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
+                const now = Date.now().toString();
+                state.loginTimestamp = now;
+                localStorage.setItem('loginTimestamp', now);
             })
             .addCase(loginWithEmail.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
 
@@ -182,6 +224,9 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
+                const now = Date.now().toString();
+                state.loginTimestamp = now;
+                localStorage.setItem('loginTimestamp', now);
             })
             .addCase(signupWithEmail.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
 
@@ -191,8 +236,26 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.token = action.payload.token;
+                const now = Date.now().toString();
+                state.loginTimestamp = now;
+                localStorage.setItem('loginTimestamp', now);
             })
-            .addCase(loginWithGoogle.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
+            .addCase(loginWithGoogle.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+            
+            // verifyPasswordChangeOtp
+            .addCase(verifyPasswordChangeOtp.pending, (state) => { state.loading = true; state.error = null; })
+            .addCase(verifyPasswordChangeOtp.fulfilled, (state) => { state.loading = false; })
+            .addCase(verifyPasswordChangeOtp.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+
+            // softDeleteAccount
+            .addCase(softDeleteAccount.pending, (state) => { state.loading = true; state.error = null; })
+            .addCase(softDeleteAccount.fulfilled, (state) => {
+                state.loading = false;
+                state.user = null;
+                state.token = null;
+                localStorage.removeItem('token');
+            })
+            .addCase(softDeleteAccount.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
     }
 });
 

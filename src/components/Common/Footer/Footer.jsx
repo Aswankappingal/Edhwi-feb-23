@@ -20,8 +20,8 @@ const Footer = () => {
                         <div className="footer__column">
                             <h3 className="footer__column-title">Office</h3>
                             <div className="footer__address">
-                                <p>Thara Online Store 11/321, Thara</p>
-                                <p>Appartments, Hospital Road,</p>
+                                <p>1/152-30</p>
+                                <p> ROYAL TRADE CENTRE, Bypass Road,</p>
                                 <p>Perinthalmanna, Malappuram,</p>
                                 <p>Kerala, India - 679322</p>
                             </div>
@@ -37,7 +37,7 @@ const Footer = () => {
                             <h3 className="footer__column-title">Shop</h3>
                             <ul className="footer__list">
                                 <li><Link to="/our-products">Our Products</Link></li>
-                                <li><a href="#about">About</a></li>
+                                <li><a href="/about-us">About</a></li>
                                 <li><Link to="/gallery">Gallery</Link></li>
                                 <li><Link to="/blogs">Blogs</Link></li>
                                 <li><a href="#faq">FAQ</a></li>
@@ -48,11 +48,11 @@ const Footer = () => {
                         <div className="footer__column">
                             <h3 className="footer__column-title">Help</h3>
                             <ul className="footer__list">
-                                <li><a href="#privacy">Privacy policy</a></li>
-                                <li><a href="#return">Return policy</a></li>
-                                <li><a href="#shipping">Shipping policy</a></li>
-                                <li><a href="#terms">Terms & Conditions</a></li>
-                                <li><a href="#contact">Contact Us</a></li>
+                                <li><a href="/files/Privacy Policy.docx">Privacy policy</a></li>
+                                <li><a href="/files/Refund Policy.docx">Refund policys</a></li>
+                                <li><a href="/files/Shipping Policy.docx">Shipping policy</a></li>
+                                <li><a href="/files/Terms of Service.docx">Terms & Conditions</a></li>
+                                <li><a href="/contact-us">Contact Us</a></li>
                             </ul>
                         </div>
                     </div>

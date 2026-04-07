@@ -8,6 +8,7 @@ import wishlistReducer from './slices/wishlistSlice';
 import couponReducer from './slices/couponSlice';
 import shippingReducer from './slices/shippingSlice';
 import notificationsReducer from './slices/notificationsSlice';
+import blogReducer from './slices/blogSlice';
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
         wishlist: wishlistReducer,
         coupons: couponReducer,
         shipping: shippingReducer,
-        notifications: notificationsReducer
+        notifications: notificationsReducer,
+        blog: blogReducer
     }
 });
 

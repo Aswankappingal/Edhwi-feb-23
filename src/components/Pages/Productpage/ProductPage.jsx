@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { addToCart, setBuyNowItem, resetCheckoutMode } from '../../../redux/slices/cartSlice'
+import { resetOrderState } from '../../../redux/slices/orderSlice'
 import { fetchProducts } from '../../../redux/slices/dataSlice'
 import { setLoginModalOpen } from '../../../redux/slices/authSlice'
 import { toast } from 'react-toastify';
@@ -21,7 +22,9 @@ const defaultProductProps = {
     storageInstruction: "Store in a cool, dry place. Keep away from direct sunlight.",
     shelfLife: "12 months from the date of packaging.",
     certification: "FSSAI Approved",
-    sizes: ["12", "24", "48", "200 ml", "1 L"]
+    sizes: ["12", "24", "48", "200 ml", "1 L"],
+    bulkSupportText: "Bulk orders available for all products, customized to your requirements.",
+    customerSupportText: "Full customer support and all necessary product documents provided for your convenience."
 };
 
 /* =====================================================
@@ -81,7 +84,9 @@ const ProductPage = () => {
         storageInstruction: product.storageInstruction || defaultProductProps.storageInstruction,
         shelfLife: product.shelfLife || defaultProductProps.shelfLife,
         certification: product.certification || defaultProductProps.certification,
-        sizes: product.variantCombinations?.map(v => v.amount || v.weight || v.volume) || defaultProductProps.sizes
+        sizes: product.variantCombinations?.map(v => v.amount || v.weight || v.volume) || defaultProductProps.sizes,
+        bulkSupportText: product.bulkSupportText || defaultProductProps.bulkSupportText,
+        customerSupportText: product.customerSupportText || defaultProductProps.customerSupportText
     } : null;
 
     const [selectedSize, setSelectedSize] = React.useState("12");
@@ -135,6 +140,7 @@ const ProductPage = () => {
             }
         };
 
+        dispatch(resetOrderState());
         dispatch(setBuyNowItem(checkoutItem));
         navigate('/address');
     };
@@ -188,7 +194,7 @@ const ProductPage = () => {
                                     <BsBoxSeam size={20} color="#000000ff" />
                                 </div>
                                 <div className="contents">
-                                    Bulk orders available for all products, customized to your requirements.
+                                    {productData.bulkSupportText}
                                 </div>
                             </div>
                             <div className="bulk-sections-content">
@@ -196,7 +202,7 @@ const ProductPage = () => {
                                     <BsHeadset size={20} color="#1c1c1c" />
                                 </div>
                                 <div className="contents">
-                                    Full customer support and all necessary product documents provided for your convenience.
+                                    {productData.customerSupportText}
                                 </div>
                             </div>
                         </div>

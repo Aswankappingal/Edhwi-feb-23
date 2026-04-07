@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAddresses, addAddress, updateAddress, setSelectedAddressId } from '../../../redux/slices/addressSlice';
 import { fetchCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
 import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
+import { resetOrderState } from '../../../redux/slices/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import './Address.scss';
 import PaymentSummary from '../../Common/PaymentSummary/PaymentSummary';
@@ -32,6 +33,7 @@ const Address = () => {
 
     useEffect(() => {
         dispatch(fetchAddresses());
+        dispatch(resetOrderState());
         if (!isBuyNow) {
             dispatch(fetchCart());
         }
@@ -39,7 +41,7 @@ const Address = () => {
     }, [dispatch, isBuyNow]);
 
     useEffect(() => {
-        dispatch(calculateTotals(shippingRates));
+        dispatch(calculateTotals({ shippingRates }));
     }, [cartItems, appliedCoupon, shippingRates, dispatch]);
 
     useEffect(() => {
@@ -135,7 +137,7 @@ const Address = () => {
                                     className="apply-btn remove-btn" 
                                     onClick={() => {
                                         dispatch(removeCoupon());
-                                        dispatch(calculateTotals(shippingRates));
+                                        dispatch(calculateTotals({ shippingRates }));
                                         toast.info("Coupon removed");
                                     }}
                                     style={{ color: '#e74c3c', backgroundColor: 'transparent', padding: '0', fontWeight: '600', border: 'none', cursor: 'pointer', fontSize: '14px' }}
@@ -156,10 +158,14 @@ const Address = () => {
                         {/* Payment Summary */}
                         <PaymentSummary
                             totalMrp={summary.totalMrp}
-                            discountOnMrp={summary.discount}
-                            couponSavings={summary.couponSavings}
-                            applicableGst={summary.gst}
+                            basePrice={summary.basePrice}
+                            discount={summary.discount}
+                            taxableValue={summary.taxableValue}
+                            gstAmount={summary.gstAmount}
+                            cgst={summary.cgst}
+                            sgst={summary.sgst}
                             delivery={summary.delivery}
+                            codCharge={summary.codCharge}
                             total={summary.total}
                             buttonText="Continue"
                             onButtonClick={() => {

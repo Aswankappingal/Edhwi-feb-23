@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchMyOrders } from '../../redux/slices/orderSlice';
+import { generateInvoice } from '../../utils/generateInvoice';
 import './Orders.scss';
 
 const Orders = ({ setActiveTab, setCancelOrderId }) => {
@@ -147,8 +148,8 @@ const Orders = ({ setActiveTab, setCancelOrderId }) => {
                             <div className="card-summary">
                                 <h4 className="box-title">Summary</h4>
                                 <div className="grey-box">
-                                    <div className="summary-row"><span>Subtotal: ₹{order.pricing?.subtotal || 0}</span></div>
-                                    <div className="summary-row"><span>Shipping: ₹{order.pricing?.deliveryCharge || 0}</span></div>
+                                    <div className="summary-row"><span>Subtotal: ₹{order.pricing?.basePrice || 0}</span></div>
+                                    <div className="summary-row"><span>Shipping: ₹{order.pricing?.delivery || 0}</span></div>
                                     <div className="summary-row-flex">
                                         <span>Tax: ₹{order.pricing?.gst || 0}</span>
                                         <span className="total-text"><strong>Total:</strong> ₹{order.pricing?.finalTotal || order.pricing?.total || 0}</span>
@@ -177,6 +178,7 @@ const Orders = ({ setActiveTab, setCancelOrderId }) => {
 
                             <div className="card-bottom-actions">
                                 <button className="btn-outline" onClick={() => setActiveTab && setActiveTab('support')}>Support</button>
+                                <button className="btn-primary" onClick={() => generateInvoice(order)}>Download Invoice</button>
                                 <button className="btn-primary">Buy again</button>
                             </div>
                         </div>

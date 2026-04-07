@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchCart, updateCartQuantity, removeFromCart, calculateTotals, removeCoupon } from '../../../redux/slices/cartSlice';
 import { fetchShippingRates } from '../../../redux/slices/shippingSlice';
 import { setLoginModalOpen } from '../../../redux/slices/authSlice';
+import { resetOrderState } from '../../../redux/slices/orderSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './Cart.scss';
@@ -32,7 +33,9 @@ const Cart = () => {
     }, [dispatch, token, user, navigate]);
 
     useEffect(() => {
-        dispatch(calculateTotals(shippingRates));
+        dispatch(calculateTotals({ shippingRates }));
+        // Ensure stale success/error state is cleared when starting checkout
+        dispatch(resetOrderState());
     }, [cartItems, appliedCoupon, shippingRates, dispatch]);
 
 
@@ -133,7 +136,7 @@ const Cart = () => {
                                             className="apply-btn remove-btn" 
                                             onClick={() => {
                                                 dispatch(removeCoupon());
-                                                dispatch(calculateTotals(shippingRates));
+                                                dispatch(calculateTotals({ shippingRates }));
                                                 toast.info("Coupon removed");
                                             }}
                                             style={{ color: '#e74c3c', backgroundColor: 'transparent', padding: '0', fontWeight: '600' }}
@@ -154,19 +157,29 @@ const Cart = () => {
                                 {/* Payment Summary */}
                                 <PaymentSummary
                                     totalMrp={summary.totalMrp}
-                                    discountOnMrp={summary.discount}
-                                    couponSavings={summary.couponSavings}
-                                    applicableGst={summary.gst}
+                                    basePrice={summary.basePrice}
+                                    discount={summary.discount}
+                                    taxableValue={summary.taxableValue}
+                                    gstAmount={summary.gstAmount}
+                                    cgst={summary.cgst}
+                                    sgst={summary.sgst}
                                     delivery={summary.delivery}
+                                    codCharge={summary.codCharge}
                                     total={summary.total}
                                     buttonText="Continue"
-                                    onButtonClick={() => navigate('/address')}
+                                    onButtonClick={() => {
+                                        dispatch(resetOrderState());
+                                        navigate('/address');
+                                    }}
                                     showButton={true} className="desktop-payment-summary"
                                     disabled={cartItems.length === 0}
                                 />
 
                                 {/* Mobile specific button, shown only on mobile */}
-                                <button className="mobile-proceed-btn" onClick={() => navigate('/address')} disabled={cartItems.length === 0}>
+                                <button className="mobile-proceed-btn" onClick={() => {
+                                    dispatch(resetOrderState());
+                                    navigate('/address');
+                                }} disabled={cartItems.length === 0}>
                                     Proceed to checkout
                                 </button>
                             </div>
