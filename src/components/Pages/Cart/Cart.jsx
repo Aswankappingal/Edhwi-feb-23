@@ -32,6 +32,8 @@ const Cart = () => {
         dispatch(fetchShippingRates());
     }, [dispatch, token, user, navigate]);
 
+
+
     useEffect(() => {
         dispatch(calculateTotals({ shippingRates }));
         // Ensure stale success/error state is cleared when starting checkout
@@ -81,14 +83,23 @@ const Cart = () => {
                                         <div className="item-image-container">
                                             {/* Using a placeholder div for the image to match structure */}
                                             <div className="image-placeholder">
-                                                <img src={item.productDetails?.image || item.image || '/Edhwi-bottle.svg'} alt={item.productDetails?.name || 'Product Image'} />
+                                                <img 
+                                                    src={item.variantCombination?.primaryImage || item.productImage || item.productDetails?.image || '/Edhwi-bottle.svg'} 
+                                                    alt={item.productDetails?.name || 'Product Image'} 
+                                                />
                                             </div>
                                         </div>
 
                                         <div className="item-details-container">
                                             <div className="item-title-row">
-                                                <h3 className="item-title">{item.productDetails?.name || item.title || 'Product'}</h3>
-                                                <span className="item-volume-badge">{item.productDetails?.volume || item.volume || '1 LTR'}</span>
+                                                <h3 className="item-title">{item.productDetails?.name || item.productName || 'Product'}</h3>
+                                                <span className="item-volume-badge">
+                                                    {item.variantCombination?.name 
+                                                        ? (item.variantCombination.name.includes(':') 
+                                                            ? item.variantCombination.name.split(':').pop().trim() 
+                                                            : item.variantCombination.name)
+                                                        : (item.productDetails?.volume || '1 LTR')}
+                                                </span>
                                             </div>
 
                                             <div className="item-actions-and-price">
@@ -110,10 +121,12 @@ const Cart = () => {
                                                     </div>
 
                                                     <div className="price-details">
-                                                        <div className="current-price">₹{(item.productDetails?.price || item.price || 0) * item.quantity}</div>
-                                                        <div className="original-price-row">
-                                                            {/* Hide strike price for now since we have realistic calculations */}
-                                                        </div>
+                                                        <div className="current-price">₹{(item.currentPrice * item.quantity).toLocaleString()}</div>
+                                                        {item.currentMRP > item.currentPrice && (
+                                                            <div className="original-price-row" style={{ textDecoration: 'line-through', color: '#888', fontSize: '0.9rem' }}>
+                                                                ₹{(item.currentMRP * item.quantity).toLocaleString()}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>

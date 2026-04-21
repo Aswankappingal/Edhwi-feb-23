@@ -119,18 +119,20 @@ const ExploreProducts = () => {
 
         setLoadingProducts(prev => new Set(prev).add(product.id));
 
-        let variantCombination = null;
+        let variantCombinationPayload = null;
         if (product.variantCombinations && product.variantCombinations.length > 0) {
-            variantCombination = product.variantCombinations[0].amount || product.variantCombinations[0].weight || product.variantCombinations[0].volume;
-        } else if (product.sizes && product.sizes.length > 0) {
-            variantCombination = product.sizes[0];
+            const firstVariant = product.variantCombinations[0];
+            variantCombinationPayload = {
+                variantId: firstVariant.variantId,
+                name: firstVariant.name || (v => v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || (v.name ? v.name.split(':')[1]?.trim() || v.name : ''))(firstVariant)
+            };
         }
 
         try {
             await dispatch(addToCart({
                 productId: product.id.toString(),
                 quantity: 1,
-                ...(variantCombination && { variantCombination })
+                variantCombination: variantCombinationPayload
             })).unwrap();
 
             setToastConfig({
@@ -155,12 +157,22 @@ const ExploreProducts = () => {
     }, [dispatch, token, user]);
 
     // Get cart button content
-    const getAddButtonContent = useCallback((productId) => {
-        if (loadingProducts.has(productId)) {
+    const getAddButtonContent = useCallback((product) => {
+        if (loadingProducts.has(product.id)) {
             return <div className="spinner-border spinner-border-sm" role="status" style={{color: '#4CAF50'}} />;
         }
 
-        const isProductInCart = cartItems.some(item => item.productId === productId?.toString() || item.productId === productId);
+        const firstVariant = product.variantCombinations?.[0];
+        const isProductInCart = cartItems.some(item => {
+            const productIdMatch = item.productId === product.id?.toString() || item.productId === product.id;
+            if (!productIdMatch) return false;
+            
+            if (firstVariant) {
+                return item.variantCombination?.variantId === firstVariant.variantId;
+            }
+            return true;
+        });
+
         if (isProductInCart) {
             return <FaCheck className='check-icon' style={{ color: '#4CAF50' }} />;
         }
@@ -377,19 +389,61 @@ const ExploreProducts = () => {
                                                         </div>
                                                         <img src={product.imageUrl || (product.images && product.images[0]?.url) || '/Kuppi.svg'} alt={product.name} />
                                                         <div
-                                                            className={`add-icon-wrapper ${cartItems.some(item => item.productId === product.id?.toString() || item.productId === product.id) ? 'in-cart' : ''}`}
+                                                            className={`add-icon-wrapper ${cartItems.some(item => {
+                                                                const productIdMatch = item.productId === product.id?.toString() || item.productId === product.id;
+                                                                if (!productIdMatch) return false;
+                                                                const firstVariant = product.variantCombinations?.[0];
+                                                                if (firstVariant) {
+                                                                    return item.variantCombination?.variantId === firstVariant.variantId;
+                                                                }
+                                                                return true;
+                                                            }) ? 'in-cart' : ''}`}
                                                             onClick={(e) => handleAddToCart(e, product)}
-                                                            title={cartItems.some(item => item.productId === product.id?.toString() || item.productId === product.id) ? 'Added to cart' : 'Add to cart'}
+                                                            title={cartItems.some(item => {
+                                                                const productIdMatch = item.productId === product.id?.toString() || item.productId === product.id;
+                                                                if (!productIdMatch) return false;
+                                                                const firstVariant = product.variantCombinations?.[0];
+                                                                if (firstVariant) {
+                                                                    return item.variantCombination?.variantId === firstVariant.variantId;
+                                                                }
+                                                                return true;
+                                                            }) ? 'Added to cart' : 'Add to cart'}
                                                         >
-                                                            {getAddButtonContent(product.id)}
+                                                            {getAddButtonContent(product)}
                                                         </div>
                                                     </div>
                                                     <div className="product-details">
-                                                        <h3>{product.name}</h3>
+                                                        <h3>{product.name || 'Product'}</h3>
                                                         {product.variantCombinations?.length > 0 && (
-                                                            <p className='Available-section'>Available in <b>{product.variantCombinations?.[0]?.weight || product.variantCombinations?.[0]?.volume || product.variantCombinations?.[0]?.amount || ''}</b></p>
+                                                            <p className='Available-section'>Available in <b>{
+                                                                (v => {
+                                                                    const val = v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || v.variantName;
+                                                                    if (val) return String(val).trim();
+                                                                    return v.name ? (v.name.includes(':') ? v.name.split(':')[1]?.trim() : v.name) : '';
+                                                                })(product.variantCombinations[0])
+                                                            }</b></p>
                                                         )}
-                                                        <h4>₹{product.price || product.sellingPrice}</h4>
+                                                        <div className="price-details-card">
+                                                            {(() => {
+                                                                const sellingPrice = product.sellingPrice || product.price || (product.variantCombinations && product.variantCombinations[0]?.sellingPrice) || (product.variantCombinations && product.variantCombinations[0]?.price) || 0;
+                                                                const mrp = product.mrp || product.price || (product.variantCombinations && product.variantCombinations[0]?.price) || sellingPrice;
+                                                                const hasDiscount = mrp > sellingPrice;
+                                                                
+                                                                return (
+                                                                    <>
+                                                                        <span className="selling-price" style={{ fontWeight: '600', color: '#1c1c1c', fontSize: '1.2rem' }}>₹{sellingPrice}</span>
+                                                                        {hasDiscount && (
+                                                                            <span className="mrp-struck" style={{ textDecoration: 'line-through', color: '#888', marginLeft: '8px', fontSize: '0.9rem' }}>₹{mrp}</span>
+                                                                        )}
+                                                                        {/* {hasDiscount && (
+                                                                            <div className="discount-tag" style={{ color: '#2d68f8', fontSize: '0.75rem', fontWeight: '500', marginTop: '2px' }}>
+                                                                                {Math.round(((mrp - sellingPrice) / mrp) * 100)}% OFF
+                                                                            </div>
+                                                                        )} */}
+                                                                    </>
+                                                                );
+                                                            })()}
+                                                        </div>
                                                     </div>
 
                                                 </div>

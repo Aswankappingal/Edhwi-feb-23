@@ -116,10 +116,18 @@ const Orders = ({ setActiveTab, setCancelOrderId }) => {
                                         <div className="item-details-box" style={{ flexGrow: 1 }}>
                                             <div className="item-title">Item {index + 1}:</div>
                                             <div className="item-name">
-                                                {item.name} {item.weight && `(${item.weight})`}
+                                                {item.name}
+                                                {(item.variant || item.weight) && (
+                                                    <span style={{ fontSize: '12px', color: '#6B7280', marginLeft: '5px' }}>
+                                                        ({typeof item.variant === 'object' ? (item.variant?.name || item.variant?.variantName || '') : (item.variant || item.weight)})
+                                                    </span>
+                                                )}
                                             </div>
                                             <div style={{ fontSize: '13px', color: '#6B7280', marginTop: '5px' }}>
-                                                Qty: {item.quantity} × ₹{item.price || item.unitPrice || 0}
+                                                Qty: {item.quantity} × <span style={{ color: '#111', fontWeight: '600' }}>₹{item.price || item.unitPrice || 0}</span>
+                                                {(item.mrp && item.mrp > (item.price || item.unitPrice)) && (
+                                                    <span style={{ textDecoration: 'line-through', marginLeft: '8px', fontSize: '12px' }}>₹{item.mrp}</span>
+                                                )}
                                             </div>
                                         </div>
                                         

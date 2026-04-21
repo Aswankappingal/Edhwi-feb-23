@@ -114,7 +114,10 @@ const cartSlice = createSlice({
 
             // Determine total discount from coupon
             let totalDiscount = 0;
-            const subtotalInclusive = itemsToCalculate.reduce((sum, item) => sum + (item.productDetails?.price || item.price || 0) * (item.quantity || 1), 0);
+            const subtotalInclusive = itemsToCalculate.reduce((sum, item) => {
+                const unitPrice = parseFloat(item.currentPrice || item.variantCombination?.price || item.productDetails?.sellingPrice || item.productDetails?.price || item.price || 0);
+                return sum + unitPrice * (item.quantity || 1);
+            }, 0);
 
             if (state.appliedCoupon) {
                 const coupon = state.appliedCoupon;

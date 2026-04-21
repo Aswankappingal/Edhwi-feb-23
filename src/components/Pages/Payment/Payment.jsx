@@ -78,7 +78,8 @@ const Payment = () => {
         const orderData = isBuyNow && checkoutItem ? {
             productId: checkoutItem.productId,
             quantity: checkoutItem.quantity,
-            variant: checkoutItem.variantCombination || null,
+            variantId: checkoutItem.variantCombination?.variantId || checkoutItem.variantId || null,
+            variantCombination: checkoutItem.variantCombination || null,
             deliveryAddress: {
                 fullName: selectedAddress.fullName,
                 phone: selectedAddress.phone.replace(/\D/g, ''),
@@ -108,10 +109,12 @@ const Payment = () => {
             items: cartItems.map(item => ({
                 productId: item.productId,
                 quantity: item.quantity,
+                variantId: item.variantCombination?.variantId || item.variantId || null,
+                variantCombination: item.variantCombination || null,
                 price: item.productDetails?.price || 0,
-                name: item.productDetails?.name || 'Product',
-                variantDetails: item.variantDetails || null
+                name: item.productDetails?.name || 'Product'
             })),
+
             deliveryAddress: {
                 fullName: selectedAddress.fullName,
                 phone: selectedAddress.phone.replace(/\D/g, ''),

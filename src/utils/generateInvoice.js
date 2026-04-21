@@ -119,6 +119,7 @@ export const generateInvoice = async (order, returnBlob = false) => {
     doc.text('FSSAI : 11325999000031', leftColX, currentY + 15);
 
     let rightY = currentY - 80;
+    const maxAddressWidth = 210; // pt - ensures it doesn't overlap with Left Column
 
     const billingAdrs = order.deliveryAddress || {};
     doc.setFont('helvetica', 'bold');
@@ -135,12 +136,17 @@ export const generateInvoice = async (order, returnBlob = false) => {
 
     rightY += 15;
     doc.text(billingName, 550, rightY, { align: 'right' });
+    
+    // Render wrapped address lines for Billing
     bLines.forEach(line => {
-        rightY += 15;
-        doc.text(line, 550, rightY, { align: 'right' });
+        const splitLines = doc.splitTextToSize(line, maxAddressWidth);
+        splitLines.forEach(l => {
+            rightY += 15;
+            doc.text(l, 550, rightY, { align: 'right' });
+        });
     });
 
-    rightY += 25;
+    rightY += 30;
 
     doc.setFont('helvetica', 'bold');
     doc.text('Shipping Address :', 550, rightY, { align: 'right' });
@@ -148,12 +154,17 @@ export const generateInvoice = async (order, returnBlob = false) => {
 
     rightY += 15;
     doc.text(billingName, 550, rightY, { align: 'right' });
+
+    // Render wrapped address lines for Shipping
     bLines.forEach(line => {
-        rightY += 15;
-        doc.text(line, 550, rightY, { align: 'right' });
+        const splitLines = doc.splitTextToSize(line, maxAddressWidth);
+        splitLines.forEach(l => {
+            rightY += 15;
+            doc.text(l, 550, rightY, { align: 'right' });
+        });
     });
 
-    currentY = Math.max(currentY + 40, rightY + 30);
+    currentY = Math.max(currentY + 40, rightY + 40);
 
     const orderId = order.orderId || order.orderNumber || order.id || 'N/A';
     const oDate = order.createdAt ? new Date(
@@ -175,15 +186,28 @@ export const generateInvoice = async (order, returnBlob = false) => {
 
     currentY += 55;
 
-    doc.text(`Place of supply : ${billingAdrs.state || 'Kerala'}`, leftColX, currentY);
-    doc.text(`Place of Delivery : ${billingAdrs.state || 'Kerala'}`, leftColX, currentY + 15);
+    // --- Dynamic Place of Supply logic ---
+    const userState = billingAdrs.state || 'Kerala';
+    doc.text(`Place of supply : ${userState}`, leftColX, currentY);
+    doc.text(`Place of Delivery : ${userState}`, leftColX, currentY + 15);
 
-    const stateInput = (billingAdrs.state || 'Kerala').toLowerCase();
-    let stateCode = '32';
-    if (stateInput.includes('kerala')) stateCode = '32';
-    else if (stateInput.includes('tamil')) stateCode = '33';
-    else if (stateInput.includes('karnataka')) stateCode = '29';
-    else if (stateInput.includes('maharashtra')) stateCode = '27';
+    // State Code Mapping
+    const indianStateCodes = {
+        'jammu': '01', 'himachal': '02', 'punjab': '03', 'chandigarh': '04', 'uttarakhand': '05',
+        'haryana': '06', 'delhi': '07', 'rajasthan': '08', 'uttar pradesh': '09', 'bihar': '10',
+        'sikkim': '11', 'arunachal': '12', 'nagaland': '13', 'manipur': '14', 'mizoram': '15',
+        'tripura': '16', 'meghalaya': '17', 'assam': '18', 'west bengal': '19', 'jharkhand': '20',
+        'odisha': '21', 'chhattisgarh': '22', 'madhya pradesh': '23', 'gujarat': '24', 'daman': '25',
+        'dadra': '26', 'maharashtra': '27', 'andhra pradesh': '28', 'karnataka': '29', 'goa': '30',
+        'lakshadweep': '31', 'kerala': '32', 'tamil nadu': '33', 'puducherry': '34', 'andaman': '35',
+        'telangana': '36', 'ladakh': '37'
+    };
+
+    const stateInput = userState.toLowerCase();
+    let stateCode = '32'; // Default to Kerala
+    Object.keys(indianStateCodes).forEach(s => {
+        if (stateInput.includes(s)) stateCode = indianStateCodes[s];
+    });
 
     doc.text(`State Code: ${stateCode}`, leftColX, currentY + 30);
     doc.text(`Invoice No : ${invoicePrefix}`, 550, currentY + 15, { align: 'right' });
@@ -199,62 +223,56 @@ export const generateInvoice = async (order, returnBlob = false) => {
     if (items && items.length > 0) {
         items.forEach(item => {
             const baseName = item.name || item.productDetails?.name || 'Product';
-            const variantData = item.variant || item.variants || item.options || item.selectedVariants || item.variantCombination || {};
-            let variantString = '';
-
-            if (typeof variantData === 'string') {
-                variantString = variantData;
-            } else if (variantData && typeof variantData === 'object') {
-                if (variantData.variantName || variantData.name) {
-                    variantString = variantData.variantName || variantData.name;
-                } else if (variantData.variants && typeof variantData.variants === 'object') {
-                    variantString = Object.entries(variantData.variants).map(([k, v]) => `${k}: ${v}`).join(', ');
-                } else {
-                    variantString = Object.entries(variantData)
-                        .filter(([k]) => !['variantId', 'id', 'sku', 'price', 'quantity', 'image', 'primaryImage'].includes(k))
-                        .map(([k, v]) => (typeof v === 'object' ? null : `${k}: ${v}`))
-                        .filter(Boolean).join(', ');
-                }
-            }
-
-            const name = variantString ? `${baseName} (${variantString})` : baseName;
+            
+            // Item Specific Pricing from Order Record
+            const itemSpecificPricing = (pricing.itemsPricing || []).find(p => String(p.productId) === String(item.productId));
+            
+            const name = item.name || baseName; // Backend already formats this as Product (Variant)
             const qty = safeNum(item.quantity) || 1;
             const itemGstRate = safeNum(item.gstRate || 5);
             
-            // Extract item level pricing if available in orderData.invoice, otherwise calculate
-            // For now, let's assume we want to match the summary logic
-            const mrp = safeNum(item.price || item.unitPrice || item.productDetails?.price);
-            const basePriceUnit = Math.round((mrp / (1 + (itemGstRate / 100))) * 100) / 100;
-            const basePriceTotal = basePriceUnit * qty;
-            
-            // Proportional discount distribution fallback
-            const totalOrderDiscount = safeNum(pricing.discount || 0);
-            const totalOrderBasePrice = items.reduce((sum, it) => {
-                const itGst = safeNum(it.gstRate || 5) / 100;
-                const itMrp = safeNum(it.price || it.unitPrice || it.productDetails?.price);
-                return sum + (Math.round((itMrp / (1 + itGst)) * 100) / 100) * (safeNum(it.quantity) || 1);
-            }, 0) || 1;
-
-            const itemSpecificPricing = (pricing.itemsPricing || []).find(p => String(p.productId) === String(item.productId));
-            
+            // Use stored values if available, otherwise fallback to calculation
+            let unitPrice = 0;
             let discount = 0;
-            if (itemSpecificPricing && itemSpecificPricing.discount > 0) {
-                discount = itemSpecificPricing.discount;
-            } else if (totalOrderDiscount > 0) {
-                discount = Math.round((basePriceTotal / totalOrderBasePrice) * totalOrderDiscount * 100) / 100;
-            }
+            let taxableValue = 0;
+            let cgst = 0;
+            let sgst = 0;
+            let totalAmount = 0;
 
-            const taxableValue = Math.round((basePriceTotal - discount) * 100) / 100;
-            const gstTotal = taxableValue * (itemGstRate / 100);
-            const cgst = Math.round((gstTotal / 2) * 100) / 100;
-            const sgst = Math.round((gstTotal - cgst) * 100) / 100;
-            const totalAmount = Math.round((taxableValue + gstTotal) * 100) / 100;
+            if (itemSpecificPricing) {
+                unitPrice = safeNum(itemSpecificPricing.basePrice) / qty;
+                discount = safeNum(itemSpecificPricing.discount);
+                taxableValue = safeNum(itemSpecificPricing.taxableValue);
+                cgst = safeNum(itemSpecificPricing.cgst);
+                sgst = safeNum(itemSpecificPricing.sgst);
+                totalAmount = safeNum(itemSpecificPricing.total);
+            } else {
+                // Fallback Calculation
+                const mrp = safeNum(item.price || item.unitPrice || item.productDetails?.price);
+                const basePriceUnit = Math.round((mrp / (1 + (itemGstRate / 100))) * 100) / 100;
+                const basePriceTotal = basePriceUnit * qty;
+                
+                const totalOrderDiscount = safeNum(pricing.discount || 0);
+                const totalOrderBasePrice = items.reduce((sum, it) => {
+                    const itGst = safeNum(it.gstRate || 5) / 100;
+                    const itMrp = safeNum(it.price || it.unitPrice || it.productDetails?.price);
+                    return sum + (Math.round((itMrp / (1 + itGst)) * 100) / 100) * (safeNum(it.quantity) || 1);
+                }, 0) || 1;
+
+                discount = Math.round((basePriceTotal / totalOrderBasePrice) * totalOrderDiscount * 100) / 100;
+                taxableValue = Math.round((basePriceTotal - discount) * 100) / 100;
+                const gstTotal = taxableValue * (itemGstRate / 100);
+                cgst = Math.round((gstTotal / 2) * 100) / 100;
+                sgst = Math.round((gstTotal - cgst) * 100) / 100;
+                totalAmount = Math.round((taxableValue + gstTotal) * 100) / 100;
+                unitPrice = basePriceUnit;
+            }
 
             tableBody.push([
                 slNo++,
                 name,
                 qty,
-                formatPrice(basePriceUnit),
+                formatPrice(unitPrice),
                 formatPrice(discount),
                 formatPrice(taxableValue),
                 `${itemGstRate}%`,

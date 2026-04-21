@@ -71,25 +71,67 @@ const ProductPage = () => {
 
     const product = products?.find(p => p.id === id || p.id === parseInt(id));
 
-    // Combine DB data with UI defaults
+    // Robust size/variant extraction logic
+    const extractVariantValue = (v) => {
+        if (!v) return '';
+        // 1. Try common explicit field names
+        const val = v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || v.variantName;
+        if (val) return String(val).trim();
+        
+        // 2. Try parsing from the name (e.g. "Select packing size: 100 ml")
+        if (v.name && v.name.includes(':')) {
+            return v.name.split(':')[1].trim();
+        }
+
+        // 3. Last resort: v.name itself
+        return v.name ? String(v.name).trim() : '';
+    };
+
+    // Get sizes from variant definitions or combinations - Normalize for consistent matching
+    const availableSizes = (product?.variants && product.variants.length > 0 && product.variants[0].values) 
+        ? product.variants[0].values.map(s => String(s).trim())
+        : (product?.variantCombinations?.map(extractVariantValue).filter(Boolean) || defaultProductProps.sizes.map(s => String(s).trim()));
+
+    const [selectedSize, setSelectedSize] = React.useState(availableSizes[0] || "");
+
+    // Find selected variant combo - use robust comparison with normalization
+    const selectedVariant = product?.variantCombinations?.find(v => 
+        extractVariantValue(v).replace(/\s/g, '').toLowerCase() === selectedSize.replace(/\s/g, '').toLowerCase()
+    ) || product?.variantCombinations?.[0];
+
+    useEffect(() => {
+        console.log("selectedVariant", selectedVariant);
+    }, [selectedVariant]);
+
+    // Combine DB data with UI defaults - Prioritize variant info but fall back to base product
     const productData = product ? {
         id: product.id,
         name: product.name,
-        price: product.price || product.sellingPrice || product.priceNumber || 0,
-        imageUrl: product.imageUrl || (product.images && product.images[0]?.url) || '/Kuppi.svg',
-        images: product.images || [],
+        price: selectedVariant?.sellingPrice || selectedVariant?.price || product.sellingPrice || product.price || 0,
+        mrp: selectedVariant?.price || selectedVariant?.mrp || product.mrp || product.price || 0,
+        imageUrl: selectedVariant?.primaryImage || selectedVariant?.images?.[0]?.url || product.primaryImage || (product.images && product.images[0]?.url) || '/Kuppi.svg',
+        images: (selectedVariant?.images && selectedVariant.images.length > 0) ? selectedVariant.images : (product.images || []),
         offers: product.offers || defaultProductProps.offers,
         features: product.features || defaultProductProps.features,
         description: product.description || defaultProductProps.description,
         storageInstruction: product.storageInstruction || defaultProductProps.storageInstruction,
         shelfLife: product.shelfLife || defaultProductProps.shelfLife,
         certification: product.certification || defaultProductProps.certification,
-        sizes: product.variantCombinations?.map(v => v.amount || v.weight || v.volume) || defaultProductProps.sizes,
+        sizes: availableSizes,
         bulkSupportText: product.bulkSupportText || defaultProductProps.bulkSupportText,
         customerSupportText: product.customerSupportText || defaultProductProps.customerSupportText
     } : null;
 
-    const [selectedSize, setSelectedSize] = React.useState("12");
+    // Reset selected size when product changes
+    useEffect(() => {
+        if (availableSizes.length > 0 && (!selectedSize || !availableSizes.includes(selectedSize))) {
+            setSelectedSize(availableSizes[0]);
+        }
+    }, [product, availableSizes]);
+
+    useEffect(() => {
+        console.log("productData", productData);
+    }, [productData]);
 
     if (productStatus === 'loading') {
         return <div style={{ padding: '100px', textAlign: 'center' }}>Loading product details...</div>;
@@ -100,7 +142,19 @@ const ProductPage = () => {
     }
 
     // Check if the current product is already in the cart
-    const isProductInCart = cartItems.some(item => item.productId === productData.id.toString() || item.productId === productData.id);
+    // Check if the currently selected variant is already in the cart
+    const isProductInCart = cartItems.some(item => {
+        const productIdMatch = item.productId === productData.id.toString() || item.productId === productData.id;
+        if (!productIdMatch) return false;
+        
+        // If product has variants, also match the variantId
+        if (productData.hasVariants && selectedVariant) {
+            return item.variantCombination?.variantId === selectedVariant.variantId;
+        }
+        
+        // If no variants, productId match is sufficient
+        return true;
+    });
 
     const handleCartAction = async () => {
         if (!token && !user) {
@@ -112,10 +166,14 @@ const ProductPage = () => {
             navigate('/cart');
         } else {
             try {
-                // For now, we assume a static product ID and a quantity of 1 for the 'Buy now' action wrapper.
+                // Pass selected variant details to cart
                 await dispatch(addToCart({
                     productId: productData.id.toString(),
-                    quantity: 1
+                    quantity: 1,
+                    variantCombination: selectedVariant ? {
+                        variantId: selectedVariant.variantId,
+                        name: selectedVariant.name || extractVariantValue(selectedVariant)
+                    } : null
                 })).unwrap();
                 toast.success(`${productData.name} added to cart!`);
             } catch (error) {
@@ -133,9 +191,15 @@ const ProductPage = () => {
         const checkoutItem = {
             productId: productData.id.toString(),
             quantity: 1,
+            variantCombination: selectedVariant ? {
+                variantId: selectedVariant.variantId,
+                name: selectedVariant.name || extractVariantValue(selectedVariant)
+            } : null,
             productDetails: {
                 name: productData.name,
                 price: productData.price,
+                mrp: productData.mrp,
+                variant: selectedSize,
                 image: productData.imageUrl
             }
         };
@@ -166,7 +230,16 @@ const ProductPage = () => {
                         <p id='price'>Price</p>
                         <h3 className="price-range">
                             ₹{productData.price}
-                            <span id='offers'> {productData.offers}</span>
+                            {productData.mrp > productData.price && (
+                                <span className="mrp-struck" style={{ textDecoration: 'line-through', color: '#888', fontSize: '0.8em', marginLeft: '10px' }}>
+                                    ₹{productData.mrp}
+                                </span>
+                            )}
+                            {productData.mrp > productData.price && (
+                                <span className="offer-badge" style={{ color: '#2d68f8', fontSize: '0.6em', marginLeft: '10px', background: '#eef3ff', padding: '2px 8px', borderRadius: '4px' }}>
+                                    {Math.round(((productData.mrp - productData.price) / productData.mrp) * 100)}% OFF
+                                </span>
+                            )}
                         </h3>
 
                         {/* Packing Size Selector */}
@@ -231,24 +304,21 @@ const ProductPage = () => {
                 </div>
 
                 {/* Additional Images */}
+                {/* Gallary Image Section */}
                 <div className="row image-whole-section">
-                    {productData.images.map((image, index) => (
-                        <div key={index} className="col-lg-6 col-md-6 col-sm-6 col-6">
-                            <div className='card-image-section'>
-                                <img src={image.url} alt={`Product ${index + 1}`} />
+                    {productData.images && productData.images.length > 0 ? (
+                        productData.images.map((image, index) => (
+                            <div key={index} className="col-lg-6 col-md-6 col-sm-6 col-6 mb-4">
+                                <div className='card-image-section'>
+                                    <img src={image.url || image.publicUrl} alt={`${productData.name} view ${index + 1}`} />
+                                </div>
                             </div>
+                        ))
+                    ) : (
+                        <div className="col-12 text-center py-4">
+                            <p className="text-muted">No additional images available for this selection.</p>
                         </div>
-                    ))}
-                </div>
-
-                <div className="row image-whole-section">
-                    {productData.images.map((image, index) => (
-                        <div key={index} className="col-lg-6 col-md-6 col-sm-6 col-6">
-                            <div className='card-image-section'>
-                                <img src={image.url} alt={`Product ${index + 1}`} />
-                            </div>
-                        </div>
-                    ))}
+                    )}
                 </div>
 
                 <div>
@@ -303,9 +373,28 @@ const ProductPage = () => {
                                             </div>
                                         </div>
                                         <div className="other-product-details">
-                                            <h5>{item.name}</h5>
-                                            <p className="other-product-features">Available in <span>{item.variantCombinations && item.variantCombinations.length > 0 ? (item.variantCombinations[0].amount || item.variantCombinations[0].weight || item.variantCombinations[0].volume) : (item.sizes ? item.sizes[0] : 'Various Sizes')}</span></p>
-                                            <p className="other-product-price">₹{item.price || item.sellingPrice || item.priceNumber || 0}</p>
+                                            <h5>{item.name || 'Product'}</h5>
+                                            <p className="other-product-features">Available in <span>{
+                                                (item.variantCombinations && item.variantCombinations.length > 0) 
+                                                    ? (v => v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || (v.name ? v.name.split(':')[1]?.trim() || v.name : ''))(item.variantCombinations[0])
+                                                    : (item.sizes ? item.sizes[0] : 'Various Sizes')
+                                            }</span></p>
+                                            <div className="other-product-price-section">
+                                                {(() => {
+                                                    const sellingPrice = item.sellingPrice || item.price || (item.variantCombinations && item.variantCombinations[0]?.sellingPrice) || (item.variantCombinations && item.variantCombinations[0]?.price) || 0;
+                                                    const mrp = item.mrp || item.price || (item.variantCombinations && item.variantCombinations[0]?.price) || sellingPrice;
+                                                    const hasDiscount = mrp > sellingPrice;
+                                                    
+                                                    return (
+                                                        <>
+                                                            <span className="selling-price" style={{ fontWeight: '600', color: '#000' }}>₹{sellingPrice}</span>
+                                                            {hasDiscount && (
+                                                                <span className="mrp-price" style={{ textDecoration: 'line-through', color: '#888', fontSize: '0.85em', marginLeft: '8px' }}>₹{mrp}</span>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })()}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -34,9 +34,24 @@ const Wishlist = () => {
     const handleAddToCart = useCallback((e, productId) => {
         e.preventDefault();
         e.stopPropagation();
-        // Default quantity 1, if there are specific variants they could be passed here.
-        dispatch(addToCart({ productId, quantity: 1 }));
-    }, [dispatch]);
+
+        const product = allProducts?.find(p => p.id === productId);
+        let variantCombination = null;
+
+        if (product && product.variantCombinations && product.variantCombinations.length > 0) {
+            const firstVariant = product.variantCombinations[0];
+            variantCombination = {
+                variantId: firstVariant.variantId,
+                name: firstVariant.name || (v => v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || (v.name ? v.name.split(':')[1]?.trim() || v.name : ''))(firstVariant)
+            };
+        }
+
+        dispatch(addToCart({ 
+            productId, 
+            quantity: 1,
+            variantCombination
+        }));
+    }, [dispatch, allProducts]);
 
     const getAddButtonContent = useCallback((productId) => {
         const isProductInCart = cartItems.some(item => item.productId === productId);
@@ -55,12 +70,16 @@ const Wishlist = () => {
                 ) : (
                     wishlistItems.map((wishlistItem) => {
                         // Cross-reference with allProducts to get missing details if API only returns productId
-                        const productRef = allProducts?.find(p => p.id.toString() === wishlistItem.productId?.toString() || p.id == wishlistItem.productId) || {};
-                        
+                        const productRef = allProducts?.find(p => p.id === wishlistItem.productId) || {};
                         const displayImage = wishlistItem.productImage || productRef.imageUrl || (productRef.images && productRef.images[0]?.url) || '/Kuppi.svg';
                         const displayName = wishlistItem.productName || wishlistItem.name || productRef.name || 'Product';
-                        const displayPrice = wishlistItem.price || wishlistItem.sellingPrice || productRef.price || productRef.sellingPrice || 0;
-                        const displayVolume = (wishlistItem.volumes && wishlistItem.volumes[0]) || (productRef.variantCombinations && productRef.variantCombinations[0]?.amount) || '1L';
+                        
+                        // Robust price extraction
+                        const displayPrice = wishlistItem.sellingPrice || wishlistItem.price || productRef.sellingPrice || productRef.price || (productRef.variantCombinations && productRef.variantCombinations[0]?.sellingPrice) || (productRef.variantCombinations && productRef.variantCombinations[0]?.price) || 0;
+                        const displayMRP = wishlistItem.mrp || productRef.mrp || productRef.price || (productRef.variantCombinations && productRef.variantCombinations[0]?.price) || displayPrice;
+
+                        // Robust volume extraction
+                        const displayVolume = (wishlistItem.volumes && wishlistItem.volumes[0]) || (productRef.variantCombinations && (v => v.weight || v.volume || v.amount || v.size || v.Size || v.packingSize || v.PackingSize || (v.name ? v.name.split(':')[1]?.trim() || v.name : ''))(productRef.variantCombinations[0])) || '1L';
 
                         return (
                             <div className="wishlist-card" key={wishlistItem.productId}>
@@ -84,7 +103,14 @@ const Wishlist = () => {
                                 <div className="card-details">
                                     <h3>{displayName}</h3>
                                     <p>Available in {displayVolume}</p>
-                                    <div className="price">₹{displayPrice}</div>
+                                    <div className="price-details-wishlist">
+                                        <span className="selling-price" style={{ fontWeight: '600', color: '#1c1c1c' }}>₹{displayPrice}</span>
+                                        {displayMRP > displayPrice && (
+                                            <span className="mrp-struck" style={{ textDecoration: 'line-through', color: '#888', marginLeft: '8px', fontSize: '0.9rem' }}>
+                                                ₹{displayMRP}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )

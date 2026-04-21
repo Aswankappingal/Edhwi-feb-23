@@ -73,7 +73,9 @@ const Overview = ({ setActiveTab }) => {
                                     <div className="product-details">
                                         <h4>
                                             {item.name}{' '}
-                                            <span className="product-size">{item.weight || item.variant || ''}</span>
+                                            <span className="product-size">
+                                                {item.weight || (typeof item.variant === 'object' ? (item.variant?.name || item.variant?.variantName || '') : (item.variant || ''))}
+                                            </span>
                                         </h4>
                                         <p style={{ fontSize: '12px', color: '#6B7280', margin: '4px 0 0 0' }}>
                                             Order #{item.orderNumber}

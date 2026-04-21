@@ -4,23 +4,25 @@
  */
 
 export const calculateItemPricing = (item, discountShare = 0) => {
-    const mrp = parseFloat(item.productDetails?.price || item.price || 0);
+    // Priority order for current price: item-level currentPrice > variant price > base price
+    const unitPrice = parseFloat(item.currentPrice || item.variantCombination?.price || item.productDetails?.sellingPrice || item.productDetails?.price || item.price || 0);
+    // MRP (original price)
+    const mrp = parseFloat(item.currentMRP || item.variantCombination?.originalPrice || item.productDetails?.originalPrice || item.productDetails?.price || item.price || unitPrice);
     const quantity = parseInt(item.quantity || 1);
-    const gstRate = parseFloat(item.gstRate || 5) / 100; // Default 5%
+    const gstRate = parseFloat(item.variantCombination?.gst || item.productDetails?.gst || item.gstRate || 5) / 100;
 
-    // Step 1: Extract base price from MRP (per unit)
-    const basePriceUnit = Math.round((mrp / (1 + gstRate)) * 100) / 100;
+    // Step 1: Extract base price from current unit price (excluding GST)
+    const basePriceUnit = Math.round((unitPrice / (1 + gstRate)) * 100) / 100;
     const basePriceTotal = Math.round(basePriceUnit * quantity * 100) / 100;
 
     // Step 2: Apply discount share on base (total for this item)
-    // Validate discount <= basePrice
     const discount = Math.min(discountShare, basePriceTotal);
     const taxableValue = Math.round(Math.max(0, basePriceTotal - discount) * 100) / 100;
 
     // Step 3: Calculate GST on taxable value
     const gstAmount = Math.round(taxableValue * gstRate * 100) / 100;
     const cgst = Math.round((gstAmount / 2) * 100) / 100;
-    const sgst = Math.round((gstAmount - cgst) * 100) / 100; // Use remaining for sgst to avoid rounding loss
+    const sgst = Math.round((gstAmount - cgst) * 100) / 100;
 
     // Step 4: Individual Item Total
     const itemTotal = Math.round((taxableValue + gstAmount) * 100) / 100;
@@ -46,10 +48,10 @@ export const calculateCartTotals = (cartItems, totalDiscount = 0, deliveryCharge
     // Initial pass to get base prices for proportional discount distribution
     let totalBasePrice = 0;
     const itemBases = items.map(item => {
-        const gstRate = parseFloat(item.gstRate || 5) / 100;
-        const mrp = parseFloat(item.productDetails?.price || item.price || 0);
+        const unitPrice = parseFloat(item.currentPrice || item.variantCombination?.price || item.productDetails?.sellingPrice || item.productDetails?.price || item.price || 0);
+        const gstRate = parseFloat(item.variantCombination?.gst || item.productDetails?.gst || item.gstRate || 5) / 100;
         const quantity = parseInt(item.quantity || 1);
-        const basePriceUnit = Math.round((mrp / (1 + gstRate)) * 100) / 100;
+        const basePriceUnit = Math.round((unitPrice / (1 + gstRate)) * 100) / 100;
         const basePriceTotal = Math.round(basePriceUnit * quantity * 100) / 100;
         totalBasePrice += basePriceTotal;
         return basePriceTotal;
